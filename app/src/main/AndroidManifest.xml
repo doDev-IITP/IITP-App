@@ -17,12 +17,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".explore.services.lostandfound.LostAndFoundActivity"></activity>
+
+        <activity android:name=".explore.services.lostandfound.LostAndFoundActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".main.MainActivity" />
+        </activity>
         <activity
             android:name=".account.ProfileActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".account.LoginActivity"
             android:launchMode="singleTop"
