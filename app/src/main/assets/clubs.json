@@ -1,0 +1,119 @@
+{
+    "clubs": [
+        {
+            "id": 101,
+            "name": "Sparkonics",
+            "bio": "This is Electronics club of IIT Patna",
+            "description": "This is Electronics club of IIT Patna",
+            "coordinators": [
+                "1701EE15"
+            ],
+            "subCoordinators": [
+                "1801EE27",
+                "1801EE50"
+            ],
+            "events": [
+                "sp_10101",
+                "sp_10102"
+            ],
+            "website": "https://www.iitp.ac.in/gymkhana/sparkonics",
+            "pages":[
+                "https://www.facebook.com/sparkonics.iitp",
+                "https://www.twitter.com/sparkonics.iitp"
+            ],
+            "image": ""
+        },
+        {
+            "id": 102,
+            "name": "NJACK",
+            "bio": "Not Just Another Computer K(C)lub",
+            "description": "This is Computer Science club of IIT Patna",
+            "coordinators": [
+                "1701EE15"
+            ],
+            "subCoordinators": [
+                "1801EE27",
+                "1801EE50"
+            ],
+            "events": [
+                "sp_10101",
+                "sp_10102"
+            ],
+            "website": "https://www.iitp.ac.in/gymkhana/sparkonics",
+            "pages":[
+                "https://www.facebook.com/sparkonics.iitp",
+                "https://www.twitter.com/sparkonics.iitp"
+            ],
+            "image": ""
+        },
+        {
+            "id": 103,
+            "name": "SCME",
+            "bio": "Students Council of Mechanical Engineers",
+            "description": "This is Mechanical club of IIT Patna",
+            "coordinators": [
+                "1701EE15"
+            ],
+            "subCoordinators": [
+                "1801EE27",
+                "1801EE50"
+            ],
+            "events": [
+                "sp_10101",
+                "sp_10102"
+            ],
+            "website": "https://www.iitp.ac.in/gymkhana/sparkonics",
+            "pages":[
+                "https://www.facebook.com/sparkonics.iitp",
+                "https://www.twitter.com/sparkonics.iitp"
+            ],
+            "image": ""
+        },
+        {
+            "id": 104,
+            "name": "SAE",
+            "bio": "Society of Automotive Engineers",
+            "description": "This is Automotive club of IIT Patna",
+            "coordinators": [
+                "1701EE15"
+            ],
+            "subCoordinators": [
+                "1801EE27",
+                "1801EE50"
+            ],
+            "events": [
+                "sp_10101",
+                "sp_10102"
+            ],
+            "website": "https://www.iitp.ac.in/gymkhana/sparkonics",
+            "pages":[
+                "https://www.facebook.com/sparkonics.iitp",
+                "https://www.twitter.com/sparkonics.iitp"
+            ],
+            "image": ""
+        },
+        {
+            "id": 105,
+            "name": "Yavanika",
+            "bio": "Dramatics Club",
+            "description": "This is Dramatics club of IIT Patna",
+            "coordinators": [
+                "1701EE15"
+            ],
+            "subCoordinators": [
+                "1801EE27",
+                "1801EE50"
+            ],
+            "events": [
+                "sp_10101",
+                "sp_10102"
+            ],
+            "website": "https://www.iitp.ac.in/gymkhana/sparkonics",
+            "pages":[
+                "https://www.facebook.com/sparkonics.iitp",
+                "https://www.twitter.com/sparkonics.iitp"
+            ],
+            "image": ""
+        }
+    ]
+}

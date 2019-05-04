@@ -1,0 +1,53 @@
+package com.grobo.notifications.utils;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+public class DateTimeUtil {
+
+    public static String getDate(long dtStart) {
+//        Date date1 = new Date(dtStart);
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+05:30'");
+        Date date = new Date(dtStart);
+        Date now = new Date();
+        long diff = System.currentTimeMillis() - date.getTime();
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(now.getTime() - date.getTime());
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime());
+        long hours = TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
+        if (seconds <= 0) {
+            return "Now";
+        } else if (seconds < 60 && seconds > 1) {
+            return seconds + " seconds ago";
+        } else if (minutes == 1) {
+            return " 1 minute ago";
+        } else if (minutes < 60 && minutes > 1) {
+            return minutes + " minutes ago";
+        } else if (hours == 1) {
+            return "An hour ago";
+        } else if (hours < 24 && hours > 1) {
+            return hours + " hours ago";
+        } else {
+            long days = Math.round(diff / (24.0 * 60 * 60 * 1000));
+            if (days == 0)
+                return "Today";
+            else if (days == 1)
+                return "Yesterday";
+            else if (days < 14)
+                return days + " days ago";
+            else if (days < 30)
+                if ((int) (days / 7) == 1)
+                    return "A week ago";
+                else
+                    return ((int) (days / 7)) + " weeks ago";
+            else if (days < 365)
+                if ((int) (days / 30) == 1)
+                    return ((int) (days / 30)) + " month ago";
+                else
+                    return ((int) (days / 30)) + " months ago";
+            else if ((int) (days / 365) == 1)
+                return "A year ago";
+            else
+                return ((int) (days / 365)) + " years ago";
+        }
+    }
+}

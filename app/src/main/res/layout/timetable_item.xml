@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/timetable_item_ll"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:minHeight="?android:listPreferredItemHeight"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tt_time_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_marginRight="24dp"
+        android:gravity="right"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="24sp"/>
+
+
+    <TextView
+        android:id="@+id/tt_subject_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_marginLeft="24dp"
+        android:textColor="@android:color/holo_blue_light"
+        android:layout_weight="2"/>
+
+</LinearLayout>

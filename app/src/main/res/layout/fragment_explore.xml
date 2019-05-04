@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:orientation="vertical"
+    tools:context=".explore.ExploreFragment"
+    android:focusableInTouchMode="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:id="@+id/ll_explore_club">
+
+                <ImageView
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_timeline_24"
+                    android:tint="@color/black"
+                    android:layout_width="?android:listPreferredItemHeightSmall"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+                <TextView
+                    android:padding="4dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="Clubs"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:id="@+id/ll_explore_timetable">
+
+                <ImageView
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_schedule_24"
+                    android:tint="@color/black"
+                    android:layout_width="?android:listPreferredItemHeightSmall"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+                <TextView
+                    android:padding="4dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="Timetable"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:id="@+id/ll_explore_calender">
+
+                <ImageView
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_calendar_today_24"
+                    android:tint="@color/black"
+                    android:layout_width="?android:listPreferredItemHeightSmall"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+                <TextView
+                    android:padding="4dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="Calender"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:id="@+id/ll_explore_mess">
+
+                <ImageView
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_restaurant_24"
+                    android:tint="@color/black"
+                    android:layout_width="?android:listPreferredItemHeightSmall"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+                <TextView
+                    android:padding="4dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="Mess"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:id="@+id/ll_explore_exam">
+
+                <ImageView
+                    android:padding="4dp"
+                    android:src="@drawable/ic_book_black_24dp"
+                    android:tint="@color/black"
+                    android:layout_width="?android:listPreferredItemHeightSmall"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+                <TextView
+                    android:padding="4dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="Exam Section"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:id="@+id/ll_explore_links">
+
+                <ImageView
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_insert_link_24"
+                    android:tint="@color/black"
+                    android:layout_width="?android:listPreferredItemHeightSmall"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+                <TextView
+                    android:padding="4dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="Links"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:id="@+id/ll_explore_services">
+
+                <ImageView
+                    android:padding="4dp"
+                    android:src="@drawable/ic_services_black_24dp"
+                    android:tint="@color/black"
+                    android:layout_width="?android:listPreferredItemHeightSmall"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+                <TextView
+                    android:padding="4dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="Services"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:listPreferredItemHeightSmall" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

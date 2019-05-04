@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_margin="4dp"
+    android:padding="2dp"
+    android:id="@+id/card_club_root"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        app:cardCornerRadius="34dp"
+        android:layout_marginStart="8dp"
+        app:cardBackgroundColor="@color/very_light_grey"
+        app:cardElevation="0dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/club_image"
+            android:src="@drawable/ic_website_black_24dp"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/club_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="22sp"
+            tools:text="text" />
+
+        <TextView
+            android:id="@+id/club_bio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:textColor="@color/dark_gray"
+            android:textSize="14sp"
+            tools:text="text" />
+
+    </LinearLayout>
+
+</LinearLayout>
