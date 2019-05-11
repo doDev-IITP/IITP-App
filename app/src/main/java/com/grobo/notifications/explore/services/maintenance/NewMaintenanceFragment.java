@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.services;
+package com.grobo.notifications.explore.services.maintenance;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,14 +20,13 @@ import androidx.fragment.app.Fragment;
 import com.grobo.notifications.R;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-public class MaintenanceFragment extends Fragment implements Spinner.OnItemSelectedListener{
+public class NewMaintenanceFragment extends Fragment implements Spinner.OnItemSelectedListener{
 
 
-    public MaintenanceFragment() {}
+    public NewMaintenanceFragment() {}
 
     private static final int SELECT_PICTURE = 1;
 
@@ -39,7 +38,7 @@ public class MaintenanceFragment extends Fragment implements Spinner.OnItemSelec
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_maintenance, container, false);
+        View view = inflater.inflate(R.layout.fragment_new_maintenance, container, false);
 
         final Spinner categorySpinner = view.findViewById(R.id.category_spinner);
         List<String> spinnerItems = Arrays.asList(getResources().getStringArray(R.array.maintenance_list_spinner));

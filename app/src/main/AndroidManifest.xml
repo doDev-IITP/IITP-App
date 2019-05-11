@@ -17,8 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".explore.services.lostandfound.LostAndFoundActivity"
+        <activity android:name=".explore.services.maintenance.MaintenanceActivity"></activity>
+        <activity
+            android:name=".explore.services.lostandfound.LostAndFoundActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity">
             <meta-data
@@ -29,7 +30,7 @@
             android:name=".account.ProfileActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".account.LoginActivity"
             android:launchMode="singleTop"

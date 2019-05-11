@@ -47,6 +47,8 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp:3.12.1"
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.12.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+
 
     // Room components
     implementation "android.arch.persistence.room:runtime:1.1.1"

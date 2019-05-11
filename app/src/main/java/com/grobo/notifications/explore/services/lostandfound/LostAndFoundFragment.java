@@ -12,11 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grobo.notifications.R;
 
-public class LostAndFoundFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
 
+public class LostAndFoundFragment extends Fragment {
 
     public LostAndFoundFragment() {}
 
+    private LostAndFoundRecyclerAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,11 +29,22 @@ public class LostAndFoundFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.lost_found_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        LostAndFoundRecyclerAdapter adapter = new LostAndFoundRecyclerAdapter();
+        adapter = new LostAndFoundRecyclerAdapter(getContext(), (LostAndFoundRecyclerAdapter.OnItemSelectedListener) getActivity());
         recyclerView.setAdapter(adapter);
+
+        populateRecycler();
 
         return view;
     }
+
+    private void populateRecycler() {
+
+        List<LostAndFoundItem> items = new ArrayList<>();
+
+        adapter.setItemList(items);
+
+    }
+
 
 }
 

@@ -112,9 +112,12 @@ public class MessFragment extends Fragment {
 
                 try {
                     Bitmap bitmap = task.execute(BASE_URL + "qrcode/qr/" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString(ROLL_NUMBER, null).toUpperCase() + ".png").get();
-                    boolean ret = utils.saveImage(getContext(), bitmap, "qr", "qr.png");
-                    if (ret){
-                        prefs.edit().putBoolean(IS_QR_DOWNLOADED, true).apply();
+                    if (bitmap != null) {
+                        boolean ret = utils.saveImage(getContext(), bitmap, "qr", "qr.png");
+
+                        if (ret){
+                            prefs.edit().putBoolean(IS_QR_DOWNLOADED, true).apply();
+                        }
                     }
 
                 } catch (ExecutionException e) {

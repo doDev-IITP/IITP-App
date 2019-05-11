@@ -69,13 +69,6 @@ public class NetworkFragment extends Fragment {
 
 
     public interface LoginCallback {
-        interface Progress {
-            int ERROR = -1;
-            int CONNECT_SUCCESS = 0;
-            int LOGIN_SUCCESS = 1;
-            int PROFILE_SUCCESS = 2;
-        }
-
         void onLoginSuccess(String response);
     }
 
