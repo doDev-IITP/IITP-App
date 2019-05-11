@@ -83,7 +83,7 @@ public class DayFragment extends Fragment {
         ttListView = rootView.findViewById(R.id.tt_list_view);
 
         timetableItems = new ArrayList<>();
-        ttAdapter = new TimetableAdapter(getActivity(), R.layout.timetable_item, timetableItems, getArguments().getString("size"));
+        ttAdapter = new TimetableAdapter(getActivity(), R.layout.card_timetable, timetableItems, getArguments().getString("size"));
         ttListView.setAdapter(ttAdapter);
 
         new AsyncTask<String, Void, List<TimetableItem>>(){

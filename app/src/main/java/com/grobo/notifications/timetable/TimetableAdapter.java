@@ -27,7 +27,7 @@ public class TimetableAdapter extends ArrayAdapter<TimetableItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.timetable_item, parent, false);
+            convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.card_timetable, parent, false);
         }
 
         TextView timeTextView = (TextView) convertView.findViewById(R.id.tt_time_view);

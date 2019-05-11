@@ -1,6 +1,7 @@
 package com.grobo.notifications.explore.services;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
-import com.grobo.notifications.explore.services.lostandfound.LostAndFoundFragment;
+import com.grobo.notifications.explore.services.lostandfound.LostAndFoundActivity;
+import com.grobo.notifications.explore.services.maintenance.NewMaintenanceFragment;
 
 public class ServicesFragment extends Fragment implements View.OnClickListener {
 
@@ -44,11 +46,11 @@ public class ServicesFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.maintenance_cv:
-                transactFragment(new MaintenanceFragment());
+                transactFragment(new NewMaintenanceFragment());
                 break;
 
             case R.id.lost_found_cv:
-                transactFragment(new LostAndFoundFragment());
+                startActivity(new Intent(getActivity(), LostAndFoundActivity.class));
                 break;
 
         }

@@ -33,7 +33,7 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
     @NonNull
     @Override
     public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_schedule, parent, false);
 
         return new FeedViewHolder(view);
     }
