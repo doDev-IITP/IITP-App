@@ -3,8 +3,12 @@ package com.grobo.notifications.explore.services.maintenance;
 public class MaintenanceItem {
 
     private int id;
-    private String category;
-    private String problem;
+    private String category;      /*<item>Carpenter</item>
+                                    <item>Water Cooler</item>
+                                    <item>Pest Control</item>
+                                    <item>Washroom problem</item>
+                                    <item>Cleaning</item> */
+    private String problem;     //description of problem
     private String imageUrl;
     private String status;
 

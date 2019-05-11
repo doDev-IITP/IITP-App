@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
 
-public class XPortal extends AppCompatActivity {
+public class XPortal extends AppCompatActivity implements XPortalFragment.OnPORSelectedListener {
 
     FragmentManager manager;
     Fragment activeFragment;
@@ -48,5 +48,12 @@ public class XPortal extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout_admin, newFragment);
         fragmentTransaction.addToBackStack("later_fragment");
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onPORSelected(String PORId) {
+        Fragment current = manager.findFragmentById(R.id.frame_layout_admin);
+        Fragment next = new CoordinatorFragment();
+        showFragmentWithTransition(current, next);
     }
 }
