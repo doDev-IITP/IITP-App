@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.transition.TransitionInflater;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,28 +19,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
-import com.grobo.notifications.database.AppDatabase;
+import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.explore.ExploreFragment;
 import com.grobo.notifications.explore.clubs.ClubDetailsFragment;
 import com.grobo.notifications.explore.clubs.ClubsRecyclerAdapter;
-import com.grobo.notifications.feed.FeedDao;
 import com.grobo.notifications.feed.FeedDetailFragment;
 import com.grobo.notifications.feed.FeedFragment;
-import com.grobo.notifications.feed.FeedItem;
 import com.grobo.notifications.feed.FeedRecyclerAdapter;
 import com.grobo.notifications.notifications.NotificationsFragment;
 import com.grobo.notifications.setting.SettingFragment;
 
+import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
@@ -87,11 +78,25 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    //TODO: remove the exclamation after implementing PORs
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (!prefs.getBoolean(IS_ADMIN, false)) {
+            MenuItem menuItem = menu.findItem(R.id.action_admin);
+            menuItem.setVisible(true);
+        }
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_profile) {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            return true;
+        } else if (id == R.id.action_admin) {
+            startActivity(new Intent(MainActivity.this, XPortal.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
