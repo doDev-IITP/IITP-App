@@ -11,9 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grobo.notifications.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MaintenanceFragment extends Fragment {
 
     public MaintenanceFragment() {}
+
+    private MaintenanceRecyclerAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -23,10 +28,20 @@ public class MaintenanceFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.maintenance_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        MaintenanceRecyclerAdapter adapter = new MaintenanceRecyclerAdapter();
+        adapter = new MaintenanceRecyclerAdapter(getContext(), (MaintenanceRecyclerAdapter.OnItemSelectedListener) getActivity());
         recyclerView.setAdapter(adapter);
 
+        populateRecycler();
+
         return view;
+    }
+
+    private void populateRecycler() {
+
+        List<MaintenanceItem> items = new ArrayList<>();
+
+        adapter.setItemList(items);
+
     }
 
 }
