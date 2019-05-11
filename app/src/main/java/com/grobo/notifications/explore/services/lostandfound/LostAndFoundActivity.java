@@ -16,11 +16,14 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
 
     FloatingActionButton fab;
     FragmentManager manager;
+    Fragment activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lost_and_found);
+
+        getSupportActionBar().setTitle("Lost and Found");
 
         manager = getSupportFragmentManager();
 
@@ -59,6 +62,24 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
         fragmentTransaction.replace(R.id.frame_lost_found, newFragment);
         fragmentTransaction.addToBackStack("later_fragment");
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        activeFragment = fragment;
+        if (fragment instanceof NewLostAndFound){
+            fab.hide();
+            activeFragment = fragment;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (activeFragment instanceof NewLostAndFound){
+            if (fab.isOrWillBeHidden()) fab.show();
+        }
+        super.onBackPressed();
     }
 
     @Override

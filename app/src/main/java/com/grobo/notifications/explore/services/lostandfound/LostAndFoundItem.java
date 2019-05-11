@@ -7,14 +7,14 @@ public class LostAndFoundItem {
     public static final int ITEM_RECOVERED = 3;
 
     private int id;
-    private int lostStatus;
+    private int lostStatus;      //can take 1,2 and 3 from above
     private String name;
-    private String place;
+    private String place;       //where lost/found
     private String time;
-    private String date;
+    private String date;        //when lost/found
     private String description;
-    private String contact;
-    private String address;
+    private String contact;     //of person who is adding this
+    private String address;     //where item can be recovered
 
     public int getLostStatus() {
         return lostStatus;

@@ -2,9 +2,11 @@ package com.grobo.notifications.explore.services.maintenance;
 
 public class MaintenanceItem {
 
+    private int id;
     private String category;
     private String problem;
     private String imageUrl;
+    private String status;
 
     public String getImageUrl() {
         return imageUrl;
@@ -30,4 +32,19 @@ public class MaintenanceItem {
         this.problem = problem;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

@@ -1,6 +1,5 @@
 package com.grobo.notifications.explore.services.lostandfound;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,4 +48,3 @@ public class LostAndFoundFragment extends Fragment {
 }
 
 //TODO: get data from server about all lost and found activities and display in recycler view, take reference from clubs fragment and clubs recycler view
-//TODO: implement fab to launch new Lost and found fragment using transact fragment
