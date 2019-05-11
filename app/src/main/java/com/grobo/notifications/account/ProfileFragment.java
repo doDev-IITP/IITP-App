@@ -16,10 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.R;
+import com.grobo.notifications.main.MainActivity;
 
 import static com.grobo.notifications.utils.Constants.BASE_URL;
+import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.PHONE_NUMBER;
@@ -31,7 +32,7 @@ public class ProfileFragment extends Fragment {
 
     public ProfileFragment() {}
 
-    SharedPreferences prefs;
+    private SharedPreferences prefs;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class ProfileFragment extends Fragment {
                 .putString(PHONE_NUMBER, "")
                 .putString("jsonString", "")
                 .putBoolean(IS_QR_DOWNLOADED, false)
+                .putBoolean(IS_ADMIN, false)
                 .apply();
 
         MainActivity.mainActivityRef.finish();

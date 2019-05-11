@@ -17,7 +17,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".explore.services.maintenance.MaintenanceActivity"></activity>
+
+        <activity android:name=".admin.XPortal"
+            android:launchMode="singleTop"
+            android:parentActivityName=".main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".main.MainActivity" />
+        </activity>
+        <activity android:name=".explore.services.maintenance.MaintenanceActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".main.MainActivity" />
+        </activity>
         <activity
             android:name=".explore.services.lostandfound.LostAndFoundActivity"
             android:launchMode="singleTop"

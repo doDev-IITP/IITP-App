@@ -16,6 +16,7 @@ public class Constants {
     public static final String PHONE_NUMBER = "phone_number";
     public static final String USER_YEAR = "user_year";
     public static final String USER_BRANCH = "user_branch";
+    public static final String IS_ADMIN = "is_admin";
 
     public static final String LOGIN_STATUS = "login_status";
 
