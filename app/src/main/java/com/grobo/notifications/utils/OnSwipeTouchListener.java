@@ -1,74 +1,98 @@
 package com.grobo.notifications.utils;
-
 import android.content.Context;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.MotionEvent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+
 import android.view.View;
-import android.view.View.OnTouchListener;
 
-public class OnSwipeTouchListener implements OnTouchListener {
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
-    private final GestureDetector gestureDetector;
+import com.grobo.notifications.R;
 
-    public OnSwipeTouchListener(Context ctx) {
-        gestureDetector = new GestureDetector(ctx, new GestureListener());
+abstract public class OnSwipeTouchListener extends ItemTouchHelper.Callback {
+
+    Context mContext;
+    private Paint mClearPaint;
+    private ColorDrawable mBackground;
+    private int backgroundColor;
+    private Drawable deleteDrawable;
+    private int intrinsicWidth;
+    private int intrinsicHeight;
+
+
+    public OnSwipeTouchListener(Context context) {
+        mContext = context;
+        mBackground = new ColorDrawable();
+        backgroundColor = Color.parseColor("#b80f0a");
+        mClearPaint = new Paint();
+        mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        deleteDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_delete_black_24dp);
+        intrinsicWidth = deleteDrawable.getIntrinsicWidth();
+        intrinsicHeight = deleteDrawable.getIntrinsicHeight();
+
+
+    }
+
+
+    @Override
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        return makeMovementFlags(1, ItemTouchHelper.LEFT);
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+        return false;
     }
 
-    private final class GestureListener extends SimpleOnGestureListener {
+    @Override
+    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
-        private static final int SWIPE_THRESHOLD = 100;
-        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+        View itemView = viewHolder.itemView;
+        int itemHeight = itemView.getHeight();
 
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
+        boolean isCancelled = dX == 0 && !isCurrentlyActive;
+
+        if (isCancelled) {
+            clearCanvas(c, itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            return;
         }
 
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            boolean result = false;
-            try {
-                float diffY = e2.getY() - e1.getY();
-                float diffX = e2.getX() - e1.getX();
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffX > 0) {
-                            onSwipeRight();
-                        } else {
-                            onSwipeLeft();
-                        }
-                        result = true;
-                    }
-                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffY > 0) {
-                        onSwipeBottom();
-                    } else {
-                        onSwipeTop();
-                    }
-                    result = true;
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-            return result;
-        }
+        mBackground.setColor(backgroundColor);
+        mBackground.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+        mBackground.draw(c);
+
+        int deleteIconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+        int deleteIconMargin = (itemHeight - intrinsicHeight) / 2;
+        int deleteIconLeft = itemView.getRight() - deleteIconMargin - intrinsicWidth;
+        int deleteIconRight = itemView.getRight() - deleteIconMargin;
+        int deleteIconBottom = deleteIconTop + intrinsicHeight;
+
+
+        deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
+        deleteDrawable.draw(c);
+
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+
     }
 
-    public void onSwipeRight() {
+    private void clearCanvas(Canvas c, Float left, Float top, Float right, Float bottom) {
+        c.drawRect(left, top, right, bottom, mClearPaint);
+
     }
 
-    public void onSwipeLeft() {
-    }
-
-    public void onSwipeTop() {
-    }
-
-    public void onSwipeBottom() {
+    @Override
+    public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+        return 0.7f;
     }
 }

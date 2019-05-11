@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
 import com.grobo.notifications.utils.DateTimeUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<NotificationsRecyclerAdapter.NotificationViewHolder> {
@@ -114,5 +115,15 @@ public class NotificationsRecyclerAdapter extends RecyclerView.Adapter<Notificat
         void onStarSelected(Notification notification);
         void onNotificationSelected(Notification notification);
     }
-
+    public void removeItem(int position) {
+        notificationList.remove(position);
+        notifyItemRemoved(position);
+    }
+    public void restoreItem(Notification item, int position) {
+        notificationList.add(position, item);
+        notifyItemInserted(position);
+    }
+    public List<Notification> getData() {
+        return  notificationList;
+    }
 }
