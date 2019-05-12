@@ -4,11 +4,12 @@ import androidx.room.TypeConverter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Converters {
 
     @TypeConverter
-    public String stringFromArray(ArrayList<String> strings) {
+    public String stringFromArray(List<String> strings) {
         if (strings != null) {
             StringBuilder string = new StringBuilder();
             for (String s : strings) string.append(s).append(",");
@@ -19,7 +20,7 @@ public class Converters {
     }
 
     @TypeConverter
-    public ArrayList<String> arrayFromString(String concatenatedStrings) {
+    public List<String> arrayFromString(String concatenatedStrings) {
 
         if (concatenatedStrings != null) {
             return new ArrayList<>(Arrays.asList(concatenatedStrings.split(",")));

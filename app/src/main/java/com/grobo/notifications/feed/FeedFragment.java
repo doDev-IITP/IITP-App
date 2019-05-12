@@ -2,6 +2,8 @@ package com.grobo.notifications.feed;
 
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +14,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grobo.notifications.R;
+import com.grobo.notifications.network.GetDataService;
+import com.grobo.notifications.network.RetrofitClientInstance;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 public class FeedFragment extends Fragment {
 
@@ -24,6 +35,7 @@ public class FeedFragment extends Fragment {
     }
 
     private FeedViewModel feedViewModel;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private FeedRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private View emptyView;
@@ -39,6 +51,14 @@ public class FeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_feed);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateData();
+            }
+        });
+
         emptyView = view.findViewById(R.id.feed_empty_view);
         recyclerView = view.findViewById(R.id.rv_feed_fragment);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -51,7 +71,47 @@ public class FeedFragment extends Fragment {
         return view;
     }
 
+    private void updateData() {
+
+        long latest = feedViewModel.getMaxEventId();
+        Log.e("maxid", String.valueOf(latest));
+
+        String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
+        Log.e("token", token);
+
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+
+        Call<FeedItem.FeedItemSuper> call = service.getNewFeed(token, latest);
+        call.enqueue(new Callback<FeedItem.FeedItemSuper>() {
+            @Override
+            public void onResponse(Call<FeedItem.FeedItemSuper> call, Response<FeedItem.FeedItemSuper> response) {
+
+                if (response.isSuccessful()) {
+                    List<FeedItem> allItems = response.body().getLatestFeeds();
+
+                    for (FeedItem newItem : allItems) {
+                        if (feedViewModel.getFeedCount(newItem.getEventId()) == 0)
+                            feedViewModel.insert(newItem);
+                        Log.e("feed", newItem.getEventName());
+                    }
+
+                }
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<FeedItem.FeedItemSuper> call, Throwable t) {
+                Log.e("failure", t.getMessage());
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+
+    }
+
     private void observeAll() {
+        feedViewModel.loadAllFeeds().removeObservers(FeedFragment.this);
         feedViewModel.loadAllFeeds().observe(FeedFragment.this, new Observer<List<FeedItem>>() {
             @Override
             public void onChanged(List<FeedItem> feedItems) {
@@ -66,4 +126,5 @@ public class FeedFragment extends Fragment {
             }
         });
     }
+
 }

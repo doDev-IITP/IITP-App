@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (!prefs.getBoolean(IS_ADMIN, false)) {
+        if (prefs.getBoolean(IS_ADMIN, false)) {
             MenuItem menuItem = menu.findItem(R.id.action_admin);
             menuItem.setVisible(true);
         }
@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressLint("StaticFieldLeak")
     public static Activity mainActivityRef;
-
 
     @Override
     public void onFeedSelected(int id, View view, int position) {

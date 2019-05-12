@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.grobo.notifications.R;
 import com.grobo.notifications.main.MainActivity;
 
@@ -25,7 +26,9 @@ import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.PHONE_NUMBER;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
+import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
+import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
 public class ProfileFragment extends Fragment {
@@ -73,6 +76,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private void logout(){
+
+        FirebaseMessaging fcm = FirebaseMessaging.getInstance();
+        fcm.unsubscribeFromTopic(prefs.getString(USER_BRANCH, "junk"));
+        fcm.unsubscribeFromTopic(prefs.getString(USER_YEAR, "junk"));
+        fcm.unsubscribeFromTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
+        fcm.unsubscribeFromTopic(prefs.getString(ROLL_NUMBER, "junk"));
+
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
                 .putString(WEBMAIL, "")
                 .putString(ROLL_NUMBER, "")
