@@ -10,22 +10,19 @@ import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class VPFragment extends Fragment {
 
 
-    public VPFragment() {
-        // Required empty public constructor
-    }
+    public VPFragment() {}
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_v, container, false);
+        View view = inflater.inflate(R.layout.fragment_vp, container, false);
+
+
+        return view;
     }
 
 }

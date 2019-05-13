@@ -30,4 +30,12 @@ public class FeedViewModel extends AndroidViewModel {
     FeedItem getFeedById(int id) {
         return feedRepository.getFeedById(id);
     }
+
+    int getFeedCount(long eventId) {
+        return feedRepository.getFeedCount(eventId);
+    }
+
+    long getMaxEventId() {
+        return feedRepository.getMaxEventId();
+    }
 }

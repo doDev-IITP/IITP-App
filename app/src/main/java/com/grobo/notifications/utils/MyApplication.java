@@ -14,7 +14,6 @@ import android.util.Log;
 
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -23,7 +22,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.grobo.notifications.R;
 import com.grobo.notifications.database.AppDatabase;
 import com.grobo.notifications.work.DeleteWorker;
-import com.grobo.notifications.work.FeedWorker;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -48,9 +46,8 @@ public class MyApplication extends Application {
         createNotificationChannel();
         subscribeFcmTopics();
 
-        scheduleTask();
-        scheduleUpdateTask();
-
+//        scheduleTask();
+        
         extractClub();
     }
 
@@ -78,20 +75,6 @@ public class MyApplication extends Application {
                 .build();
 
         WorkManager.getInstance().enqueueUniquePeriodicWork("delete_feed", ExistingPeriodicWorkPolicy.KEEP, deleteRequest);
-    }
-
-    private static void scheduleUpdateTask() {
-
-        Constraints constraints = new Constraints.Builder()
-                .setRequiresCharging(false)
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-        PeriodicWorkRequest updateRequest = new PeriodicWorkRequest.Builder(FeedWorker.class, 4, TimeUnit.HOURS)
-                .setConstraints(constraints)
-                .build();
-
-        WorkManager.getInstance().enqueueUniquePeriodicWork("update_schedule", ExistingPeriodicWorkPolicy.KEEP, updateRequest);
     }
 
     private void createNotificationChannel() {

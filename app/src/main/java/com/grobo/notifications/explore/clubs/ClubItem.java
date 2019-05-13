@@ -3,7 +3,7 @@ package com.grobo.notifications.explore.clubs;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "clubs")
 public class ClubItem {
@@ -13,12 +13,12 @@ public class ClubItem {
     private String name;
     private String bio;
     private String description;
-    private ArrayList<String> coordinators;
-    private ArrayList<String> subCoordinators;
+    private List<String> coordinators;
+    private List<String> subCoordinators;
     private String website;
     private boolean followed = false;
-    private ArrayList<String> events;
-    private ArrayList<String> pages;
+    private List<String> events;
+    private List<String> pages;
     private String image;
 
     public String getDescription() {
@@ -37,11 +37,7 @@ public class ClubItem {
         return id;
     }
 
-    public void setCoordinators(ArrayList<String> coordinators) {
-        this.coordinators = coordinators;
-    }
-
-    public ArrayList<String> getCoordinators() {
+    public List<String> getCoordinators() {
         return coordinators;
     }
 
@@ -53,15 +49,15 @@ public class ClubItem {
         return name;
     }
 
-    public ArrayList<String> getEvents() {
+    public List<String> getEvents() {
         return events;
     }
 
-    public ArrayList<String> getPages() {
+    public List<String> getPages() {
         return pages;
     }
 
-    public ArrayList<String> getSubCoordinators() {
+    public List<String> getSubCoordinators() {
         return subCoordinators;
     }
 
@@ -81,7 +77,7 @@ public class ClubItem {
         this.bio = bio;
     }
 
-    public void setEvents(ArrayList<String> events) {
+    public void setEvents(List<String> events) {
         this.events = events;
     }
 
@@ -89,11 +85,11 @@ public class ClubItem {
         this.followed = followed;
     }
 
-    public void setPages(ArrayList<String> pages) {
+    public void setPages(List<String> pages) {
         this.pages = pages;
     }
 
-    public void setSubCoordinators(ArrayList<String> subCoordinators) {
+    public void setSubCoordinators(List<String> subCoordinators) {
         this.subCoordinators = subCoordinators;
     }
 
@@ -107,5 +103,9 @@ public class ClubItem {
 
     public String getImage() {
         return image;
+    }
+
+    public void setCoordinators(List<String> coordinators) {
+        this.coordinators = coordinators;
     }
 }

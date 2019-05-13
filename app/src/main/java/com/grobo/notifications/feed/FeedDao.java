@@ -21,9 +21,6 @@ public interface FeedDao {
     @Query("select * from feed where id = :id")
     FeedItem loadFeedById(int id);
 
-    @Query("SELECT * FROM feed WHERE interested = 1 ORDER BY id DESC")
-    LiveData<List<FeedItem>> loadGoingEvents();
-
     @Insert(onConflict = REPLACE)
     void insertFeed(FeedItem feedItem);
 
@@ -39,7 +36,7 @@ public interface FeedDao {
     @Query("SELECT COUNT(*) FROM feed where eventId = :eventId")
     int feedCount(long eventId);
 
-    @Query("SELECT MAX(id) FROM feed;")
-    int getMaxId();
+    @Query("SELECT MAX(eventId) FROM feed")
+    long getMaxEventId();
     
 }

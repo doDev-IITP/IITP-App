@@ -1,69 +1,125 @@
 package com.grobo.notifications.database;
 
-import androidx.room.Ignore;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Person {
 
-    private String name;
-    private String id;
-    private String phone;
-    private String email;
-    private String image;
+    @SerializedName("token")
+    @Expose
+    private String token;
+    @SerializedName("user")
+    @Expose
+    private User user;
 
-    @Ignore
-    public Person(){}
-
-    @Ignore
-    public Person(String name, String image){
-        this.name = name;
-        this.image = image;
+    public String getToken() {
+        return token;
     }
 
-    public Person(String name, String id, String phone, String email, String image){
-        this.name = name;
-        this.phone = phone;
-        this.id = id;
-        this.email = email;
-        this.image = image;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public String getPhone() {
-        return phone;
+    public User getUser() {
+        return user;
     }
 
-    public String getEmail() {
-        return email;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getId() {
-        return id;
-    }
 
-    public String getName() {
-        return name;
-    }
+    public class User {
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+        @SerializedName("por")
+        @Expose
+        private List<String> por = null;
+        @SerializedName("email")
+        @Expose
+        private String email;
+        @SerializedName("name")
+        @Expose
+        private String name;
+        @SerializedName("instituteId")
+        @Expose
+        private String instituteId;
+        @SerializedName("batch")
+        @Expose
+        private String batch;
+        @SerializedName("branch")
+        @Expose
+        private String branch;
+        @SerializedName("rollno")
+        @Expose
+        private String rollno;
+        @SerializedName("phone")
+        @Expose
+        private String phone;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+        public List<String> getPor() {
+            return por;
+        }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+        public void setPor(List<String> por) {
+            this.por = por;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public String getEmail() {
+            return email;
+        }
 
-    public String getImage() {
-        return image;
-    }
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
-    public void setImage(String image) {
-        this.image = image;
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getInstituteId() {
+            return instituteId;
+        }
+
+        public void setInstituteId(String instituteId) {
+            this.instituteId = instituteId;
+        }
+
+        public String getBatch() {
+            return batch;
+        }
+
+        public void setBatch(String batch) {
+            this.batch = batch;
+        }
+
+        public String getBranch() {
+            return branch;
+        }
+
+        public void setBranch(String branch) {
+            this.branch = branch;
+        }
+
+        public String getRollno() {
+            return rollno;
+        }
+
+        public void setRollno(String rollno) {
+            this.rollno = rollno;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
     }
 }

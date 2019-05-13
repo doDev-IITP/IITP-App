@@ -2,211 +2,93 @@ package com.grobo.notifications.account;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.transition.TransitionInflater;
+import android.util.ArrayMap;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.R;
-import com.grobo.notifications.utils.utils;
+import com.grobo.notifications.database.Person;
+import com.grobo.notifications.main.MainActivity;
+import com.grobo.notifications.network.GetDataService;
+import com.grobo.notifications.network.RetrofitClientInstance;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.json.JSONObject;
 
-import static com.grobo.notifications.utils.Constants.ALTERNATE_EMAIL;
-import static com.grobo.notifications.utils.Constants.LOGIN_FAILED;
+import java.util.Map;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.PHONE_NUMBER;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
-import static com.grobo.notifications.utils.Constants.USER_NOT_REGISTERED;
+import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
-public class LoginActivity extends FragmentActivity implements NetworkFragment.LoginCallback {
+public class LoginActivity extends FragmentActivity implements LoginFragment.OnSignInInteractionListener, SignUpFragment.OnSignUpInteractionListener {
 
 
-    private Button loginButton;
-    private EditText emailInput;
-    private EditText passwordInput;
-    private ProgressDialog progressDialog;
-
-    private String email;
-    private String password;
-    private NetworkFragment networkFragment;
-
+    private FragmentManager manager;
     private SharedPreferences prefs;
+    private ProgressDialog progressDialog;
+    GetDataService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        manager = getSupportFragmentManager();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        emailInput = findViewById(R.id.login_input_webmail);
-        passwordInput = findViewById(R.id.login_input_password);
-        networkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
 
         getWindow().setStatusBarColor(Color.parseColor("#8548a3"));
 
-        loginButton = findViewById(R.id.login_login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (utils.getWifiInfo(LoginActivity.this)) {
-                login();
-                }
-            }
-        });
-
         checkForPermission();
-    }
+        service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
 
-    private void login() {
-        if (!validateInput()) {
-            Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        loginButton.setEnabled(false);
+        setBaseFragment(savedInstanceState);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Logging In...");
-        progressDialog.show();
-        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                loginButton.setEnabled(true);
-            }
-        });
-
-        if (networkFragment == null) {
-            networkFragment = NetworkFragment.getInstance(getSupportFragmentManager());
-        }
-        networkFragment.login(email, password);
+        progressDialog.setCanceledOnTouchOutside(false);
     }
 
-    private boolean validateInput() {
-        boolean valid = true;
+    private void setBaseFragment(Bundle savedInstanceState) {
+        if (findViewById(R.id.frame_account) != null) {
 
-        email = emailInput.getText().toString();
-        password = passwordInput.getText().toString();
-
-        if (email.isEmpty() || (email.contains("@") && !email.contains("@iitp.ac.in"))) {
-            emailInput.setError("Please enter a valid username");
-            valid = false;
-        } else {
-            emailInput.setError(null);
-            if (email.contains("@iitp.ac.in")) {
-                String[] splitResult = email.split("@");
-                Log.e("mylogmessage", splitResult[0]);
-                email = splitResult[0];
-            }
-        }
-
-        if (password.isEmpty()) {
-            passwordInput.setError("Please enter a password");
-            valid = false;
-        } else {
-            passwordInput.setError(null);
-        }
-        return valid;
-    }
-
-    @Override
-    public void onLoginSuccess(String response) {
-        if (response.equals(LOGIN_FAILED) || response.equals(USER_NOT_REGISTERED)){
-            Toast.makeText(this, response, Toast.LENGTH_LONG).show();
-        } else {
-            parseLoginData(response);
-            Toast.makeText(this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-            finish();
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        }
-        progressDialog.dismiss();
-    }
-
-    private void parseLoginData(String response) {
-        String rollNumber;
-        String name;
-        String alternateEmail;
-        String phoneNumber;
-
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-
-        if (response.contains("<a href=\"logout.php\">LOGOUT</a>")) {
-
-            Pattern p = Pattern.compile("<input type=\"text\" name=\"rollno\" pattern=\"\\[A-Za-z0-9]\\+\" required value=\"(.*?)\">\n");
-            Matcher m = p.matcher(response);
-            if (m.find()) {
-                rollNumber = m.group(1);
-                Log.e("mylog", rollNumber);
-                prefsEditor.putString(ROLL_NUMBER, rollNumber);
-
-                StringBuilder alpha = new StringBuilder();
-                StringBuilder beta = new StringBuilder();
-                for (int i = 0; i < rollNumber.length()-2; i++) {
-                    if(Character.isAlphabetic(rollNumber.charAt(i)))
-                        alpha.append(rollNumber.charAt(i));
-                    else
-                        beta.append(rollNumber.charAt(i));
-                }
-                prefsEditor.putString(USER_YEAR, beta.toString());
-                prefsEditor.putString(USER_BRANCH, alpha.toString());
+            if (savedInstanceState != null) {
+                return;
             }
 
-            p = Pattern.compile("<input type=\"text\" name=\"name\" pattern=\"\\[A-Za-z\\\\s]\\+\" required value=\"(.*?)\">");
-            m = p.matcher(response);
-            if (m.find()) {
-                name = m.group(1);
-                Log.e("mylog", name);
-                prefsEditor.putString(USER_NAME, name);
-            }
-
-            p = Pattern.compile("<input type=\"email\" name=\"aemail\" required value=\"(.*?)\">");
-            m = p.matcher(response);
-            if (m.find()) {
-                alternateEmail = m.group(1);
-                Log.e("mylog", alternateEmail);
-                prefsEditor.putString(ALTERNATE_EMAIL, alternateEmail);
-            }
-
-            p = Pattern.compile("required title=\"Please enter Only 10 digits. valid Mobile no., No 0/\\+91\" value=\"(.*?)\">");
-            m = p.matcher(response);
-            if (m.find()) {
-                phoneNumber = m.group(1);
-                Log.e("mylog", phoneNumber);
-                prefsEditor.putString(PHONE_NUMBER, phoneNumber);
-            }
-
-            prefsEditor.putString(WEBMAIL, email + "@iitp.ac.in");
-            prefsEditor.putBoolean(LOGIN_STATUS, true);
-
-            prefsEditor.apply();
-
-        } else {
-            Toast.makeText(this, "Failed parsing profile data", Toast.LENGTH_SHORT).show();
+            LoginFragment firstFragment = new LoginFragment();
+            firstFragment.setArguments(getIntent().getExtras());
+            manager.beginTransaction()
+                    .add(R.id.frame_account, firstFragment).commit();
         }
     }
 
-    private void checkForPermission(){
+    private void checkForPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -217,14 +99,125 @@ public class LoginActivity extends FragmentActivity implements NetworkFragment.L
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case 1234: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-                }
+        if (requestCode == 1234) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onLoginSelected(String email, String password) {
+        login(email, password);
+    }
+
+    private void login(String email, String password) {
+
+        progressDialog.setMessage("Logging In...");
+        progressDialog.show();
+
+        Map<String, Object> jsonParams = new ArrayMap<>();
+        jsonParams.put("email", email);
+        jsonParams.put("password", password);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+
+        Call<Person> call = service.login(body);
+        call.enqueue(new Callback<Person>() {
+            @Override
+            public void onResponse(Call<Person> call, Response<Person> response) {
+                Person person = response.body();
+                Log.e("response", person.getUser().getEmail());
+                progressDialog.dismiss();
+                parseData(person);
+            }
+
+            @Override
+            public void onFailure(Call<Person> call, Throwable t) {
+                progressDialog.dismiss();
+                Log.e("responsebad", t.toString());
+            }
+        });
+    }
+
+    private void parseData(Person person) {
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+
+        prefsEditor.putString(USER_YEAR, person.getUser().getBatch());
+        prefsEditor.putString(USER_BRANCH, person.getUser().getBranch());
+        prefsEditor.putString(USER_NAME, person.getUser().getName());
+        prefsEditor.putString(WEBMAIL, person.getUser().getEmail());
+        prefsEditor.putString(ROLL_NUMBER, person.getUser().getInstituteId());
+        prefsEditor.putString(PHONE_NUMBER, person.getUser().getPhone());
+        prefsEditor.putString(USER_TOKEN, person.getToken());
+
+        prefsEditor.putBoolean(LOGIN_STATUS, true);
+        if (person.getUser().getPor().size() != 0) {
+            prefsEditor.putBoolean(IS_ADMIN, true);
+        }
+
+        prefsEditor.apply();
+
+        Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+        finish();
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+    }
+
+    @Override
+    public void onSignUpSelected(String email, String password) {
+
+        if (validateWithWebmail(email, password)) {
+            Fragment current = manager.findFragmentById(R.id.frame_account);
+
+            Fragment next = new SignUpFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("email", email);
+            bundle.putString("password", password);
+            next.setArguments(bundle);
+
+            current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_left));
+            next.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_right));
+
+            showFragmentWithTransition(next);
+        }
+    }
+
+    private void showFragmentWithTransition(Fragment newFragment) {
+
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_account, newFragment);
+        fragmentTransaction.addToBackStack("later_fragment");
+        fragmentTransaction.commit();
+    }
+
+    private boolean validateWithWebmail(String email, String password) {
+
+
+        return true;
+    }
+
+    @Override
+    public void onFinishSelected(Map<String, Object> jsonParams) {
+
+        progressDialog.setMessage("Signing Up");
+        progressDialog.show();
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+
+        Call<Person> call = service.register(body);
+        call.enqueue(new Callback<Person>() {
+            @Override
+            public void onResponse(Call<Person> call, Response<Person> response) {
+                Person person = response.body();
+                Log.e("response", person.getUser().getEmail());
+                progressDialog.dismiss();
+                parseData(person);
+            }
+
+            @Override
+            public void onFailure(Call<Person> call, Throwable t) {
+                progressDialog.dismiss();
+                Log.e("responsebad", t.toString());
+            }
+        });
     }
 }

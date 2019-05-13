@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 import com.grobo.notifications.database.AppDatabase;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class FeedRepository {
 
@@ -30,22 +29,39 @@ public class FeedRepository {
     }
 
     FeedItem getFeedById(int id) {
-
         loadFeedById task = new loadFeedById(feedDao);
         try {
             return task.execute(id).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    long getMaxEventId() {
+        maxEventIdTask task = new maxEventIdTask(feedDao);
+        try {
+            return task.execute().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    int getFeedCount(long eventId) {
+        feedCountTask task = new feedCountTask(feedDao);
+        try {
+            return task.execute(eventId).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+
     private static class insertAsyncTask extends AsyncTask<FeedItem, Void, Void> {
-
         private FeedDao mAsyncTaskDao;
-
         insertAsyncTask(FeedDao dao) {
             mAsyncTaskDao = dao;
         }
@@ -58,9 +74,7 @@ public class FeedRepository {
     }
 
     private static class loadFeedById extends AsyncTask<Integer, Void, FeedItem> {
-
         private FeedDao mAsyncTaskDao;
-
         loadFeedById(FeedDao dao) {
             mAsyncTaskDao = dao;
         }
@@ -69,6 +83,29 @@ public class FeedRepository {
         protected FeedItem doInBackground(Integer... params) {
             return mAsyncTaskDao.loadFeedById(params[0]);
         }
+    }
 
+    private static class maxEventIdTask extends AsyncTask<Void, Void, Long> {
+        private FeedDao mAsyncTaskDao;
+        maxEventIdTask(FeedDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Long doInBackground(Void... params) {
+            return mAsyncTaskDao.getMaxEventId();
+        }
+    }
+
+    private static class feedCountTask extends AsyncTask<Long, Void, Integer> {
+        private FeedDao mAsyncTaskDao;
+        feedCountTask(FeedDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Integer doInBackground(Long... params) {
+            return mAsyncTaskDao.feedCount(params[0]);
+        }
     }
 }

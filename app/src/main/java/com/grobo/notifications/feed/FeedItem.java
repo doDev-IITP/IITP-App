@@ -1,10 +1,12 @@
 package com.grobo.notifications.feed;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import java.util.ArrayList;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 @Entity(tableName = "feed")
 public class FeedItem {
@@ -12,123 +14,147 @@ public class FeedItem {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    @SerializedName("eventId")
+    @Expose
     private long eventId;
-    private String eventName;
-    private String eventDescription;
-
+    @SerializedName("guests")
+    @Expose
+    private List<String> guests = null;
+    @SerializedName("coordinators")
+    @Expose
+    private List<String> coordinators = null;
+    @SerializedName("postLinks")
+    @Expose
+    private List<String> postLinks = null;
+    @SerializedName("feedPoster")
+    @Expose
+    private String feedPoster;
+    @SerializedName("eventDate")
+    @Expose
     private long eventDate;
+    @SerializedName("eventVenue")
+    @Expose
     private String eventVenue;
-
+    @SerializedName("eventName")
+    @Expose
+    private String eventName;
+    @SerializedName("eventDescription")
+    @Expose
+    private String eventDescription;
+    @SerializedName("eventImageUrl")
+    @Expose
     private String eventImageUrl;
+
     private boolean interested = false;
 
-    private ArrayList<String> coordinators;
-    private ArrayList<String> guests;
-    private ArrayList<String> postLinks;
-
-    @Ignore
-    public FeedItem() {
+    public void setFeedPoster(String feedPoster) {
+        this.feedPoster = feedPoster;
     }
 
-    public FeedItem(long eventId, String eventName, String eventDescription, long eventDate, String eventVenue, String eventImageUrl, boolean interested, ArrayList<String> coordinators, ArrayList<String> guests, ArrayList<String> postLinks) {
-        this.eventId = eventId;
-        this.eventName = eventName;
-        this.eventDescription = eventDescription;
-        this.eventDate = eventDate;
-        this.eventVenue = eventVenue;
-        this.eventImageUrl = eventImageUrl;
-        this.interested = interested;
-        this.coordinators = coordinators;
+    public String getFeedPoster() {
+        return feedPoster;
+    }
+
+    public void setGuests(List<String> guests) {
         this.guests = guests;
+    }
+
+    public void setPostLinks(List<String> postLinks) {
         this.postLinks = postLinks;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public long getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(long eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public void setEventId(long eventId) {
-        this.eventId = eventId;
-    }
-
-    public long getEventId() {
-        return eventId;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public String getEventName() {
-        return eventName;
+    public void setCoordinators(List<String> coordinators) {
+        this.coordinators = coordinators;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setEventVenue(String eventVenue) {
-        this.eventVenue = eventVenue;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setEventImageUrl(String eventImageUrl) {
-        this.eventImageUrl = eventImageUrl;
+    public long getEventId() {
+        return eventId;
     }
 
-    public String getEventVenue() {
-        return eventVenue;
-    }
-
-    public String getEventImageUrl() {
-        return eventImageUrl;
-    }
-
-    public ArrayList<String> getCoordinators() {
-        return coordinators;
-    }
-
-    public ArrayList<String> getGuests() {
-        return guests;
-    }
-
-    public String getEventDescription() {
-        return eventDescription;
-    }
-
-    public void setCoordinators(ArrayList<String> coordinators) {
-        this.coordinators = coordinators;
-    }
-
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
-    }
-
-    public void setGuests(ArrayList<String> guests) {
-        this.guests = guests;
-    }
-
-    public void setInterested(boolean interested) {
-        this.interested = interested;
+    public void setEventId(long eventId) {
+        this.eventId = eventId;
     }
 
     public boolean isInterested() {
         return interested;
     }
 
-    public ArrayList<String> getPostLinks() {
+    public void setInterested(boolean interested) {
+        this.interested = interested;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public String getEventImageUrl() {
+        return eventImageUrl;
+    }
+
+    public String getEventVenue() {
+        return eventVenue;
+    }
+
+    public void setEventImageUrl(String eventImageUrl) {
+        this.eventImageUrl = eventImageUrl;
+    }
+
+    public void setEventVenue(String eventVenue) {
+        this.eventVenue = eventVenue;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public void setEventDate(long eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public long getEventDate() {
+        return eventDate;
+    }
+
+    public List<String> getCoordinators() {
+        return coordinators;
+    }
+
+    public List<String> getGuests() {
+        return guests;
+    }
+
+    public List<String> getPostLinks() {
         return postLinks;
     }
 
-    public void setPostLinks(ArrayList<String> postLinks) {
-        this.postLinks = postLinks;
-    }
+    public class FeedItemSuper {
 
+        @SerializedName("latestFeeds")
+        @Expose
+        private List<FeedItem> latestFeeds = null;
+
+        public List<FeedItem> getLatestFeeds() {
+            return latestFeeds;
+        }
+
+        public void setLatestFeeds(List<FeedItem> latestFeeds) {
+            this.latestFeeds = latestFeeds;
+        }
+    }
 }
