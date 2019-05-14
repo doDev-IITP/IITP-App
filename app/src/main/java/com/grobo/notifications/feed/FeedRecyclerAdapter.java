@@ -115,6 +115,6 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
     }
 
     public interface OnFeedSelectedListener {
-        void onFeedSelected(int id, View view, int position);
+        void onFeedSelected(String id, View view, int position);
     }
 }

@@ -11,11 +11,10 @@ import androidx.core.app.NotificationManagerCompat;
 import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.R;
 import com.grobo.notifications.database.AppDatabase;
+import com.grobo.notifications.main.MainActivity;
 
-import java.sql.Timestamp;
 import java.util.concurrent.Future;
 
 public class FcmService extends FirebaseMessagingService {
@@ -27,36 +26,35 @@ public class FcmService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         Log.e("mylog", "FROM: " + remoteMessage.getFrom());
-
-        if (remoteMessage.getData().size() > 0) {
-            Log.d(LOG_TAG, "Message Data: " + remoteMessage.getData());
-        }
+        Log.d(LOG_TAG, "Message Data: " + remoteMessage.getData());
 
         notificationId = NotificationId.getID();
 
-        String imageUri = null;
-        String messageBody = remoteMessage.getData().get("body");
-        String messageTitle = remoteMessage.getData().get("title");
-        String messageDescription = remoteMessage.getData().get("description");
+        if (remoteMessage.getData().get("notify").equals("1")) {
 
-        Bitmap bitmap = null;
-        if (remoteMessage.getData().containsKey("image_uri")) {
-            imageUri = remoteMessage.getData().get("image_uri");
-            Future<Bitmap> futureTarget = Glide.with(this)
-                    .asBitmap()
-                    .load(imageUri)
-                    .error(R.drawable.baseline_dashboard_24)
-                    .submit();
-            try {
-                bitmap = futureTarget.get();
-            } catch (Exception e) {
-                e.printStackTrace();
+            String imageUri = null;
+            String messageBody = remoteMessage.getData().get("body");
+            String messageTitle = remoteMessage.getData().get("title");
+            String messageDescription = remoteMessage.getData().get("description");
+
+            Bitmap bitmap = null;
+            if (remoteMessage.getData().containsKey("image_uri")) {
+                imageUri = remoteMessage.getData().get("image_uri");
+                Future<Bitmap> futureTarget = Glide.with(this)
+                        .asBitmap()
+                        .load(imageUri)
+                        .error(R.drawable.baseline_dashboard_24)
+                        .submit();
+                try {
+                    bitmap = futureTarget.get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
+            addToDb(messageTitle, messageBody, messageDescription, imageUri);
+            sendNotification(messageTitle, messageBody, bitmap);
         }
-
-        addToDb(messageTitle, messageBody, messageDescription, imageUri);
-
-        sendNotification(messageTitle, messageBody, bitmap);
 
     }
 

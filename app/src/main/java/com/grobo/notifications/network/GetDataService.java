@@ -26,10 +26,10 @@ public interface GetDataService {
     Call<List<Person>> getAllUsers(@Header("Authorization") String credentials);
 
     @POST("/users/signIn")
-    Call<Person> login(@Body RequestBody params);
+    Call<Person> login(@Body RequestBody body);
 
     @POST("/users/signUp")
-    Call<Person> register(@Body RequestBody params);
+    Call<Person> register(@Body RequestBody body);
 
     @GET("/users/batch/{year}")
     Call<List<Person>> getUsersByBatch(@Header("Authorization") String credentials, @Path("year") String batch);
@@ -50,7 +50,7 @@ public interface GetDataService {
 
     @Headers("Content-Type: application/json")
     @POST("/feeds")
-    Call<FeedItem> postFeed (@Header("Authorization") String credentials, @Body String rawJsonString);
+    Call<Void> postFeed (@Header("Authorization") String credentials, @Body RequestBody body);
 
     @GET("/feeds/{id}")
     Call<FeedItem> getFeedByEventId (@Header("Authorization") String credentials, @Path("id") long eventId);
@@ -60,7 +60,7 @@ public interface GetDataService {
 
     //for new feed added
     @GET("/feeds/latestFeed/{timestamp}")
-    Call<FeedItem.FeedItemSuper> getNewFeed (@Header("Authorization") String credentials, @Path("timestamp") long eventId);
+    Call<FeedItem.FeedItemSuper1> getNewFeed (@Header("Authorization") String credentials, @Path("timestamp") long eventId);
 
     //for later events
     @GET("/feeds/timestamp/{timestamp}")

@@ -1,6 +1,7 @@
 package com.grobo.notifications.feed;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -76,7 +77,7 @@ public class FeedFragment extends Fragment {
         newFeedFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(getContext(), AddFeedActivity.class));
             }
         });
 
@@ -84,20 +85,20 @@ public class FeedFragment extends Fragment {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-               switch (checkedId) {
-                   case R.id.feed_radio_all:
-                       newFeedFab.hide();
-                       observeAll();
-                       break;
-                   case R.id.feed_radio_my:
-                       newFeedFab.show();
-                       observeMy(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(ROLL_NUMBER, "0"));
-                       break;
-                   case R.id.feed_radio_starred:
-                       newFeedFab.hide();
-                       observeStarred();
-                       break;
-               }
+                switch (checkedId) {
+                    case R.id.feed_radio_all:
+                        newFeedFab.hide();
+                        observeAll();
+                        break;
+                    case R.id.feed_radio_my:
+                        newFeedFab.show();
+                        observeMy(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(ROLL_NUMBER, "0"));
+                        break;
+                    case R.id.feed_radio_starred:
+                        newFeedFab.hide();
+                        observeStarred();
+                        break;
+                }
             }
         });
         radioGroup.check(R.id.feed_radio_all);
@@ -115,27 +116,26 @@ public class FeedFragment extends Fragment {
 
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
 
-        Call<FeedItem.FeedItemSuper> call = service.getNewFeed(token, latest);
-        call.enqueue(new Callback<FeedItem.FeedItemSuper>() {
+        Call<FeedItem.FeedItemSuper1> call = service.getNewFeed(token, latest);
+        call.enqueue(new Callback<FeedItem.FeedItemSuper1>() {
             @Override
-            public void onResponse(Call<FeedItem.FeedItemSuper> call, Response<FeedItem.FeedItemSuper> response) {
+            public void onResponse(Call<FeedItem.FeedItemSuper1> call, Response<FeedItem.FeedItemSuper1> response) {
 
                 if (response.isSuccessful()) {
                     List<FeedItem> allItems = response.body().getLatestFeeds();
 
                     for (FeedItem newItem : allItems) {
-                        if (feedViewModel.getFeedCount(newItem.getEventId()) == 0)
+                        if (feedViewModel.getFeedCount(newItem.getId()) == 0)
                             feedViewModel.insert(newItem);
                         Log.e("feed", newItem.getEventName());
                     }
 
                 }
-
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
-            public void onFailure(Call<FeedItem.FeedItemSuper> call, Throwable t) {
+            public void onFailure(Call<FeedItem.FeedItemSuper1> call, Throwable t) {
                 Log.e("failure", t.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -168,7 +168,7 @@ public class FeedFragment extends Fragment {
             public void onChanged(List<FeedItem> feedItems) {
 
                 List<FeedItem> newList = new ArrayList<>();
-                for (FeedItem n : feedItems){
+                for (FeedItem n : feedItems) {
                     if (n.getFeedPoster().equals(roll)) newList.add(n);
                 }
                 adapter.setFeedItemList(newList);
@@ -190,7 +190,7 @@ public class FeedFragment extends Fragment {
             public void onChanged(List<FeedItem> feedItems) {
 
                 List<FeedItem> newList = new ArrayList<>();
-                for (FeedItem n : feedItems){
+                for (FeedItem n : feedItems) {
                     if (n.isInterested()) newList.add(n);
                 }
                 adapter.setFeedItemList(newList);

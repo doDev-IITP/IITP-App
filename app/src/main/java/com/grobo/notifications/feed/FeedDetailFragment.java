@@ -51,15 +51,13 @@ public class FeedDetailFragment extends Fragment {
         interestedFab = view.findViewById(R.id.fab_event_detail_interested);
         TextView eventVenue = view.findViewById(R.id.tv_event_detail_venue);
         TextView eventTime = view.findViewById(R.id.tv_event_detail_time);
-        TextView guestTitle = view.findViewById(R.id.tv_event_detail_guest_title);
-        TextView guestName = view.findViewById(R.id.tv_event_detail_guest_name);
         TextView eventDescription = view.findViewById(R.id.tv_event_detail_description);
 
         Bundle b = getArguments();
         if (b != null) {
             String transitionName = b.getString("transitionName");
             eventPoster.setTransitionName(transitionName);
-            int id = b.getInt("feedId");
+            String id = b.getString("id");
 
             final FeedItem current = feedViewModel.getFeedById(id);
 
@@ -82,12 +80,6 @@ public class FeedDetailFragment extends Fragment {
 
             SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a");
             eventTime.setText(format.format(new Date(current.getEventDate())));
-
-            guestTitle.setText("Speakers:");
-
-            StringBuilder guests = new StringBuilder();
-            for (String s : current.getGuests()) guests.append(s).append("\n");
-            guestName.setText(guests.toString());
 
             if (current.isInterested()){
                 interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));

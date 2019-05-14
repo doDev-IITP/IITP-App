@@ -19,7 +19,7 @@ public interface FeedDao {
     FeedItem loadFeedByEventId(long eventId);
 
     @Query("select * from feed where id = :id")
-    FeedItem loadFeedById(int id);
+    FeedItem loadFeedById(String id);
 
     @Insert(onConflict = REPLACE)
     void insertFeed(FeedItem feedItem);
@@ -33,8 +33,8 @@ public interface FeedDao {
     @Query("delete from feed where eventId like :eventId")
     void deleteFeedByEventId(long eventId);
 
-    @Query("SELECT COUNT(*) FROM feed where eventId = :eventId")
-    int feedCount(long eventId);
+    @Query("SELECT COUNT(*) FROM feed where id = :id")
+    int feedCount(String id);
 
     @Query("SELECT MAX(eventId) FROM feed")
     long getMaxEventId();

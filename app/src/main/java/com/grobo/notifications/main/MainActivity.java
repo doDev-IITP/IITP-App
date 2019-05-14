@@ -123,13 +123,13 @@ public class MainActivity extends AppCompatActivity
     public static Activity mainActivityRef;
 
     @Override
-    public void onFeedSelected(int id, View view, int position) {
+    public void onFeedSelected(String id, View view, int position) {
         Fragment current = manager.findFragmentById(R.id.frame_layout_main);
 
         Fragment newFragment = new FeedDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putString("transitionName", "transition" + position);
-        bundle.putInt("feedId", id);
+        bundle.putString("id", id);
         newFragment.setArguments(bundle);
 
         showFragmentWithTransition(current, newFragment, view, "transition" + position);

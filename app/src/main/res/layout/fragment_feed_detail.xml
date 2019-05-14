@@ -71,6 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
+                android:layout_marginBottom="8dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -81,26 +82,10 @@
                 android:id="@+id/tv_event_detail_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:fontFamily="sans-serif"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"
                 tools:text="10:30 am - 11:15 am" />
-
-            <TextView
-                android:id="@+id/tv_event_detail_guest_title"
-                android:layout_width="319dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="50dp"
-                android:textColor="@color/dark_gray"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tv_event_detail_guest_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="50dp"
-                tools:text="@tools:sample/full_names" />
 
             <View
                 android:id="@+id/v_event_detail_guest_divider"
