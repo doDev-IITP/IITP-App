@@ -24,12 +24,14 @@
                 android:orientation="vertical"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="45dp"
                     app:cardElevation="8dp"
+                    app:strokeWidth="4dp"
+                    app:strokeColor="@color/light_blue"
                     app:cardCornerRadius="75dp">
 
                     <ImageView
@@ -39,7 +41,7 @@
                         android:layout_height="match_parent"
                         android:src="@drawable/profile_photo"/>
 
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:layout_width="wrap_content"

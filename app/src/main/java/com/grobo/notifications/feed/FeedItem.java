@@ -1,5 +1,6 @@
 package com.grobo.notifications.feed;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -11,15 +12,15 @@ import java.util.List;
 @Entity(tableName = "feed")
 public class FeedItem {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey()
+    @SerializedName("_id")
+    @Expose
+    @NonNull
+    private String id = "new_feed";
 
     @SerializedName("eventId")
     @Expose
     private long eventId;
-    @SerializedName("guests")
-    @Expose
-    private List<String> guests = null;
     @SerializedName("coordinators")
     @Expose
     private List<String> coordinators = null;
@@ -55,24 +56,12 @@ public class FeedItem {
         return feedPoster;
     }
 
-    public void setGuests(List<String> guests) {
-        this.guests = guests;
-    }
-
     public void setPostLinks(List<String> postLinks) {
         this.postLinks = postLinks;
     }
 
     public void setCoordinators(List<String> coordinators) {
         this.coordinators = coordinators;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public long getEventId() {
@@ -135,15 +124,19 @@ public class FeedItem {
         return coordinators;
     }
 
-    public List<String> getGuests() {
-        return guests;
-    }
-
     public List<String> getPostLinks() {
         return postLinks;
     }
 
-    public class FeedItemSuper {
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public class FeedItemSuper1 {
 
         @SerializedName("latestFeeds")
         @Expose

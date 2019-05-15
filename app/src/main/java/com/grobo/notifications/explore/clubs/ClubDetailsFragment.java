@@ -44,7 +44,6 @@ public class ClubDetailsFragment extends Fragment {
         FloatingActionButton followingFab = view.findViewById(R.id.fab_event_detail_interested);
         TextView bio = view.findViewById(R.id.tv_event_detail_time);
         ImageView website = view.findViewById(R.id.fab_website);
-        TextView guestName = view.findViewById(R.id.tv_event_detail_guest_name);
         TextView description = view.findViewById(R.id.tv_event_detail_description);
 
         Bundle b = getArguments();

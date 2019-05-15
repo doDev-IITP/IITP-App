@@ -28,7 +28,7 @@ public class FeedRepository {
         new insertAsyncTask(feedDao).execute(feedItem);
     }
 
-    FeedItem getFeedById(int id) {
+    FeedItem getFeedById(String id) {
         loadFeedById task = new loadFeedById(feedDao);
         try {
             return task.execute(id).get();
@@ -48,10 +48,10 @@ public class FeedRepository {
         return 0;
     }
 
-    int getFeedCount(long eventId) {
+    int getFeedCount(String id) {
         feedCountTask task = new feedCountTask(feedDao);
         try {
-            return task.execute(eventId).get();
+            return task.execute(id).get();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,14 +73,14 @@ public class FeedRepository {
         }
     }
 
-    private static class loadFeedById extends AsyncTask<Integer, Void, FeedItem> {
+    private static class loadFeedById extends AsyncTask<String, Void, FeedItem> {
         private FeedDao mAsyncTaskDao;
         loadFeedById(FeedDao dao) {
             mAsyncTaskDao = dao;
         }
 
         @Override
-        protected FeedItem doInBackground(Integer... params) {
+        protected FeedItem doInBackground(String... params) {
             return mAsyncTaskDao.loadFeedById(params[0]);
         }
     }
@@ -97,14 +97,14 @@ public class FeedRepository {
         }
     }
 
-    private static class feedCountTask extends AsyncTask<Long, Void, Integer> {
+    private static class feedCountTask extends AsyncTask<String, Void, Integer> {
         private FeedDao mAsyncTaskDao;
         feedCountTask(FeedDao dao) {
             mAsyncTaskDao = dao;
         }
 
         @Override
-        protected Integer doInBackground(Long... params) {
+        protected Integer doInBackground(String... params) {
             return mAsyncTaskDao.feedCount(params[0]);
         }
     }

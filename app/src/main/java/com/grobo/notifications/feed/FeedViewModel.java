@@ -27,12 +27,12 @@ public class FeedViewModel extends AndroidViewModel {
         feedRepository.insert(feedItem);
     }
 
-    FeedItem getFeedById(int id) {
+    FeedItem getFeedById(String id) {
         return feedRepository.getFeedById(id);
     }
 
-    int getFeedCount(long eventId) {
-        return feedRepository.getFeedCount(eventId);
+    int getFeedCount(String id) {
+        return feedRepository.getFeedCount(id);
     }
 
     long getMaxEventId() {

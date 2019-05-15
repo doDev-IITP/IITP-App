@@ -17,15 +17,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".admin.XPortal"
+        <activity android:name=".admin.AddFeedActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
         </activity>
-        <activity android:name=".explore.services.maintenance.MaintenanceActivity"
+        <activity
+            android:name=".admin.XPortal"
+            android:launchMode="singleTop">
+        </activity>
+        <activity
+            android:name=".explore.services.maintenance.MaintenanceActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity">
             <meta-data

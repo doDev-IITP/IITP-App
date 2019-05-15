@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
+            android:gravity="center"
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:orientation="horizontal">
@@ -22,22 +23,15 @@
             <RadioButton
                 android:id="@+id/feed_radio_all"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="32dp"
                 android:text="All Feed" />
-
-            <RadioButton
-                android:id="@+id/feed_radio_my"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:text="My Feed" />
 
             <RadioButton
                 android:id="@+id/feed_radio_starred"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="32dp"
                 android:text="Starred" />
 
         </RadioGroup>
@@ -56,17 +50,6 @@
             android:id="@+id/feed_empty_view"
             android:visibility="invisible"
             layout="@layout/item_empty_view" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_add_new_feed"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="16dp"
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_add_black_24dp"
-            android:tint="@color/white"/>
 
     </RelativeLayout>
 

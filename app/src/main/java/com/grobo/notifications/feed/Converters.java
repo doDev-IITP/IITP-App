@@ -9,18 +9,18 @@ import java.util.List;
 public class Converters {
 
     @TypeConverter
-    public String stringFromArray(List<String> strings) {
+    public static String stringFromArray(List<String> strings) {
         if (strings != null) {
             StringBuilder string = new StringBuilder();
             for (String s : strings) string.append(s).append(",");
 
             return string.toString();
         }
-        return null;
+        return "";
     }
 
     @TypeConverter
-    public List<String> arrayFromString(String concatenatedStrings) {
+    public static List<String> arrayFromString(String concatenatedStrings) {
 
         if (concatenatedStrings != null) {
             return new ArrayList<>(Arrays.asList(concatenatedStrings.split(",")));

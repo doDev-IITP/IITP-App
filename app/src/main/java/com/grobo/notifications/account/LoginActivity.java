@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.database.Person;
+import com.grobo.notifications.feed.Converters;
 import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.network.GetDataService;
 import com.grobo.notifications.network.RetrofitClientInstance;
@@ -42,11 +43,13 @@ import static com.grobo.notifications.utils.Constants.PHONE_NUMBER;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
+import static com.grobo.notifications.utils.Constants.USER_POR;
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
-public class LoginActivity extends FragmentActivity implements LoginFragment.OnSignInInteractionListener, SignUpFragment.OnSignUpInteractionListener {
+public class LoginActivity extends FragmentActivity implements LoginFragment.OnSignInInteractionListener,
+        SignUpFragment.OnSignUpInteractionListener {
 
 
     private FragmentManager manager;
@@ -125,10 +128,14 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         call.enqueue(new Callback<Person>() {
             @Override
             public void onResponse(Call<Person> call, Response<Person> response) {
-                Person person = response.body();
-                Log.e("response", person.getUser().getEmail());
+                if (response.isSuccessful()) {
+                    Person person = response.body();
+                    Log.e("response", person.getUser().getEmail());
+                    parseData(person);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT).show();
+                }
                 progressDialog.dismiss();
-                parseData(person);
             }
 
             @Override
@@ -142,19 +149,22 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     private void parseData(Person person) {
         SharedPreferences.Editor prefsEditor = prefs.edit();
 
-        prefsEditor.putString(USER_YEAR, person.getUser().getBatch());
-        prefsEditor.putString(USER_BRANCH, person.getUser().getBranch());
-        prefsEditor.putString(USER_NAME, person.getUser().getName());
-        prefsEditor.putString(WEBMAIL, person.getUser().getEmail());
-        prefsEditor.putString(ROLL_NUMBER, person.getUser().getInstituteId());
-        prefsEditor.putString(PHONE_NUMBER, person.getUser().getPhone());
-        prefsEditor.putString(USER_TOKEN, person.getToken());
+        prefsEditor.putString(USER_YEAR, person.getUser().getBatch())
+                .putString(USER_BRANCH, person.getUser().getBranch())
+                .putString(USER_NAME, person.getUser().getName())
+                .putString(WEBMAIL, person.getUser().getEmail())
+                .putString(ROLL_NUMBER, person.getUser().getInstituteId())
+                .putString(PHONE_NUMBER, person.getUser().getPhone())
+                .putString(USER_TOKEN, person.getToken());
 
-        prefsEditor.putBoolean(LOGIN_STATUS, true);
+        String porString = Converters.stringFromArray(person.getUser().getPor());
+        prefsEditor.putString(USER_POR, porString);
+
         if (person.getUser().getPor().size() != 0) {
             prefsEditor.putBoolean(IS_ADMIN, true);
         }
 
+        prefsEditor.putBoolean(LOGIN_STATUS, true);
         prefsEditor.apply();
 
         Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
@@ -207,10 +217,14 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         call.enqueue(new Callback<Person>() {
             @Override
             public void onResponse(Call<Person> call, Response<Person> response) {
-                Person person = response.body();
-                Log.e("response", person.getUser().getEmail());
+                if (response.isSuccessful()) {
+                    Person person = response.body();
+                    Log.e("response", person.getUser().getEmail());
+                    parseData(person);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT).show();
+                }
                 progressDialog.dismiss();
-                parseData(person);
             }
 
             @Override

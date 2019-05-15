@@ -47,14 +47,14 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (utils.getWifiInfo(getContext())) {
-                    if (!validateInput()) {
-                        Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
-                        return;
-                    } else {
-                        callback.onLoginSelected(email, password);
-                    }
+//                if (utils.getWifiInfo(getContext())) {
+                if (!validateInput()) {
+                    Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
+                    return;
+                } else {
+                    callback.onLoginSelected(email, password);
                 }
+//                }
             }
         });
 
@@ -113,6 +113,7 @@ public class LoginFragment extends Fragment {
 
     public interface OnSignInInteractionListener {
         void onSignUpSelected(String email, String password);
+
         void onLoginSelected(String email, String password);
     }
 }
