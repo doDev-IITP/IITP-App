@@ -45,7 +45,7 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
             final FeedItem current = feedItemList.get(position);
 
             holder.title.setText(current.getEventName());
-            holder.speaker.setText(current.getEventDescription());
+            holder.venue.setText(current.getEventVenue());
             Glide.with(context)
                     .load(current.getEventImageUrl())
                     .centerCrop()
@@ -91,7 +91,6 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
         TextView title;
         TextView time;
         TextView venue;
-        TextView speaker;
         LinearLayout rootLayout;
         LinearLayout sessionLayout;
         ImageView imageView;
@@ -102,7 +101,6 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
             time = itemView.findViewById(R.id.item_time_text);
             title = itemView.findViewById(R.id.item_title_text);
             venue = itemView.findViewById(R.id.item_room_text);
-            speaker = itemView.findViewById(R.id.item_speaker_name_text);
             rootLayout = itemView.findViewById(R.id.itemScheduleRootLayout);
             sessionLayout = itemView.findViewById(R.id.item_session_layout);
             imageView = itemView.findViewById(R.id.item_speaker_image);

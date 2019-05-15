@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".feed.AddFeedActivity">
+    tools:context=".admin.AddFeedActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,8 +28,7 @@
             android:hint="Enter title"
             android:inputType="text"
             android:text=""
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/black" />
 
         <TextView
             android:layout_width="match_parent"
@@ -47,12 +46,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:clickable="true"
-            android:focusable="false"
+            android:focusable="true"
             android:hint="Select event date"
             android:inputType="text"
             android:text=""
-            android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:textColor="@color/black" />
 
         <TextView
             android:layout_width="match_parent"
@@ -72,8 +70,7 @@
             android:hint="Enter venue"
             android:inputType="text"
             android:text=""
-            android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:textColor="@color/black" />
 
         <TextView
             android:layout_width="match_parent"
@@ -93,8 +90,7 @@
             android:hint="Enter image URL"
             android:inputType="textUri"
             android:text=""
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/black" />
 
         <TextView
             android:layout_width="match_parent"
@@ -116,8 +112,7 @@
             android:hint="Enter description (markdown supported)"
             android:inputType="textMultiLine"
             android:padding="4dp"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/black" />
 
         <TextView
             android:layout_width="match_parent"
@@ -137,8 +132,7 @@
             android:hint="Enter roll no of coordinators separated by comma"
             android:inputType="textMultiLine"
             android:text=""
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/black" />
 
         <TextView
             android:layout_width="match_parent"
@@ -158,8 +152,7 @@
             android:hint="Enter facebook post URL"
             android:inputType="textUri"
             android:text=""
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/add_feed_inst"
@@ -171,8 +164,7 @@
             android:hint="Enter instagram post URL"
             android:inputType="textUri"
             android:text=""
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/add_feed_twitter"
@@ -184,8 +176,7 @@
             android:hint="Enter twitter post URL"
             android:inputType="textUri"
             android:text=""
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/post_button"

@@ -1,5 +1,6 @@
-package com.grobo.notifications.feed;
+package com.grobo.notifications.admin;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.grobo.notifications.R;
@@ -78,7 +80,9 @@ public class AddFeedActivity extends AppCompatActivity {
             public void onClick(View v) {
                 long eventDate = dateHelper.getTimeInMillisFromCalender();
                 if (validateFeed(eventDate)) {
-                    post(eventDate);
+                    showUnsavedChangesDialog(eventDate);
+                } else {
+                    Toast.makeText(AddFeedActivity.this, "Please check the errors", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -93,6 +97,7 @@ public class AddFeedActivity extends AppCompatActivity {
         jsonParams.put("eventVenue", venue.getText().toString());
         jsonParams.put("eventName", title.getText().toString());
         jsonParams.put("eventDescription", description.getText().toString());
+        jsonParams.put("eventImageUrl", image.getText().toString());
 
         String[] pos = {fb.getText().toString(), inst.getText().toString(), twitter.getText().toString()};
         jsonParams.put("postLinks", pos);
@@ -158,5 +163,26 @@ public class AddFeedActivity extends AppCompatActivity {
         return valid;
     }
 
+    private void showUnsavedChangesDialog(final long eventDate) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirmation Dialog");
+        builder.setMessage("Posting this feed... Please confirm!!");
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                post(eventDate);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
 }

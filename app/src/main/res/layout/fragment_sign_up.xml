@@ -28,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="16dp"
                 android:gravity="center"
                 android:text="Click here to upload photo"
                 android:textColor="@color/black"
@@ -37,6 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/logo"
+                android:scaleType="centerCrop"
+                android:id="@+id/signup_profile_image"
                 android:src="@drawable/profile_photo" />
 
         </androidx.cardview.widget.CardView>

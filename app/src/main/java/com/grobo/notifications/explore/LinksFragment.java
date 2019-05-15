@@ -16,15 +16,9 @@ import com.grobo.notifications.R;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class LinksFragment extends Fragment {
 
-
-    public LinksFragment() {
-        // Required empty public constructor
-    }
+    public LinksFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

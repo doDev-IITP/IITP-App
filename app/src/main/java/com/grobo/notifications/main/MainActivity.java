@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    //TODO: remove the exclamation after implementing PORs
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);

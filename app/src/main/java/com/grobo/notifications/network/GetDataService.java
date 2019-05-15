@@ -41,49 +41,49 @@ public interface GetDataService {
     Call<List<Person>> getUsersByBatchNBranch(@Header("Authorization") String credentials, @Path("year") String batch, @Path("br") String branch);
 
     @GET("/users/instituteId/{id}")
-    Call<Person> getUserByInstituteId (@Header("Authorization") String credentials, @Path("id") String instituteId);
+    Call<Person> getUserByInstituteId(@Header("Authorization") String credentials, @Path("id") String instituteId);
 
 
     //feeds
     @GET("/feeds")
-    Call<List<FeedItem>> getAllFeeds (@Header("Authorization") String credentials);
+    Call<List<FeedItem>> getAllFeeds(@Header("Authorization") String credentials);
 
     @Headers("Content-Type: application/json")
     @POST("/feeds")
-    Call<Void> postFeed (@Header("Authorization") String credentials, @Body RequestBody body);
+    Call<Void> postFeed(@Header("Authorization") String credentials, @Body RequestBody body);
 
     @GET("/feeds/{id}")
-    Call<FeedItem> getFeedByEventId (@Header("Authorization") String credentials, @Path("id") long eventId);
+    Call<FeedItem> getFeedByEventId(@Header("Authorization") String credentials, @Path("id") long eventId);
 
     @DELETE("/feeds/{id}")
-    void deleteFeedByEventId (@Header("Authorization") String credentials, @Path("id") long eventId);
+    void deleteFeedByEventId(@Header("Authorization") String credentials, @Path("id") long eventId);
 
     //for new feed added
     @GET("/feeds/latestFeed/{timestamp}")
-    Call<FeedItem.FeedItemSuper1> getNewFeed (@Header("Authorization") String credentials, @Path("timestamp") long eventId);
+    Call<FeedItem.FeedItemSuper1> getNewFeed(@Header("Authorization") String credentials, @Path("timestamp") long eventId);
 
     //for later events
     @GET("/feeds/timestamp/{timestamp}")
-    Call<List<FeedItem>> getNewEvents (@Header("Authorization") String credentials, @Path("timestamp") long eventDate);
+    Call<List<FeedItem>> getNewEvents(@Header("Authorization") String credentials, @Path("timestamp") long eventDate);
 
 
     //lostnfounds
     @GET("/lostnfounds")
-    Call<List<LostAndFoundItem>> getAllLostNFound (@Header("Authorization") String credentials);
+    Call<List<LostAndFoundItem>> getAllLostNFound(@Header("Authorization") String credentials);
 
     @Headers("Content-Type: application/json")
     @POST("/feeds")
-    Call<LostAndFoundItem> postLostNFound (@Header("Authorization") String credentials, @Body String rawJsonString);
+    Call<LostAndFoundItem> postLostNFound(@Header("Authorization") String credentials, @Body String rawJsonString);
 
     @GET("/feeds/{id}")
-    Call<LostAndFoundItem> getLostNFoundById (@Header("Authorization") String credentials, @Path("id") int id);
+    Call<LostAndFoundItem> getLostNFoundById(@Header("Authorization") String credentials, @Path("id") int id);
 
     @DELETE("/feeds/{id}")
-    void deleteLostNFoundById (@Header("Authorization") String credentials, @Path("id") int id);
+    void deleteLostNFoundById(@Header("Authorization") String credentials, @Path("id") int id);
 
     @Headers("Content-Type: application/json")
     @PATCH("/feeds/{id}")
-    Call<LostAndFoundItem> patchLostNFound (@Header("Authorization") String credentials, @Body String rawJsonString, @Path("id") int id);
+    Call<LostAndFoundItem> patchLostNFound(@Header("Authorization") String credentials, @Body String rawJsonString, @Path("id") int id);
 
 
 }
@@ -94,7 +94,6 @@ public interface GetDataService {
 //    @GET("group/{id}/users")
 //    Call<List<User>> groupList(@Path("id") int groupId);
 //}
-
 
 
 //public interface ServiceApi
