@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.grobo.notifications.explore.clubs.ClubsFragment;
 import com.grobo.notifications.R;
+import com.grobo.notifications.explore.clubs.ClubsActivity;
 import com.grobo.notifications.explore.services.ServicesFragment;
 import com.grobo.notifications.timetable.TimetableActivity;
 
@@ -33,7 +33,7 @@ public class ExploreFragment extends Fragment {
         exploreClubs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                transactFragment(new ClubsFragment());
+                startActivity(new Intent(getContext(), ClubsActivity.class));
             }
         });
 

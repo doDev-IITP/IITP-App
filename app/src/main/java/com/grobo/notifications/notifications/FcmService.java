@@ -15,6 +15,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.database.AppDatabase;
 import com.grobo.notifications.main.MainActivity;
 
+import java.util.Map;
 import java.util.concurrent.Future;
 
 public class FcmService extends FirebaseMessagingService {
@@ -30,30 +31,34 @@ public class FcmService extends FirebaseMessagingService {
 
         notificationId = NotificationId.getID();
 
-        if (remoteMessage.getData().get("notify").equals("1")) {
+        Map<String, String> data = remoteMessage.getData();
 
-            String imageUri = null;
-            String messageBody = remoteMessage.getData().get("body");
-            String messageTitle = remoteMessage.getData().get("title");
-            String messageDescription = remoteMessage.getData().get("description");
+        if (data.containsKey("notify")) {
+            if (data.get("notify").equals("1")) {
 
-            Bitmap bitmap = null;
-            if (remoteMessage.getData().containsKey("image_uri")) {
-                imageUri = remoteMessage.getData().get("image_uri");
-                Future<Bitmap> futureTarget = Glide.with(this)
-                        .asBitmap()
-                        .load(imageUri)
-                        .error(R.drawable.baseline_dashboard_24)
-                        .submit();
-                try {
-                    bitmap = futureTarget.get();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                String imageUri = null;
+                String messageBody = remoteMessage.getData().get("body");
+                String messageTitle = remoteMessage.getData().get("title");
+                String messageDescription = remoteMessage.getData().get("description");
+
+                Bitmap bitmap = null;
+                if (data.containsKey("image_uri")) {
+                    imageUri = remoteMessage.getData().get("image_uri");
+                    Future<Bitmap> futureTarget = Glide.with(this)
+                            .asBitmap()
+                            .load(imageUri)
+                            .error(R.drawable.baseline_dashboard_24)
+                            .submit();
+                    try {
+                        bitmap = futureTarget.get();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            addToDb(messageTitle, messageBody, messageDescription, imageUri);
-            sendNotification(messageTitle, messageBody, bitmap);
+                addToDb(messageTitle, messageBody, messageDescription, imageUri);
+                sendNotification(messageTitle, messageBody, bitmap);
+            }
         }
 
     }

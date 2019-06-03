@@ -20,8 +20,6 @@ import androidx.fragment.app.Fragment;
 import com.grobo.notifications.R;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 public class NewMaintenanceFragment extends Fragment implements Spinner.OnItemSelectedListener{
 
@@ -41,8 +39,8 @@ public class NewMaintenanceFragment extends Fragment implements Spinner.OnItemSe
         View view = inflater.inflate(R.layout.fragment_new_maintenance, container, false);
 
         final Spinner categorySpinner = view.findViewById(R.id.category_spinner);
-        List<String> spinnerItems = Arrays.asList(getResources().getStringArray(R.array.maintenance_list_spinner));
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerItems);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.maintenance_list_spinner, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(spinnerAdapter);
         categorySpinner.setOnItemSelectedListener(this);
 

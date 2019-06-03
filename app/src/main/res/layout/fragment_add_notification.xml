@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".admin.AddNotificationFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Title :"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/add_notification_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Enter title"
+            android:inputType="text"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Body :"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/add_notification_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Enter Body"
+            android:inputType="text"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Image URL :"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/add_notification_image_uri"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Enter image URL"
+            android:inputType="textUri"
+            android:text=""
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Description :"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/add_notification_description"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_edittext"
+            android:gravity="top"
+            android:hint="Enter description"
+            android:inputType="textMultiLine"
+            android:padding="4dp"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/add_notification_send_button"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_style"
+            android:backgroundTint="@color/colorAccent"
+            android:padding="8dp"
+            android:text="Send"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</ScrollView>

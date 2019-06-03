@@ -38,7 +38,7 @@
                     android:layout_marginLeft="16dp"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:text="Clubs"
+                    android:text="Explore"
                     android:layout_width="match_parent"
                     android:layout_height="?android:listPreferredItemHeightSmall" />
 

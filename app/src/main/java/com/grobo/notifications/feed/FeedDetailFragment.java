@@ -3,6 +3,7 @@ package com.grobo.notifications.feed;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,24 +17,31 @@ import androidx.lifecycle.ViewModelProviders;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
+import com.grobo.notifications.admin.XPortal;
+import com.grobo.notifications.admin.feed.AddFeedActivity;
+import com.grobo.notifications.main.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import ru.noties.markwon.Markwon;
 import ru.noties.markwon.image.ImagesPlugin;
 
+import static com.grobo.notifications.utils.Constants.USER_POR;
+
 public class FeedDetailFragment extends Fragment {
 
-    public FeedDetailFragment() {}
+    public FeedDetailFragment() {
+    }
 
     public static FeedDetailFragment newInstance() {
-
         return new FeedDetailFragment();
     }
 
     private FeedViewModel feedViewModel;
     private FloatingActionButton interestedFab;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,53 +62,95 @@ public class FeedDetailFragment extends Fragment {
         TextView eventDescription = view.findViewById(R.id.tv_event_detail_description);
 
         Bundle b = getArguments();
-        if (b != null) {
-            String transitionName = b.getString("transitionName");
-            eventPoster.setTransitionName(transitionName);
-            String id = b.getString("id");
 
-            final FeedItem current = feedViewModel.getFeedById(id);
+        if (getContext() instanceof MainActivity || getContext() instanceof XPortal) {
 
-            Glide.with(this)
-                    .load(current.getEventImageUrl())
-                    .centerInside()
-                    .placeholder(R.drawable.baseline_dashboard_24)
-                    .into(eventPoster);
+            if (b != null) {
+                String transitionName = b.getString("transitionName");
+                eventPoster.setTransitionName(transitionName);
+                String id = b.getString("id");
 
-            eventTitle.setText(current.getEventName());
-            eventVenue.setText(current.getEventVenue());
+                final FeedItem current = feedViewModel.getFeedById(id);
 
-            if (current.getEventDescription() == null){
-                current.setEventDescription("No Description");
-            }
-            final Markwon markwon = Markwon.builder(getContext())
-                    .usePlugin(ImagesPlugin.create(getContext())).build();
-            final Spanned spanned = markwon.toMarkdown(current.getEventDescription());
-            markwon.setParsedMarkdown(eventDescription, spanned);
+                Glide.with(this)
+                        .load(current.getEventImageUrl())
+                        .centerInside()
+                        .placeholder(R.drawable.baseline_dashboard_24)
+                        .into(eventPoster);
 
-            SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a");
-            eventTime.setText(format.format(new Date(current.getEventDate())));
+                eventTitle.setText(current.getEventName());
+                eventVenue.setText(current.getEventVenue());
 
-            if (current.isInterested()){
-                interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));
-            } else {
-                interestedFab.getBackground().setTint(getResources().getColor(R.color.dark_gray));
-            }
-
-            interestedFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleStar(current);
+                if (current.getEventDescription() == null) {
+                    current.setEventDescription("No Description");
                 }
-            });
+                final Markwon markwon = Markwon.builder(getContext())
+                        .usePlugin(ImagesPlugin.create(getContext())).build();
+                final Spanned spanned = markwon.toMarkdown(current.getEventDescription());
+                markwon.setParsedMarkdown(eventDescription, spanned);
 
+                SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a");
+                eventTime.setText(format.format(new Date(current.getEventDate())));
+
+                if (current.isInterested()) {
+                    interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));
+                } else {
+                    interestedFab.getBackground().setTint(getResources().getColor(R.color.dark_gray));
+                }
+
+                interestedFab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleStar(current);
+                    }
+                });
+
+            }
+
+        } else if (getContext() instanceof AddFeedActivity) {
+
+            interestedFab.hide();
+            if (b != null) {
+
+                Glide.with(this)
+                        .load(b.getString("image"))
+                        .centerInside()
+                        .placeholder(R.drawable.baseline_dashboard_24)
+                        .into(eventPoster);
+
+                eventTitle.setText(b.getString("title"));
+                eventVenue.setText(b.getString("venue"));
+
+                final Markwon markwon = Markwon.builder(getContext())
+                        .usePlugin(ImagesPlugin.create(getContext())).build();
+                final Spanned spanned = markwon.toMarkdown(b.getString("description", "No Description"));
+                markwon.setParsedMarkdown(eventDescription, spanned);
+
+                SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a");
+                eventTime.setText(format.format(new Date(b.getLong("date"))));
+            }
+        }
+
+        if (getContext() instanceof XPortal) {
+
+            List<String> itemsList = Converters.arrayFromString(PreferenceManager
+                    .getDefaultSharedPreferences(getContext()).getString(USER_POR, ""));
+
+            if (itemsList != null && itemsList.size() != 0)
+
+            for (String por : itemsList) {
+                String[] array = por.split("_", 2);
+                String club = array[1];
+            }
+
+            //TODO : implement feed edit and delete functionality
         }
 
         return view;
     }
 
-    private void toggleStar(FeedItem item){
-        if (item.isInterested()){
+    private void toggleStar(FeedItem item) {
+        if (item.isInterested()) {
             item.setInterested(false);
         } else {
             item.setInterested(true);
@@ -112,7 +162,6 @@ public class FeedDetailFragment extends Fragment {
                 .attach(this)
                 .commit();
     }
-
 
 
 }

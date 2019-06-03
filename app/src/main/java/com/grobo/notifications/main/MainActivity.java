@@ -25,8 +25,6 @@ import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
 import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.explore.ExploreFragment;
-import com.grobo.notifications.explore.clubs.ClubDetailsFragment;
-import com.grobo.notifications.explore.clubs.ClubsRecyclerAdapter;
 import com.grobo.notifications.feed.FeedDetailFragment;
 import com.grobo.notifications.feed.FeedFragment;
 import com.grobo.notifications.feed.FeedRecyclerAdapter;
@@ -39,7 +37,7 @@ import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 
 public class MainActivity extends AppCompatActivity
-        implements Preference.OnPreferenceChangeListener, FeedRecyclerAdapter.OnFeedSelectedListener, ClubsRecyclerAdapter.OnClubSelectedListener {
+        implements Preference.OnPreferenceChangeListener, FeedRecyclerAdapter.OnFeedSelectedListener {
 
     private FragmentManager manager;
     private SharedPreferences prefs;
@@ -129,19 +127,6 @@ public class MainActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putString("transitionName", "transition" + position);
         bundle.putString("id", id);
-        newFragment.setArguments(bundle);
-
-        showFragmentWithTransition(current, newFragment, view, "transition" + position);
-    }
-
-    @Override
-    public void onClubSelected(int id, View view, int position) {
-        Fragment current = manager.findFragmentById(R.id.frame_layout_main);
-
-        Fragment newFragment = new ClubDetailsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("transitionName", "transition" + position);
-        bundle.putInt("clubId", id);
         newFragment.setArguments(bundle);
 
         showFragmentWithTransition(current, newFragment, view, "transition" + position);

@@ -112,7 +112,7 @@ public class XPortalFragment extends Fragment {
             final String finalPower = powers.get(array[0]);
 
             TextView text = listItemView.findViewById(R.id.card_por_text);
-            text.setText(array[1] + "  " + finalPower);
+            text.setText( finalPower + "  " + array[1]);
 
             listItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
