@@ -17,6 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
+            android:id="@+id/coordinator_feed_cv"
             android:layout_margin="4dp"
             app:cardCornerRadius="8dp"
             app:cardBackgroundColor="@color/blue_black_light">
@@ -36,6 +37,7 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             app:cardCornerRadius="8dp"
+            android:id="@+id/coordinator_notification_cv"
             android:layout_margin="4dp"
             app:cardBackgroundColor="@color/blue_black_light">
 
@@ -62,6 +64,7 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             android:layout_margin="4dp"
+            android:id="@+id/coordinator_events_cv"
             app:cardCornerRadius="8dp"
             app:cardBackgroundColor="@color/blue_black_light">
 
@@ -79,6 +82,7 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
+            android:id="@+id/coordinator_projects_cv"
             app:cardCornerRadius="8dp"
             android:layout_margin="4dp"
             app:cardBackgroundColor="@color/blue_black_light">

@@ -1,5 +1,6 @@
 package com.grobo.notifications.feed;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -16,8 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.XPortal;
+import com.grobo.notifications.admin.feed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.network.GetDataService;
 import com.grobo.notifications.network.RetrofitClientInstance;
@@ -42,6 +45,7 @@ public class FeedFragment extends Fragment {
     private RecyclerView recyclerView;
     private View emptyView;
     private RadioGroup radioGroup;
+    private FloatingActionButton addFab;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +66,8 @@ public class FeedFragment extends Fragment {
             }
         });
 
+        addFab = view.findViewById(R.id.add_feed_fab);
+
         emptyView = view.findViewById(R.id.feed_empty_view);
         recyclerView = view.findViewById(R.id.rv_feed_fragment);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -69,9 +75,12 @@ public class FeedFragment extends Fragment {
         adapter = new FeedRecyclerAdapter(getContext(), (FeedRecyclerAdapter.OnFeedSelectedListener) getActivity());
         recyclerView.setAdapter(adapter);
 
+        radioGroup = view.findViewById(R.id.radio_group_feed);
+
         if (getContext() instanceof MainActivity) {
 
-            radioGroup = view.findViewById(R.id.radio_group_feed);
+            addFab.hide();
+
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -88,14 +97,26 @@ public class FeedFragment extends Fragment {
             radioGroup.check(R.id.feed_radio_all);
 
         } else if (getContext() instanceof XPortal){
+
+            addFab.show();
+
             radioGroup.setVisibility(View.GONE);
-            String feedPoster = getArguments().getString("feedPoster", "");
-            if (feedPoster != "gymkhana") {
-                observeMy(feedPoster);
-            } else {
+            final String feedPoster = getArguments().getString("club", "");
+            if (feedPoster.equals("gymkhana")) {
                 observeAll();
+            } else {
+                observeMy(feedPoster);
             }
-            //TODO: add edit button and delete button
+            //TODO: add button
+
+            addFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), AddFeedActivity.class);
+                    intent.putExtra("club", feedPoster);
+                    startActivity(intent);
+                }
+            });
         }
 
         return view;

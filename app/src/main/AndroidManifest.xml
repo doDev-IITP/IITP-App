@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.grobo.notifications">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,16 +16,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".admin.AddFeedActivity"
+        <activity android:name=".explore.clubs.ClubsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
+            </activity>
+        <activity
+            android:name=".admin.feed.AddFeedActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".admin.XPortal">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".admin.XPortal" />
         </activity>
         <activity
             android:name=".admin.XPortal"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName=".main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".main.MainActivity" />
         </activity>
         <activity
             android:name=".explore.services.maintenance.MaintenanceActivity"
