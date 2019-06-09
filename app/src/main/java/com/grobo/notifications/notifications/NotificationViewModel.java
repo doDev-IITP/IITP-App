@@ -26,4 +26,7 @@ public class NotificationViewModel extends AndroidViewModel {
     public void insert (Notification notification) {
         notificationsRepository.insert(notification);
     }
+    public void delete (Notification notification) {
+        notificationsRepository.delete(notification);
+    }
 }
