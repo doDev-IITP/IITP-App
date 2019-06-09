@@ -27,6 +27,9 @@ public class NotificationsRepository {
     public void insert (Notification notification) {
         new insertAsyncTask(mNotificationDao).execute(notification);
     }
+    public void delete (Notification notification) {
+        new deleteAsyncTask(mNotificationDao).execute(notification);
+    }
 
     private static class insertAsyncTask extends AsyncTask<Notification, Void, Void> {
 
@@ -39,6 +42,20 @@ public class NotificationsRepository {
         @Override
         protected Void doInBackground(final Notification... params) {
             mAsyncTaskDao.insertNotification(params[0]);
+            return null;
+        }
+    }
+    private static class deleteAsyncTask extends AsyncTask<Notification, Void, Void> {
+
+        private NotificationDao mAsyncTaskDao;
+
+        deleteAsyncTask(NotificationDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Notification... params) {
+            mAsyncTaskDao.deleteNotificationById(params[0].id);
             return null;
         }
     }

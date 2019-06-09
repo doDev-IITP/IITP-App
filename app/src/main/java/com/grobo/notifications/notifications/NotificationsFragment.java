@@ -178,6 +178,7 @@ public class NotificationsFragment extends Fragment implements NotificationsRecy
                 final Notification item = adapter.getData().get(position);
 
                 adapter.removeItem(position);
+                notificationViewModel.delete( item );
 
 
                 Snackbar snackbar = Snackbar
