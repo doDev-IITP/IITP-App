@@ -33,7 +33,7 @@ public class FcmService extends FirebaseMessagingService {
 
         Map<String, String> data = remoteMessage.getData();
 
-        if (data.containsKey("notify")) {
+            if (data.containsKey("notify")) {
             if (data.get("notify").equals("1")) {
 
                 String imageUri = null;

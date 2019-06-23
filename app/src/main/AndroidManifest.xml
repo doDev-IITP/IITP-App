@@ -16,13 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".explore.clubs.ClubsActivity"
+        <activity
+            android:name=".explore.clubs.ClubsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
-            </activity>
+        </activity>
         <activity
             android:name=".admin.feed.AddFeedActivity"
             android:launchMode="singleTop"
