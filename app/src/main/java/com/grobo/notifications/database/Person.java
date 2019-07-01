@@ -57,6 +57,9 @@ public class Person {
         @SerializedName("phone")
         @Expose
         private String phone;
+        @SerializedName("_id")
+        @Expose
+        private String studentMongoId;
 
         public List<String> getPor() {
             return por;
@@ -120,6 +123,14 @@ public class Person {
 
         public String getPhone() {
             return phone;
+        }
+
+        public String getStudentMongoId() {
+            return studentMongoId;
+        }
+
+        public void setStudentMongoId(String studentMongoId) {
+            this.studentMongoId = studentMongoId;
         }
     }
 }

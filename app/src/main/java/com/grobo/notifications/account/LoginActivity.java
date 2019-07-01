@@ -42,6 +42,7 @@ import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.PHONE_NUMBER;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
+import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 import static com.grobo.notifications.utils.Constants.USER_POR;
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
@@ -155,7 +156,8 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 .putString(WEBMAIL, person.getUser().getEmail())
                 .putString(ROLL_NUMBER, person.getUser().getInstituteId())
                 .putString(PHONE_NUMBER, person.getUser().getPhone())
-                .putString(USER_TOKEN, person.getToken());
+                .putString(USER_TOKEN, person.getToken())
+                .putString(USER_MONGO_ID, person.getUser().getStudentMongoId());
 
         String porString = Converters.stringFromArray(person.getUser().getPor());
         prefsEditor.putString(USER_POR, porString);
