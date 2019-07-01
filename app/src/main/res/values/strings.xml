@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Notifications</string>
+    <string name="app_name">IITP App</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_timetable">Timetable</string>
 
@@ -28,4 +28,10 @@
         <item>Washroom problem</item>
         <item>Cleaning</item>
     </string-array>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Guest</string>
+    <string name="nav_header_desc">Navigation header</string>
 </resources>

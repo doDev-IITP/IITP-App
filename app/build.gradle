@@ -36,8 +36,8 @@ dependencies {
     //Firebase
 //    implementation 'com.google.android.gms:play-services-auth:16.0.1'
     //TODO:implement smart lock
-    implementation 'com.google.firebase:firebase-core:16.0.9'
-    implementation 'com.google.firebase:firebase-messaging:18.0.0'
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+    implementation 'com.google.firebase:firebase-messaging:19.0.1'
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
