@@ -28,12 +28,16 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
 import com.grobo.notifications.admin.XPortal;
-import com.grobo.notifications.explore.ExploreFragment;
+import com.grobo.notifications.clubs.ClubDetailsFragment;
+import com.grobo.notifications.clubs.ClubsFragment;
+import com.grobo.notifications.clubs.ClubsRecyclerAdapter;
 import com.grobo.notifications.feed.FeedDetailFragment;
 import com.grobo.notifications.feed.FeedFragment;
 import com.grobo.notifications.feed.FeedRecyclerAdapter;
 import com.grobo.notifications.notifications.NotificationsFragment;
+import com.grobo.notifications.services.ServicesFragment;
 import com.grobo.notifications.setting.SettingFragment;
+import com.grobo.notifications.timetable.TimetableActivity;
 
 import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
@@ -41,7 +45,8 @@ import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Preference.OnPreferenceChangeListener, FeedRecyclerAdapter.OnFeedSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, Preference.OnPreferenceChangeListener,
+        FeedRecyclerAdapter.OnFeedSelectedListener, ClubsRecyclerAdapter.OnClubSelectedListener {
 
     private FragmentManager manager;
     private SharedPreferences prefs;
@@ -198,7 +203,31 @@ public class MainActivity extends AppCompatActivity
                 updateFragment(new NotificationsFragment());
                 break;
             case R.id.nav_explore:
-                updateFragment(new ExploreFragment());
+                updateFragment(new ClubsFragment());
+                break;
+            case R.id.nav_timetable:
+                startActivity(new Intent(MainActivity.this, TimetableActivity.class));
+                break;
+            case R.id.nav_calender:
+                updateFragment(new CalenderFragment());
+                break;
+            case R.id.nav_mess:
+                updateFragment(new MessFragment());
+                break;
+            case R.id.nav_internship:
+//                updateFragment(new SettingFragment());
+                break;
+            case R.id.nav_tech:
+//                updateFragment(new SettingFragment());
+                break;
+            case R.id.nav_exam:
+                updateFragment(new ExamFragment());
+                break;
+            case R.id.nav_links:
+                updateFragment(new LinksFragment());
+                break;
+            case R.id.nav_services:
+                updateFragment(new ServicesFragment());
                 break;
             case R.id.nav_setting:
                 updateFragment(new SettingFragment());
@@ -208,6 +237,19 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClubSelected(int id, View view, int position) {
+        Fragment current = manager.findFragmentById(R.id.frame_layout_main);
+
+        Fragment newFragment = new ClubDetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("transitionName", "transition" + position);
+        bundle.putInt("clubId", id);
+        newFragment.setArguments(bundle);
+
+        showFragmentWithTransition(current, newFragment, view, "transition" + position);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.services.maintenance;
+package com.grobo.notifications.services.lostandfound;
 
 import android.os.Bundle;
 import android.transition.TransitionInflater;
@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 
-public class MaintenanceActivity extends AppCompatActivity implements MaintenanceRecyclerAdapter.OnItemSelectedListener {
+public class LostAndFoundActivity extends AppCompatActivity implements LostAndFoundRecyclerAdapter.OnItemSelectedListener {
 
     FloatingActionButton fab;
     FragmentManager manager;
@@ -21,18 +21,18 @@ public class MaintenanceActivity extends AppCompatActivity implements Maintenanc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maintenance);
+        setContentView(R.layout.activity_lost_and_found);
 
-        getSupportActionBar().setTitle("Maintenance");
+        getSupportActionBar().setTitle("Lost and Found");
 
         manager = getSupportFragmentManager();
 
-        fab = findViewById(R.id.new_maintenance_fab);
+        fab = findViewById(R.id.new_lost_found_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment current = manager.findFragmentById(R.id.frame_maintenance);
-                Fragment next = new NewMaintenanceFragment();
+                Fragment current = manager.findFragmentById(R.id.frame_lost_found);
+                Fragment next = new NewLostAndFound();
                 showFragmentWithTransition(current, next);
             }
         });
@@ -41,15 +41,16 @@ public class MaintenanceActivity extends AppCompatActivity implements Maintenanc
     }
 
     private void setBaseFragment(Bundle savedInstanceState) {
-        if (findViewById(R.id.frame_maintenance) != null) {
+        if (findViewById(R.id.frame_lost_found) != null) {
 
             if (savedInstanceState != null) {
                 return;
             }
-            MaintenanceFragment firstFragment = new MaintenanceFragment();
+
+            LostAndFoundFragment firstFragment = new LostAndFoundFragment();
             firstFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_maintenance, firstFragment).commit();
+            manager.beginTransaction()
+                    .add(R.id.frame_lost_found, firstFragment).commit();
         }
     }
 
@@ -58,7 +59,7 @@ public class MaintenanceActivity extends AppCompatActivity implements Maintenanc
         newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_bottom));
 
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_maintenance, newFragment);
+        fragmentTransaction.replace(R.id.frame_lost_found, newFragment);
         fragmentTransaction.addToBackStack("later_fragment");
         fragmentTransaction.commit();
     }
@@ -67,7 +68,7 @@ public class MaintenanceActivity extends AppCompatActivity implements Maintenanc
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
         activeFragment = fragment;
-        if (fragment instanceof NewMaintenanceFragment){
+        if (fragment instanceof NewLostAndFound){
             fab.hide();
             activeFragment = fragment;
         }
@@ -75,7 +76,7 @@ public class MaintenanceActivity extends AppCompatActivity implements Maintenanc
 
     @Override
     public void onBackPressed() {
-        if (activeFragment instanceof NewMaintenanceFragment){
+        if (activeFragment instanceof NewLostAndFound){
             if (fab.isOrWillBeHidden()) fab.show();
         }
         super.onBackPressed();
@@ -83,6 +84,6 @@ public class MaintenanceActivity extends AppCompatActivity implements Maintenanc
 
     @Override
     public void onItemSelected(int id) {
-
+        //TODO: start a new fragment and show entry data
     }
 }

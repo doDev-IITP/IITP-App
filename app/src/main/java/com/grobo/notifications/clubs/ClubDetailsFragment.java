@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.clubs;
+package com.grobo.notifications.clubs;
 
 import android.content.res.ColorStateList;
 import android.net.Uri;

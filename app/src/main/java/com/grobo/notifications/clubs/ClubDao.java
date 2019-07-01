@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.clubs;
+package com.grobo.notifications.clubs;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

@@ -1,7 +1,7 @@
 package com.grobo.notifications.network;
 
 import com.grobo.notifications.database.Person;
-import com.grobo.notifications.explore.services.lostandfound.LostAndFoundItem;
+import com.grobo.notifications.services.lostandfound.LostAndFoundItem;
 import com.grobo.notifications.feed.FeedItem;
 
 import java.util.List;

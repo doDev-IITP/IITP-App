@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore;
+package com.grobo.notifications.main;
 
 
 import android.content.SharedPreferences;
@@ -27,15 +27,10 @@ import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MessFragment extends Fragment {
 
 
-    public MessFragment() {
-        // Required empty public constructor
-    }
+    public MessFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

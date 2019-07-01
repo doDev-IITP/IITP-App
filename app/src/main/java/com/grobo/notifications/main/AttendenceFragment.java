@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore;
+package com.grobo.notifications.main;
 
 
 import android.os.Bundle;
