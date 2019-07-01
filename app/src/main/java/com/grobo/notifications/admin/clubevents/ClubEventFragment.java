@@ -20,7 +20,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.admin.feed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
-import com.grobo.notifications.network.GetDataService;
+import com.grobo.notifications.network.UserRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
@@ -98,7 +98,7 @@ public class ClubEventFragment extends Fragment {
         String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
         Log.e("token", token);
 
-        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        UserRoutes service = RetrofitClientInstance.getRetrofitInstance().create(UserRoutes.class);
 
 //        Call<ClubEventItem.FeedItemSuper1> call = service.getNewFeed(token, latest);
 //        call.enqueue(new Callback<ClubEventItem.FeedItemSuper1>() {
