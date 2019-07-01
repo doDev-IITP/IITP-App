@@ -22,7 +22,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.admin.feed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
-import com.grobo.notifications.network.GetDataService;
+import com.grobo.notifications.network.FeedRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ public class FeedFragment extends Fragment {
         String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
         Log.e("token", token);
 
-        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        FeedRoutes service = RetrofitClientInstance.getRetrofitInstance().create(FeedRoutes.class);
 
         Call<FeedItem.FeedItemSuper1> call = service.getNewFeed(token, latest);
         call.enqueue(new Callback<FeedItem.FeedItemSuper1>() {

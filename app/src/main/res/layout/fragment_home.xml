@@ -17,6 +17,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="200dp"
+                android:id="@+id/card_home_qr"
                 android:layout_row="0"
                 android:background="@android:color/transparent"
                 android:layout_column="0"
@@ -27,7 +28,7 @@
 
                 <fragment
                     android:id="@+id/home_fr_mess_qr"
-                    android:name="com.grobo.notifications.main.MessFragment$QRFragment"
+                    android:name="com.grobo.notifications.main.QRFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
@@ -38,6 +39,7 @@
                 android:layout_height="200dp"
                 android:layout_row="0"
                 android:layout_column="1"
+                android:id="@+id/card_home_timetable"
                 android:background="@android:color/transparent"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
