@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.services.lostandfound;
+package com.grobo.notifications.services.lostandfound;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,9 +14,9 @@ import com.grobo.notifications.R;
 
 import java.util.List;
 
-import static com.grobo.notifications.explore.services.lostandfound.LostAndFoundItem.ITEM_FOUND;
-import static com.grobo.notifications.explore.services.lostandfound.LostAndFoundItem.ITEM_LOST;
-import static com.grobo.notifications.explore.services.lostandfound.LostAndFoundItem.ITEM_RECOVERED;
+import static com.grobo.notifications.services.lostandfound.LostAndFoundItem.ITEM_FOUND;
+import static com.grobo.notifications.services.lostandfound.LostAndFoundItem.ITEM_LOST;
+import static com.grobo.notifications.services.lostandfound.LostAndFoundItem.ITEM_RECOVERED;
 
 public class LostAndFoundRecyclerAdapter extends RecyclerView.Adapter<LostAndFoundRecyclerAdapter.LostFoundViewHolder> {
 

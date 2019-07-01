@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.clubs;
+package com.grobo.notifications.clubs;
 
 import android.app.Application;
 import android.os.AsyncTask;

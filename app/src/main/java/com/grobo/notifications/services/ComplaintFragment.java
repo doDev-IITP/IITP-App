@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.services.lostandfound;
+package com.grobo.notifications.services;
 
 
 import android.os.Bundle;
@@ -10,20 +10,22 @@ import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
 
-public class NewLostAndFound extends Fragment {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ComplaintFragment extends Fragment {
 
 
-    public NewLostAndFound() {}
+    public ComplaintFragment() {
+        // Required empty public constructor
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_new_lost_found, container, false);
-
-        //TODO: call edit text from corresponding fragment to get data
-
-        return view;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_complaint, container, false);
     }
 
 }

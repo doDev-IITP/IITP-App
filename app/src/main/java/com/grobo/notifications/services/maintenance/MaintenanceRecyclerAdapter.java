@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.services.maintenance;
+package com.grobo.notifications.services.maintenance;
 
 import android.content.Context;
 import android.view.LayoutInflater;

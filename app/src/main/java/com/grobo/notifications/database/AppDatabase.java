@@ -7,8 +7,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.grobo.notifications.explore.clubs.ClubDao;
-import com.grobo.notifications.explore.clubs.ClubItem;
+import com.grobo.notifications.clubs.ClubDao;
+import com.grobo.notifications.clubs.ClubItem;
 import com.grobo.notifications.feed.Converters;
 import com.grobo.notifications.feed.FeedDao;
 import com.grobo.notifications.feed.FeedItem;

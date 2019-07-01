@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.services;
+package com.grobo.notifications.services;
 
 
 import android.content.Intent;
@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
-import com.grobo.notifications.explore.services.lostandfound.LostAndFoundActivity;
-import com.grobo.notifications.explore.services.maintenance.MaintenanceActivity;
+import com.grobo.notifications.services.lostandfound.LostAndFoundActivity;
+import com.grobo.notifications.services.maintenance.MaintenanceActivity;
 
 public class ServicesFragment extends Fragment implements View.OnClickListener {
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.grobo.notifications">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,15 +16,8 @@
         android:roundIcon="@drawable/baseline_dashboard_24"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity
-            android:name=".explore.clubs.ClubsActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".main.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".main.MainActivity" />
-        </activity>
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".admin.feed.AddFeedActivity"
             android:launchMode="singleTop"
@@ -34,6 +28,7 @@
         </activity>
         <activity
             android:name=".admin.XPortal"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity">
             <meta-data
@@ -41,16 +36,18 @@
                 android:value=".main.MainActivity" />
         </activity>
         <activity
-            android:name=".explore.services.maintenance.MaintenanceActivity"
+            android:name=".services.maintenance.MaintenanceActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
         </activity>
         <activity
-            android:name=".explore.services.lostandfound.LostAndFoundActivity"
+            android:name=".services.lostandfound.LostAndFoundActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -69,6 +66,7 @@
         <activity
             android:name=".timetable.TimetableActivity"
             android:label="@string/title_activity_timetable"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity">
             <meta-data
@@ -85,9 +83,6 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
         <activity android:name=".timetable.EditTimetableActivity" />

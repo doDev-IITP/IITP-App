@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".explore.MessFragment">
+    tools:context=".main.MessFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -13,7 +13,7 @@
 
         <fragment
             android:id="@+id/mess_fr_qr"
-            android:name="com.grobo.notifications.explore.MessFragment$QRFragment"
+            android:name="com.grobo.notifications.main.MessFragment$QRFragment"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"

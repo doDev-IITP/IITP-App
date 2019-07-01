@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.clubs;
+package com.grobo.notifications.clubs;
 
 
 import android.os.Bundle;
@@ -51,5 +51,3 @@ public class ClubsFragment extends Fragment {
         return view;
     }
 }
-
-//TODO: add Club activity and set base fragment as this fragment insted of loading this fragment directly in main activity

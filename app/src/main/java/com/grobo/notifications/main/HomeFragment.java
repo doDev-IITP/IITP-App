@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.grobo.notifications.explore.MessFragment;
 import com.grobo.notifications.R;
 import com.grobo.notifications.timetable.DayFragment;
 import com.grobo.notifications.timetable.TimetableActivity;

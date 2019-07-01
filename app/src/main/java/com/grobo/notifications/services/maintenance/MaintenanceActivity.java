@@ -1,4 +1,4 @@
-package com.grobo.notifications.explore.services.lostandfound;
+package com.grobo.notifications.services.maintenance;
 
 import android.os.Bundle;
 import android.transition.TransitionInflater;
@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 
-public class LostAndFoundActivity extends AppCompatActivity implements LostAndFoundRecyclerAdapter.OnItemSelectedListener {
+public class MaintenanceActivity extends AppCompatActivity implements MaintenanceRecyclerAdapter.OnItemSelectedListener {
 
     FloatingActionButton fab;
     FragmentManager manager;
@@ -21,18 +21,18 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lost_and_found);
+        setContentView(R.layout.activity_maintenance);
 
-        getSupportActionBar().setTitle("Lost and Found");
+        getSupportActionBar().setTitle("Maintenance");
 
         manager = getSupportFragmentManager();
 
-        fab = findViewById(R.id.new_lost_found_fab);
+        fab = findViewById(R.id.new_maintenance_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment current = manager.findFragmentById(R.id.frame_lost_found);
-                Fragment next = new NewLostAndFound();
+                Fragment current = manager.findFragmentById(R.id.frame_maintenance);
+                Fragment next = new NewMaintenanceFragment();
                 showFragmentWithTransition(current, next);
             }
         });
@@ -41,16 +41,15 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
     }
 
     private void setBaseFragment(Bundle savedInstanceState) {
-        if (findViewById(R.id.frame_lost_found) != null) {
+        if (findViewById(R.id.frame_maintenance) != null) {
 
             if (savedInstanceState != null) {
                 return;
             }
-
-            LostAndFoundFragment firstFragment = new LostAndFoundFragment();
+            MaintenanceFragment firstFragment = new MaintenanceFragment();
             firstFragment.setArguments(getIntent().getExtras());
-            manager.beginTransaction()
-                    .add(R.id.frame_lost_found, firstFragment).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frame_maintenance, firstFragment).commit();
         }
     }
 
@@ -59,7 +58,7 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
         newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_bottom));
 
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_lost_found, newFragment);
+        fragmentTransaction.replace(R.id.frame_maintenance, newFragment);
         fragmentTransaction.addToBackStack("later_fragment");
         fragmentTransaction.commit();
     }
@@ -68,7 +67,7 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
         activeFragment = fragment;
-        if (fragment instanceof NewLostAndFound){
+        if (fragment instanceof NewMaintenanceFragment){
             fab.hide();
             activeFragment = fragment;
         }
@@ -76,7 +75,7 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
 
     @Override
     public void onBackPressed() {
-        if (activeFragment instanceof NewLostAndFound){
+        if (activeFragment instanceof NewMaintenanceFragment){
             if (fab.isOrWillBeHidden()) fab.show();
         }
         super.onBackPressed();
@@ -84,6 +83,6 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
 
     @Override
     public void onItemSelected(int id) {
-        //TODO: start a new fragment and show entry data
+
     }
 }
