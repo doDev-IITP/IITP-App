@@ -55,7 +55,7 @@ public class NotificationsRepository {
 
         @Override
         protected Void doInBackground(final Notification... params) {
-            mAsyncTaskDao.deleteNotificationById(params[0].id);
+            mAsyncTaskDao.deleteNotificationById(params[0].getId());
             return null;
         }
     }

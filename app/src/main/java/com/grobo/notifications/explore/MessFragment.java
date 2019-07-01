@@ -23,10 +23,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.concurrent.ExecutionException;
 
-import static com.grobo.notifications.utils.Constants.BASE_URL;
 import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
-import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
+import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,7 +68,7 @@ public class MessFragment extends Fragment {
             imageView = view.findViewById(R.id.qr_fragment_qr);
 
             Bitmap bitmap = null;
-            if (prefs.getBoolean(LOGIN_STATUS, false)){
+            if (prefs.getBoolean(LOGIN_STATUS, false)) {
                 if (prefs.getBoolean(IS_QR_DOWNLOADED, false)) {
                     bitmap = getQRBitmap();
                 } else {
@@ -106,28 +105,26 @@ public class MessFragment extends Fragment {
         }
 
         private void downloadAndSave() {
-            if (utils.getWifiInfo(getContext())) {
 
-                utils.ImageDownloader task = new utils.ImageDownloader();
+            utils.ImageDownloader task = new utils.ImageDownloader();
 
-                try {
-                    Bitmap bitmap = task.execute(BASE_URL + "qrcode/qr/" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString(ROLL_NUMBER, null).toUpperCase() + ".png").get();
-                    if (bitmap != null) {
-                        boolean ret = utils.saveImage(getContext(), bitmap, "qr", "qr.png");
+            try {
+                Bitmap bitmap = task.execute("https://api.qrserver.com/v1/create-qr-code/?data=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_MONGO_ID, null) + "&amp;size=100x100").get();
+                if (bitmap != null) {
+                    boolean ret = utils.saveImage(getContext(), bitmap, "qr", "qr.png");
 
-                        if (ret){
-                            prefs.edit().putBoolean(IS_QR_DOWNLOADED, true).apply();
-                        }
+                    if (ret) {
+                        prefs.edit().putBoolean(IS_QR_DOWNLOADED, true).apply();
                     }
-
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
-            }
-        }
 
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
 
 
     }
