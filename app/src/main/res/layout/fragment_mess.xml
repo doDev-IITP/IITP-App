@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".explore.MessFragment">
+    tools:context=".main.MessFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -13,30 +13,56 @@
 
         <fragment
             android:id="@+id/mess_fr_qr"
-            android:name="com.grobo.notifications.explore.MessFragment$QRFragment"
+            android:name="com.grobo.notifications.main.QRFragment"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
             android:layout_margin="16dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_below="@id/mess_fr_qr"
-                android:layout_margin="8dp"
-                android:id="@+id/mess_tv_cur"
-                android:layout_centerHorizontal="true"
-                android:layout_height="wrap_content"
-                android:text="Currently Selected Mess"
-                android:textSize="18sp" />
+        <LinearLayout
+            android:id="@+id/ll_mess_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mess_fr_qr"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:text="Currently Selected Mess"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/mess_selected_mess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="NONE"
                 android:textColor="@color/black"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/mess_tv_cur"
-                android:textSize="20sp"
-                android:text="MESS 1"/>
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel meal:"
+                android:textColor="@color/colorAccent"
+                android:layout_margin="16dp"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_mess_selection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mess_fr_qr"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+
+        </LinearLayout>
 
     </RelativeLayout>
 

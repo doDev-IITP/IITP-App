@@ -18,8 +18,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.grobo.notifications.R;
-import com.grobo.notifications.explore.clubs.ClubDao;
-import com.grobo.notifications.explore.clubs.ClubItem;
+import com.grobo.notifications.clubs.ClubDao;
+import com.grobo.notifications.clubs.ClubItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;

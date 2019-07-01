@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".explore.services.maintenance.MaintenanceFragment">
+    tools:context=".services.maintenance.MaintenanceFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/maintenance_fragment_recycler"

@@ -18,7 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.feed.FeedDetailFragment;
-import com.grobo.notifications.network.GetDataService;
+import com.grobo.notifications.network.FeedRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
 import org.json.JSONObject;
@@ -94,7 +94,7 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_TOKEN, "0");
 
-        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        FeedRoutes service = RetrofitClientInstance.getRetrofitInstance().create(FeedRoutes.class);
         Call<Void> call = service.postFeed(token, body);
         call.enqueue(new Callback<Void>() {
             @Override

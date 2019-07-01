@@ -37,7 +37,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.database.Person;
 import com.grobo.notifications.feed.Converters;
 import com.grobo.notifications.main.MainActivity;
-import com.grobo.notifications.network.GetDataService;
+import com.grobo.notifications.network.UserRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
 import org.json.JSONObject;
@@ -68,10 +68,14 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     private FragmentManager manager;
     private SharedPreferences prefs;
     private ProgressDialog progressDialog;
+
     GetDataService service;
     private GoogleApiClient mCredentialClient;
     private int RC_SAVE = 1;
     private int RC_READ = 10;
+
+    UserRoutes service;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         getWindow().setStatusBarColor( Color.parseColor( "#8548a3" ) );
 
         checkForPermission();
+
         service = RetrofitClientInstance.getRetrofitInstance().create( GetDataService.class );
 
         setBaseFragment( savedInstanceState );
@@ -123,6 +128,15 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                         }
                     }
                 } );
+
+        service = RetrofitClientInstance.getRetrofitInstance().create(UserRoutes.class);
+
+        setBaseFragment(savedInstanceState);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+
     }
 
 
