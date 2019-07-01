@@ -1,5 +1,4 @@
-package com.grobo.notifications.admin;
-
+package com.grobo.notifications.admin.positions;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,19 +9,17 @@ import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
 
-public class VPFragment extends Fragment {
+public class CRFragment extends Fragment {
 
-
-    public VPFragment() {}
-
+    public CRFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_vp, container, false);
-
-
-        return view;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_cr, container, false);
     }
 
 }

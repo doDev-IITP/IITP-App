@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".admin.CoordinatorFragment">
+    tools:context=".admin.positions.CoordinatorFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,40 +14,52 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/coordinator_feed_cv"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_weight="1"
-            android:id="@+id/coordinator_feed_cv"
             android:layout_margin="4dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Feed"
-                android:textSize="18sp"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Feed"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/coordinator_notification_cv"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_weight="1"
-            app:cardCornerRadius="8dp"
-            android:id="@+id/coordinator_notification_cv"
             android:layout_margin="4dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Send a notification"
-                android:textSize="18sp"
-                android:layout_gravity="center"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Send notification"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -60,40 +72,51 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/coordinator_events_cv"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_weight="1"
             android:layout_margin="4dp"
-            android:id="@+id/coordinator_events_cv"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Events"
-                android:textSize="18sp"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Club Events"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/coordinator_projects_cv"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_weight="1"
-            android:id="@+id/coordinator_projects_cv"
-            app:cardCornerRadius="8dp"
             android:layout_margin="4dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Update Projects"
-                android:textSize="18sp"
-                android:layout_gravity="center"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Projects"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 

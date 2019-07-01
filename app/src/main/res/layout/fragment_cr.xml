@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".admin.CRFragment">
+    tools:context=".admin.positions.CRFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,16 +18,22 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             android:layout_margin="4dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            app:cardCornerRadius="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Professors"
-                android:textSize="18sp"
-                android:textColor="@color/white"/>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Professors"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -36,16 +42,22 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             app:cardCornerRadius="8dp"
-            android:layout_margin="4dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            android:layout_margin="4dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Send a notification"
-                android:textSize="18sp"
-                android:layout_gravity="center"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Send notification"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -62,16 +74,22 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             android:layout_margin="4dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            app:cardCornerRadius="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Events"
-                android:textSize="18sp"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Events"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -80,16 +98,22 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             app:cardCornerRadius="8dp"
-            android:layout_margin="4dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            android:layout_margin="4dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Update Projects"
-                android:textSize="18sp"
-                android:layout_gravity="center"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Projects"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -106,16 +130,22 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             android:layout_margin="4dp"
-            app:cardCornerRadius="8dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            app:cardCornerRadius="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Feed"
-                android:textSize="18sp"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Feed"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -124,16 +154,22 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             app:cardCornerRadius="8dp"
-            android:layout_margin="4dp"
-            app:cardBackgroundColor="@color/blue_black_light">
+            android:layout_margin="4dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="18sp"
-                android:layout_gravity="center"
-                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 

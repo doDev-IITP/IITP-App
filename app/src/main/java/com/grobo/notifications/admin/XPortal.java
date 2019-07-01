@@ -10,6 +10,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
+import com.grobo.notifications.admin.positions.CRFragment;
+import com.grobo.notifications.admin.positions.CoordinatorFragment;
+import com.grobo.notifications.admin.positions.SecretaryFragment;
+import com.grobo.notifications.admin.positions.VPFragment;
 import com.grobo.notifications.feed.FeedDetailFragment;
 import com.grobo.notifications.feed.FeedRecyclerAdapter;
 

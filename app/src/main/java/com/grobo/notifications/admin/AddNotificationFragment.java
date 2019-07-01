@@ -1,8 +1,10 @@
 package com.grobo.notifications.admin;
 
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.ArrayMap;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
@@ -36,6 +39,12 @@ public class AddNotificationFragment extends Fragment {
     private ProgressDialog dialog;
     private Context context;
 
+    private EditText title;
+    private EditText description;
+    private EditText image;
+    private EditText body;
+    private EditText reference;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,18 +63,26 @@ public class AddNotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_notification, container, false);
 
-        EditText title = view.findViewById(R.id.add_notification_title);
-        EditText description = view.findViewById(R.id.add_notification_description);
-        EditText image = view.findViewById(R.id.add_notification_image_uri);
-        EditText body = view.findViewById(R.id.add_notification_body);
+        title = view.findViewById(R.id.add_notification_title);
+        description = view.findViewById(R.id.add_notification_description);
+        image = view.findViewById(R.id.add_notification_image_uri);
+        body = view.findViewById(R.id.add_notification_body);
+        reference = view.findViewById(R.id.add_notification_reference);
+
         Button sendButton = view.findViewById(R.id.add_notification_send_button);
-
-
-        post();
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validateInput()) {
+                    showUnsavedChangesDialog();
+                }
+            }
+        });
 
         return view;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void post() {
 
         dialog.setMessage("Sending Notification");
@@ -73,24 +90,24 @@ public class AddNotificationFragment extends Fragment {
 
         Map<String, Object> jsonParams = new ArrayMap<>();
         jsonParams.put("to", "/topics/dev");
+        jsonParams.put("priority", "high");
 
         Map<String, Object> data = new ArrayMap<>();
-        data.put("title", "New notification");
-        data.put("body", "New notification");
-        data.put("description", "New notification");
-        data.put("image_uri", "https://sample-videos.com/img/Sample-png-image-1mb.png");
+        data.put("title", title.getText().toString());
+        data.put("body", body.getText().toString());
+        data.put("description", description.getText().toString());
+        data.put("image_uri", image.getText().toString());
         data.put("notify", "1");
-
+        data.put("reference", reference.getText().toString());
         jsonParams.put("data", data);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
 
         final OkHttpClient client = new OkHttpClient();
-
         final Request request = new Request.Builder()
                 .url("https://fcm.googleapis.com/fcm/send")
                 .post(body)
-                .addHeader("Authorization", "key=AAAAHlsC9sw:APA91bEeRILLYmitqLt0DOYGKj6o0Xy9FW_nenzEwkBn4QIi5uMZt3LQqOLA4TsYT2WVcd_Ufn7eyFbeSSw5GPUXWHAjRg3IWYRPAYDn6jVoCKuiIZUlan5F-2SEX2YkMBNdsIBFSDQI")
+                .addHeader("Authorization", getResources().getString(R.string.FCM_authorization))
                 .addHeader("content-type", "application/json")
                 .build();
 
@@ -98,13 +115,12 @@ public class AddNotificationFragment extends Fragment {
 
             @Override
             protected Integer doInBackground(Void... voids) {
-                int responseCode = 0;
                 try (okhttp3.Response response = client.newCall(request).execute()) {
-                    responseCode = response.code();
+                    return response.code();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return responseCode;
+                return null;
             }
 
             @Override
@@ -113,14 +129,55 @@ public class AddNotificationFragment extends Fragment {
                     dialog.dismiss();
                 }
                 if (integer == 200) {
-                    Toast.makeText(context, "Notification sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Notification sent", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(context, "Notification send Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Notification send Failed", Toast.LENGTH_LONG).show();
                 }
-
             }
 
         }.execute();
 
+    }
+
+    private boolean validateInput() {
+        boolean valid = true;
+
+        if (title.getText().toString().isEmpty()) {
+            title.setError("Please enter valid title");
+            valid = false;
+        } else {
+            title.setError(null);
+        }
+
+        if (body.getText().toString().isEmpty()) {
+            body.setError("Please enter valid body");
+            valid = false;
+        } else {
+            body.setError(null);
+        }
+
+        return valid;
+    }
+
+    private void showUnsavedChangesDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Confirmation Dialog");
+        builder.setMessage("Sending this notification... Please confirm!!");
+        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                post();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

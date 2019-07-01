@@ -1,4 +1,4 @@
-package com.grobo.notifications.admin;
+package com.grobo.notifications.admin.positions;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,13 +10,14 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
+import com.grobo.notifications.admin.AddNotificationFragment;
+import com.grobo.notifications.admin.clubevents.ClubEventFragment;
 import com.grobo.notifications.feed.FeedFragment;
 import com.grobo.notifications.utils.MistakeFragment;
 
 public class CoordinatorFragment extends Fragment implements View.OnClickListener {
 
-    public CoordinatorFragment() {
-    }
+    public CoordinatorFragment() {}
 
     private Bundle args;
 
@@ -43,14 +44,6 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
         return view;
     }
 
-    private void transactFragment(Fragment frag){
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
-                .replace(R.id.frame_layout_admin, frag)
-                .addToBackStack("later_fragment")
-                .commit();
-    }
-
     @Override
     public void onClick(View v) {
         Bundle bundle = new Bundle();
@@ -64,11 +57,25 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
             case R.id.coordinator_notification_cv:
                 next = new AddNotificationFragment();
                 break;
+            case R.id.coordinator_projects_cv:
+                next = new MistakeFragment();
+                break;
+            case R.id.coordinator_events_cv:
+                next = new ClubEventFragment();
+                break;
             default:
                 next = new MistakeFragment();
         }
 
         next.setArguments(bundle);
         transactFragment(next);
+    }
+
+    private void transactFragment(Fragment frag){
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
+                .replace(R.id.frame_layout_admin, frag)
+                .addToBackStack("later_fragment")
+                .commit();
     }
 }

@@ -8,18 +8,22 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.transition.TransitionInflater;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
@@ -37,12 +41,10 @@ import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 
 public class MainActivity extends AppCompatActivity
-        implements Preference.OnPreferenceChangeListener, FeedRecyclerAdapter.OnFeedSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, Preference.OnPreferenceChangeListener, FeedRecyclerAdapter.OnFeedSelectedListener {
 
     private FragmentManager manager;
     private SharedPreferences prefs;
-    private BottomNavigationView navigation;
-    private int selectedNavItemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,19 +57,43 @@ public class MainActivity extends AppCompatActivity
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         } else {
-            String title = prefs.getString(USER_NAME, "Notifications") + " (" + prefs.getString(ROLL_NUMBER, "IITP").toUpperCase() + ")";
-            getSupportActionBar().setTitle(title);
+
+            manager = getSupportFragmentManager();
+
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
+            getSupportActionBar().setTitle("IITP App");
+
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            NavigationView navigationView = findViewById(R.id.nav_view);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+
+            toggle.syncState();
+            navigationView.setNavigationItemSelectedListener(this);
+            View v = navigationView.getHeaderView(0);
+
+            setBaseFragment(savedInstanceState);
+
+            ((TextView)v.findViewById(R.id.user_name_nav_header)).setText(prefs.getString(USER_NAME, "Guest"));
+            ((TextView)v.findViewById(R.id.user_email_nav_header)).setText(prefs.getString(ROLL_NUMBER, ""));
+
+            mainActivityRef = this;
         }
+    }
 
-        manager = getSupportFragmentManager();
+    private void setBaseFragment(Bundle savedInstanceState) {
+        if (findViewById(R.id.frame_layout_main) != null) {
 
-        navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setItemHorizontalTranslationEnabled(true);
-        navigation.setSelectedItemId(prefs.getInt("item_id", R.id.nav_home));
-
-        mainActivityRef = this;
-
+            if (savedInstanceState != null) {
+                return;
+            }
+            HomeFragment firstFragment = new HomeFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frame_layout_main, firstFragment).commit();
+        }
     }
 
     @Override
@@ -147,38 +173,41 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            selectedNavItemId = item.getItemId();
-            Log.e("selectednav", String.valueOf(item.getItemId()));
-            switch (item.getItemId()) {
-                case R.id.nav_home:
-                    updateFragment(new HomeFragment());
-                    return true;
-                case R.id.nav_feed:
-                    updateFragment(new FeedFragment());
-                    return true;
-                case R.id.nav_notifications:
-                    updateFragment(new NotificationsFragment());
-                    return true;
-                case R.id.nav_explore:
-                    updateFragment(new ExploreFragment());
-                    return true;
-                case R.id.nav_setting:
-                    updateFragment(new SettingFragment());
-                    return true;
-            }
-            return false;
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
-    };
+    }
 
     @Override
-    protected void onDestroy() {
-        prefs.edit().putInt("item_id", selectedNavItemId).apply();
-        Log.e("savedinstance", String.valueOf(selectedNavItemId));
-        super.onDestroy();
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        int id = menuItem.getItemId();
+
+        switch (id) {
+            case R.id.nav_home:
+                updateFragment(new HomeFragment());
+                break;
+            case R.id.nav_feed:
+                updateFragment(new FeedFragment());
+                break;
+            case R.id.nav_notifications:
+                updateFragment(new NotificationsFragment());
+                break;
+            case R.id.nav_explore:
+                updateFragment(new ExploreFragment());
+                break;
+            case R.id.nav_setting:
+                updateFragment(new SettingFragment());
+                break;
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
+
 }

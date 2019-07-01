@@ -19,9 +19,7 @@ import retrofit2.http.Path;
 
 public interface GetDataService {
 
-
     //users
-
     @GET("/users")
     Call<List<Person>> getAllUsers(@Header("Authorization") String credentials);
 
@@ -85,51 +83,4 @@ public interface GetDataService {
     @PATCH("/feeds/{id}")
     Call<LostAndFoundItem> patchLostNFound(@Header("Authorization") String credentials, @Body String rawJsonString, @Path("id") int id);
 
-
 }
-
-//public interface GitHubService {
-//    @GET("users/{user}/repos")
-//    Call<List<Repo>> listRepos(@Path("user") String user);
-//    @GET("group/{id}/users")
-//    Call<List<User>> groupList(@Path("id") int groupId);
-//}
-
-
-//public interface ServiceApi
-//{
-//    @POST("prefix/user/{login}")
-//    Call<ResponseBody> login(@Path("login") String postfix, @Body RequestBody params);
-//}
-//    In your calling point create a RequestBody, stating it's MediaType, and using JSONObject to convert your Map to the proper format:
-//
-//        Map<String, Object> jsonParams = new ArrayMap<>();
-////put something inside the map, could be null
-//        jsonParams.put("code", some_code);
-//
-//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),(new JSONObject(jsonParams)).toString());
-////serviceCaller is the interface initialized with retrofit.create...
-//        Call<ResponseBody> response = serviceCaller.login("loginpostfix", body);
-//
-//        response.enqueue(new Callback<ResponseBody>()
-//        {
-//@Override
-//public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> rawResponse)
-//        {
-//        try
-//        {
-//        //get your response....
-//        Log.d(TAG, "RetroFit2.0 :RetroGetLogin: " + rawResponse.body().string());
-//        }
-//        catch (Exception e)
-//        {
-//        e.printStackTrace();
-//        }
-//        }
-//
-//@Override
-//public void onFailure(Call<ResponseBody> call, Throwable throwable)
-//        {
-//        // other stuff...
-//        }
-//        });

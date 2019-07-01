@@ -200,4 +200,10 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
         alertDialog.show();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 }

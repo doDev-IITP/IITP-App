@@ -7,21 +7,17 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "notification")
 public class Notification {
 
-    @PrimaryKey(autoGenerate = true)
-    public int id;
-
-    public String body;
-
     @NonNull
-    public String title = "New Notification";
-
-    public String description;
-
-    public String imageUrl;
-
-    public boolean starred = false;
-
-    public long timeStamp;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    private String body;
+    @NonNull
+    private String title = "New Notification";
+    private String description = "";
+    private String imageUrl;
+    private boolean starred = false;
+    private long timeStamp;
+    private long reference;
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
@@ -78,5 +74,13 @@ public class Notification {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public long getReference() {
+        return reference;
+    }
+
+    public void setReference(long reference) {
+        this.reference = reference;
     }
 }
