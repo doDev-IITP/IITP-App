@@ -34,8 +34,8 @@ dependencies {
     implementation 'ru.noties.markwon:core:3.0.0'
 
     //Firebase
-   implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    //TODO:implement smart lock
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
 

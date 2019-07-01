@@ -96,7 +96,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 new CredentialsOptions.Builder().forceEnableSaveDialog().build();
         mCredentialClient = new GoogleApiClient.Builder( this )
                 .addApi( Auth.CREDENTIALS_API, options )
-                .setAccountName( "chanmol1999@gmail.com" )
+                .setAccountName( "youremail" )
                 .build();
         mCredentialClient.connect();
         CredentialRequest mCredentialRequest = new CredentialRequest.Builder()
@@ -108,9 +108,10 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 new ResultCallback<CredentialRequestResult>() {
                     @Override
                     public void onResult(CredentialRequestResult credentialRequestResult) {
-                        if (credentialRequestResult.getStatus().isSuccess() && call.compareTo( "logout" ) != 0) {
+                        if (credentialRequestResult.getStatus().isSuccess() && call == null) {
                             // Handle successful credential requests
                             login( credentialRequestResult.getCredential().getId(), credentialRequestResult.getCredential().getPassword() );
+                        } else if (credentialRequestResult.getStatus().isSuccess()) {
                         } else {
                             // Handle unsuccessful and incomplete credential requests
                             try {
@@ -190,7 +191,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 Log.e( "ye", "SAVE: OK" );
                 Credential credential = data.getParcelableExtra( Credential.EXTRA_KEY );
                 login( credential.getId(), credential.getPassword() );
-                Toast.makeText( this, "Credentials saved", Toast.LENGTH_SHORT ).show();
             } else {
                 Log.e( "ye", "SAVE: Canceled by user" );
             }
@@ -218,12 +218,12 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                         }
                     }
                 } );
-        Auth.CredentialsApi.delete( mCredentialClient, credential ).setResultCallback( new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                Toast.makeText( LoginActivity.this, "deleted", Toast.LENGTH_SHORT ).show();
-            }
-        } );
+//        Auth.CredentialsApi.delete( mCredentialClient, credential ).setResultCallback( new ResultCallback<Status>() {
+//            @Override
+//            public void onResult(@NonNull Status status) {
+//                Toast.makeText( LoginActivity.this, "deleted", Toast.LENGTH_SHORT ).show();
+//            }
+//        } );
     }
 
     private void login(String email, String password) {
