@@ -97,6 +97,7 @@ public class ProfileFragment extends Fragment {
         MainActivity.mainActivityRef.finish();
         getActivity().finish();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.putExtra( "call","logout" );
         startActivity(intent);
     }
 
