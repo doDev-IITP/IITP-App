@@ -62,6 +62,9 @@ dependencies {
     //WorkManager
     implementation "androidx.work:work-runtime:2.0.1"
 
+    //pdf
+    implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
+    implementation 'org.jsoup:jsoup:1.8.3' // required
 
 }
 apply plugin: 'com.google.gms.google-services'
