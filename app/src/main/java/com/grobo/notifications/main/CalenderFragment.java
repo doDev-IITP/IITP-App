@@ -32,12 +32,10 @@ import ru.noties.markwon.SpannableBuilder;
 public class CalenderFragment extends Fragment {
 
     private TextView events;
-    RecyclerView eventList;
+    private RecyclerView eventList;
 
     public CalenderFragment() {}
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
