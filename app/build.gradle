@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.grobo.notifications"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -36,7 +36,7 @@ dependencies {
     //Firebase
 //    implementation 'com.google.android.gms:play-services-auth:16.0.1'
     //TODO:implement smart lock
-    implementation 'com.google.firebase:firebase-core:17.0.0'
+    implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
 
     //glide
@@ -60,7 +60,7 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
 
     //WorkManager
-    implementation "androidx.work:work-runtime:2.0.1"
+    implementation "androidx.work:work-runtime:2.1.0"
 
 
 }

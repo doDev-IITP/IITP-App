@@ -29,6 +29,12 @@
         <item>Cleaning</item>
     </string-array>
 
+    <string-array name="spinner_items">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Snacks</item>
+        <item>Dinner</item>
+    </string-array>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
