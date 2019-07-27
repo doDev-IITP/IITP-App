@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -216,12 +217,15 @@ public class MainActivity extends AppCompatActivity
                 updateFragment(new MessFragment());
                 break;
             case R.id.nav_internship:
-                updateFragment(new InternshipFragment() );
+                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                //updateFragment(new InternshipFragment() );
                 break;
             case R.id.nav_tech:
+                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
 //                updateFragment(new SettingFragment());
                 break;
             case R.id.nav_exam:
+                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
                 updateFragment(new ExamFragment());
                 break;
             case R.id.nav_links:
