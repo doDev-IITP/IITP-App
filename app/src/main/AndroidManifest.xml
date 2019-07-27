@@ -30,6 +30,7 @@
             android:name=".admin.XPortal"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
             android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -96,7 +97,7 @@
 
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
-                android:resource="@color/statusColor" />
+                android:resource="@color/colorAccent" />
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
                 android:value="@string/default_notification_channel_id" />

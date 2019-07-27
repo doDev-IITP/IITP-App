@@ -1,14 +1,20 @@
 package com.grobo.notifications.main;
 
-
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,9 +30,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +54,8 @@ public class MessFragment extends Fragment {
     private LinearLayout messLL;
     private LinearLayout messSelectionLL;
     private TextView selectedMess;
+    private String cancelMealString;
+    private Spinner spinner;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,14 +78,36 @@ public class MessFragment extends Fragment {
 
         selectedMess = rootView.findViewById(R.id.mess_selected_mess);
 
-        progressDialog.setMessage("Loading Data...");
-        progressDialog.show();
+        final EditText cancelMealDate = rootView.findViewById(R.id.cancel_meal_select_date);
+        cancelMealDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDatePickerDialog(cancelMealDate).show();
+            }
+        });
+
+        spinner = rootView.findViewById(R.id.cancel_meal_spinner);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.spinner_items, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+
+        Button cancelMealButton = rootView.findViewById(R.id.cancel_meal_ok_button);
+        cancelMealButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelMealFunction();
+            }
+        });
+
         populateData();
 
         return rootView;
     }
 
     private void populateData() {
+
+        progressDialog.setMessage("Loading Data...");
+        progressDialog.show();
 
         MessRoutes service = RetrofitClientInstance.getRetrofitInstance().create(MessRoutes.class);
 
@@ -86,7 +121,7 @@ public class MessFragment extends Fragment {
                     String json = null;
                     try {
                         json = response.body().string();
-                        parseJson(json);
+                        parseMessJson(json);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -110,7 +145,7 @@ public class MessFragment extends Fragment {
 
     }
 
-    private void parseJson(String json) {
+    private void parseMessJson(String json) {
 
         try {
             JSONObject jsonObject = new JSONObject(json);
@@ -149,6 +184,84 @@ public class MessFragment extends Fragment {
         if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
 
 
+    }
+
+    private void cancelMealFunction() {
+
+        progressDialog.setMessage("Cancelling Meal...");
+        progressDialog.show();
+
+        MessRoutes service = RetrofitClientInstance.getRetrofitInstance().create(MessRoutes.class);
+
+        String userId = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_MONGO_ID, "");
+        String meal = null;
+        switch (spinner.getSelectedItemPosition()) {
+            case 0:
+                meal = "1";
+                break;
+            case 1:
+                meal = "2";
+                break;
+            case 2:
+                meal = "3";
+                break;
+            case 3:
+                meal = "4";
+                break;
+        }
+        Map<String, Object> jsonParams = new ArrayMap<>();
+        jsonParams.put("currentMeal", cancelMealString + "_" + meal + "_-1");
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+
+        Call<ResponseBody> call = service.cancelMeal(userId, body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.e("mess response", response.toString());
+                try {
+                    JSONObject object = new JSONObject(response.body().string());
+                    String message = object.getString("message");
+
+                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (progressDialog != null && progressDialog.isShowing())
+                    progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("failure", t.getMessage());
+                if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
+                Toast.makeText(getContext(), "Meal cancellation failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private DatePickerDialog getDatePickerDialog(final EditText cancelMealDate) {
+        final Calendar calendar = Calendar.getInstance();
+
+        return new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+//                if (day  ) {
+
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY", Locale.getDefault());
+                cancelMealDate.setText(dateFormat.format(calendar.getTime()));
+                cancelMealString = dayOfMonth + "_" + month + "_" + year;
+//                }
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }
 }
 
