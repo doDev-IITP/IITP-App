@@ -34,6 +34,7 @@ import com.grobo.notifications.clubs.ClubsRecyclerAdapter;
 import com.grobo.notifications.feed.FeedDetailFragment;
 import com.grobo.notifications.feed.FeedFragment;
 import com.grobo.notifications.feed.FeedRecyclerAdapter;
+import com.grobo.notifications.internship.InternshipFragment;
 import com.grobo.notifications.notifications.NotificationsFragment;
 import com.grobo.notifications.services.ServicesFragment;
 import com.grobo.notifications.setting.SettingFragment;
@@ -215,7 +216,7 @@ public class MainActivity extends AppCompatActivity
                 updateFragment(new MessFragment());
                 break;
             case R.id.nav_internship:
-//                updateFragment(new SettingFragment());
+                updateFragment(new InternshipFragment() );
                 break;
             case R.id.nav_tech:
 //                updateFragment(new SettingFragment());
