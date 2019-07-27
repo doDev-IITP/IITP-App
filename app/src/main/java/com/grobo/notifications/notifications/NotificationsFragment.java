@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -59,6 +60,7 @@ public class NotificationsFragment extends Fragment implements NotificationsRecy
         recyclerView.setAdapter(adapter);
         enableSwipeToDeleteAndUndo();
         observeAll();
+        Toast.makeText( getActivity(), "Swipe left to delete a notification", Toast.LENGTH_SHORT ).show();
 
         fab.setOnClickListener(firstClick());
 
@@ -182,13 +184,14 @@ public class NotificationsFragment extends Fragment implements NotificationsRecy
 
 
                 Snackbar snackbar = Snackbar
-                        .make(layout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                        .make(layout, "Notification deleted", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
                         adapter.restoreItem(item, position);
                         recyclerView.scrollToPosition(position);
+                        notificationViewModel.insert( item );
                     }
                 });
 

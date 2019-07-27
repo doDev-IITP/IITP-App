@@ -34,8 +34,8 @@ dependencies {
     implementation 'ru.noties.markwon:core:3.0.0'
 
     //Firebase
-//    implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    //TODO:implement smart lock
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
     implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
 
@@ -62,6 +62,9 @@ dependencies {
     //WorkManager
     implementation "androidx.work:work-runtime:2.1.0"
 
+    //pdf
+    implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
+    implementation 'org.jsoup:jsoup:1.8.3' // required
 
 }
 apply plugin: 'com.google.gms.google-services'
