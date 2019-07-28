@@ -69,5 +69,8 @@ dependencies {
 //    //google material
 //    implementation 'com.google.android.material:material:1.1.0-alpha08'
 
+    //goodiebag
+    implementation 'com.github.GoodieBag:Pinview:v1.4'
+
 }
 apply plugin: 'com.google.gms.google-services'
