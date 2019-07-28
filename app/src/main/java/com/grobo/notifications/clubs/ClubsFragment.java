@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -24,6 +25,13 @@ public class ClubsFragment extends Fragment {
     private ClubViewModel clubViewModel;
 
     public ClubsFragment() {}
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated( view, savedInstanceState );
+        if(getActivity()!=null)
+        getActivity().setTitle( "Clubs" );
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

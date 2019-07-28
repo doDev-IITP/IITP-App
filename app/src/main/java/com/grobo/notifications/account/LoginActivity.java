@@ -69,7 +69,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     private SharedPreferences prefs;
     private ProgressDialog progressDialog;
 
-    GetDataService service;
     private GoogleApiClient mCredentialClient;
     private int RC_SAVE = 1;
     private int RC_READ = 10;
@@ -89,7 +88,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
         checkForPermission();
 
-        service = RetrofitClientInstance.getRetrofitInstance().create( GetDataService.class );
+        service = RetrofitClientInstance.getRetrofitInstance().create( UserRoutes.class );
 
         setBaseFragment( savedInstanceState );
         final String call = getIntent().getStringExtra( "call" );

@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,6 +30,12 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        getActivity().setTitle( "IITP App" );
+        super.onViewCreated( view, savedInstanceState );
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
@@ -41,12 +49,13 @@ public class HomeFragment extends Fragment {
         int margin = ViewUtils.dpToPx(8);
         int screenWidth = ViewUtils.getScreenWidth(getContext()) / 2 - (2 * margin);
 
-        GridLayout.LayoutParams lp = new GridLayout.LayoutParams(new ViewGroup.LayoutParams(screenWidth, screenWidth));
-        lp.setMargins(0, margin, margin, margin);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(screenWidth, screenWidth));
+        int p=screenWidth/2;
+        lp.setMargins(p+margin, margin, margin, margin);
         qrCard.setLayoutParams(lp);
 
-        GridLayout.LayoutParams lp2 = new GridLayout.LayoutParams(new ViewGroup.LayoutParams(screenWidth, screenWidth));
-        lp2.setMargins(margin, margin, margin, margin);
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(screenWidth, screenWidth));
+        lp2.setMargins(p+margin, margin, margin, margin);
         timetableCard.setLayoutParams(lp2);
 
         View qrFragment = rootView.findViewById(R.id.home_fr_mess_qr);

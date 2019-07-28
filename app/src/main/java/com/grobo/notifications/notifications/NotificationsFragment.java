@@ -42,6 +42,13 @@ public class NotificationsFragment extends Fragment implements NotificationsRecy
     private ConstraintLayout layout;
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        if(getActivity()!=null)
+        getActivity().setTitle( "Notifications" );
+        super.onViewCreated( view, savedInstanceState );
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         notificationViewModel = ViewModelProviders.of(this).get(NotificationViewModel.class);

@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -56,6 +57,13 @@ public class MessFragment extends Fragment {
     private TextView selectedMess;
     private String cancelMealString;
     private Spinner spinner;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        if(getActivity()!=null)
+        getActivity().setTitle( "Mess" );
+        super.onViewCreated( view, savedInstanceState );
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

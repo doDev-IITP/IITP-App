@@ -109,7 +109,7 @@
             android:inputType="text"
             android:textColor="@color/black" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/add_notification_send_button"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
