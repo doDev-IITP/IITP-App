@@ -23,7 +23,8 @@ import ru.noties.markwon.image.ImagesPlugin;
 
 public class ClubDetailsFragment extends Fragment {
 
-    public ClubDetailsFragment() {}
+    public ClubDetailsFragment() {
+    }
 
     private ClubViewModel clubViewModel;
 
@@ -50,7 +51,7 @@ public class ClubDetailsFragment extends Fragment {
         if (b != null) {
             String transitionName = b.getString("transitionName");
             cover.setTransitionName(transitionName);
-            int id = b.getInt("clubId");
+            String id = b.getString("clubId");
 
             final ClubItem current = clubViewModel.getClubById(id);
 
@@ -62,7 +63,7 @@ public class ClubDetailsFragment extends Fragment {
 
             name.setText(current.getName());
 
-            if (current.getDescription() == null){
+            if (current.getDescription() == null) {
                 current.setDescription("No Description");
             }
             final Markwon markwon = Markwon.builder(getContext())
@@ -72,7 +73,7 @@ public class ClubDetailsFragment extends Fragment {
 
             bio.setText(current.getBio());
 
-            if (current.isFollowed()){
+            if (current.isFollowed()) {
                 followingFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));
             } else {
                 followingFab.getBackground().setTint(getResources().getColor(R.color.dark_gray));
@@ -92,7 +93,8 @@ public class ClubDetailsFragment extends Fragment {
                     builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
 
                     CustomTabsIntent customTabsIntent = builder.build();
-                    customTabsIntent.launchUrl(getContext(), Uri.parse(current.getWebsite()));
+                    String website = current.getWebsite().contains("http") ? current.getWebsite() : "https://" + current.getWebsite();
+                    customTabsIntent.launchUrl(getContext(), Uri.parse(website));
                 }
             });
 
@@ -101,8 +103,8 @@ public class ClubDetailsFragment extends Fragment {
         return view;
     }
 
-    private void toggleStar(ClubItem item){
-        if (item.isFollowed()){
+    private void toggleStar(ClubItem item) {
+        if (item.isFollowed()) {
             item.setFollowed(false);
         } else {
             item.setFollowed(true);

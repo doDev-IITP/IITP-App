@@ -1,11 +1,9 @@
 package com.grobo.notifications.account;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,9 +13,6 @@ import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -85,8 +80,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
         getWindow().setStatusBarColor( Color.parseColor( "#8548a3" ) );
 
-        checkForPermission();
-
         service = RetrofitClientInstance.getRetrofitInstance().create( UserRoutes.class );
 
         setBaseFragment( savedInstanceState );
@@ -149,24 +142,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             firstFragment.setArguments( getIntent().getExtras() );
             manager.beginTransaction()
                     .add( R.id.frame_account, firstFragment ).commit();
-        }
-    }
-
-    private void checkForPermission() {
-        if (ContextCompat.checkSelfPermission( this, Manifest.permission.ACCESS_COARSE_LOCATION )
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions( this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    12345 );
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 1234) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText( this, "Permission Granted", Toast.LENGTH_SHORT ).show();
-            }
         }
     }
 

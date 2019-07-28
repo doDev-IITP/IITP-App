@@ -5,27 +5,30 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.R;
-import com.grobo.notifications.database.AppDatabase;
 import com.grobo.notifications.work.DeleteWorker;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.grobo.notifications.utils.Constants.KEY_CURRENT_VERSION;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
@@ -47,11 +50,11 @@ public class MyApplication extends Application {
         subscribeFcmTopics();
 
         scheduleTask();
-        
-        extractClub();
+
+        remoteConfig();
     }
 
-    private void subscribeFcmTopics(){
+    private void subscribeFcmTopics() {
         FirebaseMessaging fcm = FirebaseMessaging.getInstance();
 
         fcm.subscribeToTopic("all");
@@ -95,22 +98,27 @@ public class MyApplication extends Application {
         }
     }
 
-    private void extractClub(){
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            Log.e("package", String.valueOf(pInfo.versionName));
+    private void remoteConfig() {
+        final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
-            if (!PreferenceManager.getDefaultSharedPreferences(this).getString("last_version", "0").equals(pInfo.versionName)) {
+        Map<String, Object> remoteConfigDefaults = new HashMap<>();
+        remoteConfigDefaults.put(Constants.KEY_UPDATE_REQUIRED, false);
+        remoteConfigDefaults.put(Constants.KEY_CURRENT_VERSION, "1.0");
 
-                String clubJson = utils.loadJSONFromAsset(this, "clubs.json");
-                new utils.ExtractClubsJson(AppDatabase.getDatabase(this).clubDao(), clubJson).execute();
+        firebaseRemoteConfig.setDefaults(remoteConfigDefaults);
+        // fetch every minutes
 
+        firebaseRemoteConfig.fetch(60).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.e("Application", "remote config is fetched.");
+                    firebaseRemoteConfig.activateFetched();
+                    Log.e("Application", firebaseRemoteConfig.getString(KEY_CURRENT_VERSION));
+                } else {
+                    Log.e("Application", "remote config fetch failed.");
+                }
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
-
 }
