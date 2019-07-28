@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 
@@ -19,6 +21,13 @@ import java.util.Map;
 public class LinksFragment extends Fragment {
 
     public LinksFragment() {}
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        if(getActivity()!=null)
+        getActivity().setTitle( "Quick Links" );
+        super.onViewCreated( view, savedInstanceState );
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

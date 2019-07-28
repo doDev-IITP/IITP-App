@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
@@ -30,7 +30,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
                     android:text="General"
-                    android:textSize="16sp" />
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tv_webmail"
@@ -39,7 +40,7 @@
                     android:layout_margin="4dp"
                     android:text="WebMail"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tv_intranet"
@@ -48,7 +49,7 @@
                     android:layout_margin="4dp"
                     android:text="INTRANET"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tv_reg"
@@ -57,13 +58,13 @@
                     android:layout_margin="4dp"
                     android:text="Registration and Result"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
@@ -81,7 +82,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
                     android:text="Library"
-                    android:textSize="16sp" />
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tv_lib_catalogue"
@@ -90,7 +92,7 @@
                     android:layout_margin="4dp"
                     android:text="Library catalogue"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tv_lib_res"
@@ -99,7 +101,7 @@
                     android:layout_margin="4dp"
                     android:text="Library eResources"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tv_prev_ques"
@@ -108,7 +110,7 @@
                     android:layout_margin="4dp"
                     android:text="Previous Year Question Papers"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tv_late_fee"
@@ -117,13 +119,13 @@
                     android:layout_margin="4dp"
                     android:text="Late Fee Payment"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
@@ -140,8 +142,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="Others"
-                    android:textSize="16sp" />
+                    android:text="Miscellaneous"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tv_institute_repo"
@@ -150,7 +153,7 @@
                     android:layout_margin="4dp"
                     android:text="Institutional Repo"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tv_inter_rel"
@@ -159,11 +162,11 @@
                     android:layout_margin="4dp"
                     android:text="International Relations Website"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 

@@ -66,5 +66,8 @@ dependencies {
     implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
     implementation 'org.jsoup:jsoup:1.8.3' // required
 
+//    //google material
+//    implementation 'com.google.android.material:material:1.1.0-alpha08'
+
 }
 apply plugin: 'com.google.gms.google-services'
