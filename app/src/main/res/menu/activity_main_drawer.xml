@@ -53,6 +53,14 @@
             android:icon="@drawable/baseline_explore_24"
             android:title="Services" />
         <item
+            android:id="@+id/nav_fresher"
+            android:icon="@drawable/baseline_explore_24"
+            android:title="Fresher Zone" />
+        <item
+            android:id="@+id/nav_virtual"
+            android:icon="@drawable/baseline_explore_24"
+            android:title="Virtual Tour" />
+        <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="Setting"/>

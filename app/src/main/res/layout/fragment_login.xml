@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/webmail_username"
                     android:inputType="text"
-                    android:text="as@gmail.com"
+                    tools:text="as@gmail.com"
                     android:textColor="@color/black" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -115,7 +115,7 @@
                     android:hint="@string/password"
                     android:importantForAutofill="no"
                     android:inputType="textPassword"
-                    android:text="testing"
+                    tools:text="testing"
                     android:textColor="@color/black"
                     tools:ignore="UnusedAttribute" />
 

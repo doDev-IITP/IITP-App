@@ -46,7 +46,7 @@ public class MyApplication extends Application {
         createNotificationChannel();
         subscribeFcmTopics();
 
-//        scheduleTask();
+        scheduleTask();
         
         extractClub();
     }
@@ -65,16 +65,17 @@ public class MyApplication extends Application {
     }
 
 
-    private static void scheduleTask() {
+    private void scheduleTask() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiresCharging(true)
                 .build();
 
         PeriodicWorkRequest deleteRequest = new PeriodicWorkRequest.Builder(DeleteWorker.class, 1, TimeUnit.DAYS)
                 .setConstraints(constraints)
+                .setInitialDelay(10, TimeUnit.SECONDS)
                 .build();
 
-        WorkManager.getInstance().enqueueUniquePeriodicWork("delete_feed", ExistingPeriodicWorkPolicy.KEEP, deleteRequest);
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("delete_feed", ExistingPeriodicWorkPolicy.KEEP, deleteRequest);
     }
 
     private void createNotificationChannel() {

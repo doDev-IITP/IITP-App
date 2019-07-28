@@ -30,15 +30,14 @@ import com.google.android.gms.auth.api.credentials.CredentialRequestResult;
 import com.google.android.gms.auth.api.credentials.CredentialsOptions;
 import com.google.android.gms.auth.api.credentials.IdentityProviders;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.grobo.notifications.R;
 import com.grobo.notifications.database.Person;
 import com.grobo.notifications.feed.Converters;
 import com.grobo.notifications.main.MainActivity;
-import com.grobo.notifications.network.UserRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
+import com.grobo.notifications.network.UserRoutes;
 
 import org.json.JSONObject;
 
@@ -69,7 +68,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     private SharedPreferences prefs;
     private ProgressDialog progressDialog;
 
-    GetDataService service;
     private GoogleApiClient mCredentialClient;
     private int RC_SAVE = 1;
     private int RC_READ = 10;
@@ -89,7 +87,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
         checkForPermission();
 
-        service = RetrofitClientInstance.getRetrofitInstance().create( GetDataService.class );
+        service = RetrofitClientInstance.getRetrofitInstance().create( UserRoutes.class );
 
         setBaseFragment( savedInstanceState );
         final String call = getIntent().getStringExtra( "call" );
