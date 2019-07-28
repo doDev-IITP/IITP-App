@@ -10,7 +10,6 @@
 
     <application
         android:name=".utils.MyApplication"
-        android:allowBackup="false"
         android:icon="@drawable/baseline_dashboard_24"
         android:label="@string/app_name"
         android:roundIcon="@drawable/baseline_dashboard_24"
@@ -63,6 +62,7 @@
             android:name=".account.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".timetable.TimetableActivity"
@@ -73,6 +73,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
+
         </activity>
         <activity
             android:name=".main.MainActivity"
@@ -85,6 +86,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".timetable.EditTimetableActivity" />
 

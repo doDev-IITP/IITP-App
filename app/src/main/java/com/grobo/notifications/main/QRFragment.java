@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.utils.utils;
 
@@ -39,6 +41,7 @@ public class QRFragment extends Fragment {
 
     private ImageView imageView;
     SharedPreferences prefs;
+    private FloatingActionButton changeqr;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class QRFragment extends Fragment {
         View view = inflater.inflate( R.layout.fragment_qr, container, false );
 
         imageView = view.findViewById( R.id.qr_fragment_qr );
+        changeqr = view.findViewById( R.id.changefab );
 
         Bitmap bitmap = null;
         if (prefs.getBoolean( LOGIN_STATUS, false )) {
@@ -68,6 +72,15 @@ public class QRFragment extends Fragment {
 
             Glide.with( this ).load( "http://www.sohrabdaver.com/images/upload-qr.jpg" ).centerCrop().into( imageView );
         }
+        changeqr.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType( "image/*" );
+                intent.setAction( Intent.ACTION_GET_CONTENT );
+                startActivityForResult( Intent.createChooser( intent, "Select Picture" ), 1 );
+            }
+        } );
 
 
         return view;
@@ -153,6 +166,23 @@ public class QRFragment extends Fragment {
             }
         }
         super.onActivityResult( requestCode, resultCode, data );
+    }
+
+    public void change(boolean check) {
+        if (check == true) {
+            changeqr.show();
+            new CountDownTimer( 10000, 1000 ) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    changeqr.hide();
+                }
+            }.start();
+        }
     }
 
 }

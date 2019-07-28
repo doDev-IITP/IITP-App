@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
@@ -76,7 +77,6 @@ public class MainActivity extends AppCompatActivity
 
             Toolbar toolbar = findViewById( R.id.toolbar );
             setSupportActionBar( toolbar );
-
             DrawerLayout drawer = findViewById( R.id.drawer_layout );
             navigationView = findViewById( R.id.nav_view );
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -267,6 +267,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_setting:
                 currentFragment = R.id.nav_setting;
                 updateFragment( new SettingFragment() );
+                break;
+            case R.id.nav_fresher:
+                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                break;
+            case R.id.nav_virtual:
+                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
                 break;
         }
         handler.postDelayed( runnable2, 300 );

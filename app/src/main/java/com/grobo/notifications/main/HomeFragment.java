@@ -2,6 +2,7 @@ package com.grobo.notifications.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.timetable.DayFragment;
 import com.grobo.notifications.timetable.TimetableActivity;
@@ -44,7 +46,6 @@ public class HomeFragment extends Fragment {
         dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
         CardView qrCard = rootView.findViewById(R.id.card_home_qr);
-        CardView timetableCard = rootView.findViewById(R.id.card_home_timetable);
 
         int margin = ViewUtils.dpToPx(8);
         int screenWidth = ViewUtils.getScreenWidth(getContext()) / 2 - (2 * margin);
@@ -54,17 +55,26 @@ public class HomeFragment extends Fragment {
         lp.setMargins(p+margin, margin, margin, margin);
         qrCard.setLayoutParams(lp);
 
-        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(screenWidth, screenWidth));
-        lp2.setMargins(p+margin, margin, margin, margin);
-        timetableCard.setLayoutParams(lp2);
-
         View qrFragment = rootView.findViewById(R.id.home_fr_mess_qr);
 
         qrFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QRFragment frag = new QRFragment();
+                final QRFragment frag = new QRFragment();
                 transactFragment(frag);
+                new CountDownTimer( 200, 1000 ) {
+                    @Override
+                    public void onTick(long l) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        frag.change( true );
+                    }
+                }.start();
+
+
             }
         });
 

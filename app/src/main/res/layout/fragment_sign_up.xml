@@ -134,7 +134,7 @@
         android:layout_marginBottom="32dp"
         android:background="@drawable/button_style"
         android:backgroundTint="#171132"
-        android:text="Finish"
+        android:text="Proceed to verify email Id"
         android:textColor="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
