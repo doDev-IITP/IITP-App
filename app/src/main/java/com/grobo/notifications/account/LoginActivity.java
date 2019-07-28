@@ -56,7 +56,7 @@ import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
 public class LoginActivity extends FragmentActivity implements LoginFragment.OnSignInInteractionListener,
-        SignUpFragment.OnSignUpInteractionListener {
+        SignUpFragment.OnSignUpInteractionListener, OtpFragment.OnOtpListener {
 
 
     private FragmentManager manager;
@@ -66,6 +66,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     private GoogleApiClient mCredentialClient;
     private int RC_SAVE = 1;
     private int RC_READ = 10;
+    private Map<String, Object> json;
 
     UserRoutes service;
 
@@ -120,13 +121,13 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     }
                 } );
 
-        service = RetrofitClientInstance.getRetrofitInstance().create(UserRoutes.class);
+        service = RetrofitClientInstance.getRetrofitInstance().create( UserRoutes.class );
 
-        setBaseFragment(savedInstanceState);
+        setBaseFragment( savedInstanceState );
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog = new ProgressDialog( this );
+        progressDialog.setIndeterminate( true );
+        progressDialog.setCanceledOnTouchOutside( false );
 
     }
 
@@ -308,11 +309,19 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
     @Override
     public void onFinishSelected(Map<String, Object> jsonParams) {
+        json = jsonParams;
+        showFragmentWithTransition( new OtpFragment() );
+
+
+    }
+
+    @Override
+    public void OnOtpCorrect(int status) {
 
         progressDialog.setMessage( "Signing Up" );
         progressDialog.show();
 
-        RequestBody body = RequestBody.create( okhttp3.MediaType.parse( "application/json; charset=utf-8" ), (new JSONObject( jsonParams )).toString() );
+        RequestBody body = RequestBody.create( okhttp3.MediaType.parse( "application/json; charset=utf-8" ), (new JSONObject( json )).toString() );
 
         Call<Person> call = service.register( body );
         call.enqueue( new Callback<Person>() {
