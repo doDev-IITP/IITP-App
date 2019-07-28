@@ -1,6 +1,6 @@
 package com.grobo.notifications.account;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.grobo.notifications.R;
-import com.grobo.notifications.main.MainActivity;
 
 import static com.grobo.notifications.utils.Constants.BASE_URL;
 import static com.grobo.notifications.utils.Constants.IS_ADMIN;
@@ -36,6 +35,7 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment() {}
 
     private SharedPreferences prefs;
+    private OnLogoutCallback callback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,11 +94,24 @@ public class ProfileFragment extends Fragment {
                 .putBoolean(IS_ADMIN, false)
                 .apply();
 
-        MainActivity.mainActivityRef.finish();
-        getActivity().finish();
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.putExtra( "call","logout" );
-        startActivity(intent);
+        callback.onLogout();
     }
 
+    interface OnLogoutCallback {
+        void onLogout();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnLogoutCallback) {
+            callback = (OnLogoutCallback) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
+    }
 }

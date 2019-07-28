@@ -47,14 +47,14 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (utils.getWifiInfo(getContext())) {
-                if (!validateInput()) {
-                    Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
-                    return;
-                } else {
-                    callback.onLoginSelected(email, password);
-                }
-//                }
+                if (utils.isNetworkConnected(getContext())) {
+                    if (!validateInput()) {
+                        Toast.makeText(getContext(), "Please check input fields!", Toast.LENGTH_LONG).show();
+                        return;
+                    } else {
+                        callback.onLoginSelected(email, password);
+                    }
+                } else Toast.makeText(getContext(), "No internet connection!!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -62,7 +62,7 @@ public class LoginFragment extends Fragment {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (utils.getWifiInfo(getContext())) {
+                if (utils.isNetworkConnected(getContext())) {
                     if (!validateInput()) {
                         Toast.makeText(getContext(), "SignUp failed", Toast.LENGTH_LONG).show();
                     } else {
@@ -81,12 +81,12 @@ public class LoginFragment extends Fragment {
         email = emailInput.getText().toString();
         password = passwordInput.getText().toString();
 
-//        if (email.isEmpty() || !email.contains("@iitp.ac.in")) {
-//            emailInput.setError("Please enter a valid email");
-//            valid = false;
-//        } else {
-//            emailInput.setError(null);
-//        }
+        if (email.isEmpty() || !email.contains("@iitp.ac.in")) {
+            emailInput.setError("Please enter a valid email");
+            valid = false;
+        } else {
+            emailInput.setError(null);
+        }
 
         if (password.isEmpty()) {
             passwordInput.setError("Please enter a password");

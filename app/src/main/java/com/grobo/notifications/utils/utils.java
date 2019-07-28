@@ -1,13 +1,12 @@
 package com.grobo.notifications.utils;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -18,12 +17,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.grobo.notifications.R;
-import com.grobo.notifications.clubs.ClubDao;
-import com.grobo.notifications.clubs.ClubItem;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,7 +27,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
 import java.util.Random;
 
 import javax.net.ssl.HostnameVerifier;
@@ -189,18 +181,6 @@ public class utils {
         }
     }
 
-    public static ProgressDialog showLoadingDialog(Context context) {
-        ProgressDialog progressDialog = new ProgressDialog(context);
-        if (progressDialog.getWindow() != null) {
-            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-        progressDialog.setContentView(R.layout.progress_dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        return progressDialog;
-    }
-
     public static String loadJSONFromAsset(Context context, String jsonFileName)
             throws IOException {
 
@@ -244,6 +224,16 @@ public class utils {
         }
     }
 
+    public static String getAppVersion(Context context) {
+        String vName = null;
+        try {
+            vName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return vName;
+    }
+
     public static class ImageDownloader extends AsyncTask<String, Void, Bitmap>{
 
         @Override
@@ -270,75 +260,5 @@ public class utils {
             return null;
         }
     }
-
-    public static class ExtractClubsJson extends AsyncTask<Void, Void, Void>{
-
-        private ClubDao clubDao;
-        private String json;
-
-        ExtractClubsJson(ClubDao clubDao, String json){
-            this.json = json;
-            this.clubDao = clubDao;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            try {
-                JSONObject object = new JSONObject(json);
-                JSONArray clubs = object.getJSONArray("clubs");
-
-                for (int i = 0; i < clubs.length(); i++){
-                    JSONObject current = clubs.getJSONObject(i);
-                    ClubItem newItem = new ClubItem();
-
-                    newItem.setBio(current.getString("bio"));
-                    newItem.setId(current.getInt("id"));
-                    newItem.setName(current.getString("name"));
-                    newItem.setDescription(current.getString("description"));
-                    newItem.setWebsite(current.getString("website"));
-                    newItem.setImage(current.getString("image"));
-
-                    JSONArray coordinators = current.getJSONArray("coordinators");
-                    ArrayList<String> coords = new ArrayList<>();
-                    for (int j = 0; j < coordinators.length(); j++){
-                        coords.add(coordinators.getString(j));
-                    }
-                    newItem.setCoordinators(coords);
-
-                    JSONArray subCoordinators = current.getJSONArray("subCoordinators");
-                    ArrayList<String> subCoords = new ArrayList<>();
-                    for (int j = 0; j < subCoordinators.length(); j++){
-                        subCoords.add(subCoordinators.getString(j));
-                    }
-                    newItem.setSubCoordinators(subCoords);
-
-                    JSONArray events = current.getJSONArray("events");
-                    ArrayList<String> event = new ArrayList<>();
-                    for (int j = 0; j < events.length(); j++){
-                        event.add(events.getString(j));
-                    }
-                    newItem.setEvents(event);
-
-                    JSONArray pages = current.getJSONArray("pages");
-                    ArrayList<String> page = new ArrayList<>();
-                    for (int j = 0; j < pages.length(); j++){
-                        page.add(pages.getString(j));
-                    }
-                    newItem.setCoordinators(page);
-
-                    clubDao.insertClub(newItem);
-
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            return null;
-        }
-    }
-
 }
 

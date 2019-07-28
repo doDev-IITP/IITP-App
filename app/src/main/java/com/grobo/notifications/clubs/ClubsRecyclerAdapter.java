@@ -46,7 +46,6 @@ public class ClubsRecyclerAdapter extends RecyclerView.Adapter<ClubsRecyclerAdap
             holder.bio.setText(current.getBio());
             Glide.with(context)
                     .load(current.getImage())
-                    .centerCrop()
                     .placeholder(R.drawable.ic_website_black_24dp)
                     .into(holder.image);
             holder.image.setTransitionName("transition" + position);
@@ -93,6 +92,6 @@ public class ClubsRecyclerAdapter extends RecyclerView.Adapter<ClubsRecyclerAdap
     }
 
     public interface OnClubSelectedListener {
-        void onClubSelected(int id, View view, int position);
+        void onClubSelected(String id, View view, int position);
     }
 }
