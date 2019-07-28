@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.grobo.notifications.feed.FeedDao;
 import com.grobo.notifications.database.AppDatabase;
+import com.grobo.notifications.feed.FeedDao;
 
 public class DeleteWorker extends Worker {
 
@@ -15,19 +15,19 @@ public class DeleteWorker extends Worker {
         super(context, params);
     }
 
+    @NonNull
     @Override
     public Result doWork() {
-
         deleteOldData();
 
         return Result.success();
     }
 
-    private void deleteOldData(){
+    private void deleteOldData() {
 
         AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
         FeedDao feedDao = db.feedDao();
-        feedDao.deleteOldFeed(System.currentTimeMillis() - (10*24*60*60*1000));
+        feedDao.deleteOldFeed(System.currentTimeMillis() - (10 * 24 * 60 * 60 * 1000));
 
     }
 }
