@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.grobo.notifications.R;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnLogoutCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,4 +41,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onLogout() {
+        finish();
+    }
 }

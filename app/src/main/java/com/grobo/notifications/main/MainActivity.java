@@ -2,12 +2,14 @@ package com.grobo.notifications.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -26,6 +29,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
@@ -36,13 +40,15 @@ import com.grobo.notifications.clubs.ClubsRecyclerAdapter;
 import com.grobo.notifications.feed.FeedDetailFragment;
 import com.grobo.notifications.feed.FeedFragment;
 import com.grobo.notifications.feed.FeedRecyclerAdapter;
-import com.grobo.notifications.internship.InternshipFragment;
 import com.grobo.notifications.notifications.NotificationsFragment;
 import com.grobo.notifications.services.ServicesFragment;
 import com.grobo.notifications.setting.SettingFragment;
 import com.grobo.notifications.timetable.TimetableActivity;
+import com.grobo.notifications.utils.utils;
 
 import static com.grobo.notifications.utils.Constants.IS_ADMIN;
+import static com.grobo.notifications.utils.Constants.KEY_CURRENT_VERSION;
+import static com.grobo.notifications.utils.Constants.KEY_UPDATE_REQUIRED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
@@ -60,82 +66,103 @@ public class MainActivity extends AppCompatActivity
     private Runnable runnable2 = null;
     private int state = 0;
 
+    private FirebaseRemoteConfig remoteConfig;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences( this );
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (!prefs.getBoolean( LOGIN_STATUS, false )) {
+        if (!prefs.getBoolean(LOGIN_STATUS, false)) {
             finish();
-            startActivity( new Intent( MainActivity.this, LoginActivity.class ) );
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         } else {
 
             manager = getSupportFragmentManager();
 
-            Toolbar toolbar = findViewById( R.id.toolbar );
-            setSupportActionBar( toolbar );
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-            DrawerLayout drawer = findViewById( R.id.drawer_layout );
-            navigationView = findViewById( R.id.nav_view );
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            navigationView = findViewById(R.id.nav_view);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
-            drawer.addDrawerListener( toggle );
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
 
             toggle.syncState();
-            navigationView.setNavigationItemSelectedListener( this );
-            View v = navigationView.getHeaderView( 0 );
-            navigationView.setCheckedItem( R.id.nav_home );
+            navigationView.setNavigationItemSelectedListener(this);
+            View v = navigationView.getHeaderView(0);
+            navigationView.setCheckedItem(R.id.nav_home);
             currentFragment = R.id.nav_home;
 
-            setBaseFragment( savedInstanceState );
+            setBaseFragment(savedInstanceState);
 
-            ((TextView) v.findViewById( R.id.user_name_nav_header )).setText( prefs.getString( USER_NAME, "Guest" ) );
-            ((TextView) v.findViewById( R.id.user_email_nav_header )).setText( prefs.getString( ROLL_NUMBER, "" ) );
+            ((TextView) v.findViewById(R.id.user_name_nav_header)).setText(prefs.getString(USER_NAME, "Guest"));
+            ((TextView) v.findViewById(R.id.user_email_nav_header)).setText(prefs.getString(ROLL_NUMBER, ""));
 
             handler = new Handler();
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    startActivity( new Intent( getApplicationContext(), TimetableActivity.class ) );
+                    startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
                 }
             };
             runnable2 = new Runnable() {
                 @Override
                 public void run() {
-                    navigationView.setCheckedItem( currentFragment );
+                    navigationView.setCheckedItem(currentFragment);
                 }
             };
             state = 1;
-            mainActivityRef = this;
+
+            remoteConfig = FirebaseRemoteConfig.getInstance();
+
+            if (!remoteConfig.getBoolean(KEY_UPDATE_REQUIRED)) {
+                updateApp(true);
+            }
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!prefs.getBoolean(LOGIN_STATUS, false)) {
+            finish();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }
+
+        if (remoteConfig.getBoolean(KEY_UPDATE_REQUIRED)) {
+            updateApp(false);
+        }
+
+    }
+
     private void setBaseFragment(Bundle savedInstanceState) {
-        if (findViewById( R.id.frame_layout_main ) != null) {
+        if (findViewById(R.id.frame_layout_main) != null) {
 
             if (savedInstanceState != null) {
                 return;
             }
             HomeFragment firstFragment = new HomeFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add( R.id.frame_layout_main, firstFragment ).commit();
+                    .add(R.id.frame_layout_main, firstFragment).commit();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate( R.menu.main, menu );
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu( menu );
-        if (prefs.getBoolean( IS_ADMIN, false )) {
-            MenuItem menuItem = menu.findItem( R.id.action_admin );
-            menuItem.setVisible( true );
+        super.onPrepareOptionsMenu(menu);
+        if (prefs.getBoolean(IS_ADMIN, false)) {
+            MenuItem menuItem = menu.findItem(R.id.action_admin);
+            menuItem.setVisible(true);
         }
         return true;
     }
@@ -144,27 +171,27 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_profile) {
-            startActivity( new Intent( MainActivity.this, ProfileActivity.class ) );
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             return true;
         } else if (id == R.id.action_admin) {
-            startActivity( new Intent( MainActivity.this, XPortal.class ) );
+            startActivity(new Intent(MainActivity.this, XPortal.class));
             return true;
         }
-        return super.onOptionsItemSelected( item );
+        return super.onOptionsItemSelected(item);
     }
 
     public void updateFragment(Fragment fragment) {
 
-        manager.popBackStackImmediate( "later_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE );
+        manager.popBackStackImmediate("later_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace( R.id.frame_layout_main, fragment );
+        transaction.replace(R.id.frame_layout_main, fragment);
         transaction.commit();
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference.getKey().equals( LOGIN_STATUS )) {
+        if (preference.getKey().equals(LOGIN_STATUS)) {
             recreate();
         }
         return false;
@@ -175,37 +202,37 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFeedSelected(String id, View view, int position) {
-        Fragment current = manager.findFragmentById( R.id.frame_layout_main );
+        Fragment current = manager.findFragmentById(R.id.frame_layout_main);
 
         Fragment newFragment = new FeedDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putString( "transitionName", "transition" + position );
-        bundle.putString( "id", id );
-        newFragment.setArguments( bundle );
+        bundle.putString("transitionName", "transition" + position);
+        bundle.putString("id", id);
+        newFragment.setArguments(bundle);
 
-        showFragmentWithTransition( current, newFragment, view, "transition" + position );
+        showFragmentWithTransition(current, newFragment, view, "transition" + position);
     }
 
     private void showFragmentWithTransition(Fragment current, Fragment newFragment, View sharedView, String sharedElementName) {
 
-        current.setSharedElementReturnTransition( TransitionInflater.from( this ).inflateTransition( R.transition.default_transition ) );
-        current.setExitTransition( TransitionInflater.from( this ).inflateTransition( android.R.transition.no_transition ) );
+        current.setSharedElementReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
+        current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
 
-        newFragment.setSharedElementEnterTransition( TransitionInflater.from( this ).inflateTransition( R.transition.default_transition ) );
-        newFragment.setEnterTransition( TransitionInflater.from( this ).inflateTransition( android.R.transition.slide_bottom ) );
+        newFragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
+        newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_bottom));
 
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.replace( R.id.frame_layout_main, newFragment );
-        fragmentTransaction.addToBackStack( "later_fragment" );
-        fragmentTransaction.addSharedElement( sharedView, sharedElementName );
+        fragmentTransaction.replace(R.id.frame_layout_main, newFragment);
+        fragmentTransaction.addToBackStack("later_fragment");
+        fragmentTransaction.addSharedElement(sharedView, sharedElementName);
         fragmentTransaction.commit();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById( R.id.drawer_layout );
-        if (drawer.isDrawerOpen( GravityCompat.START )) {
-            drawer.closeDrawer( GravityCompat.START );
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -218,84 +245,114 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_home:
                 currentFragment = R.id.nav_home;
-                updateFragment( new HomeFragment() );
+                updateFragment(new HomeFragment());
                 break;
             case R.id.nav_feed:
                 currentFragment = R.id.nav_feed;
-                updateFragment( new FeedFragment() );
+                updateFragment(new FeedFragment());
                 break;
             case R.id.nav_notifications:
                 currentFragment = R.id.nav_notifications;
-                updateFragment( new NotificationsFragment() );
+                updateFragment(new NotificationsFragment());
                 break;
             case R.id.nav_explore:
                 currentFragment = R.id.nav_explore;
-                updateFragment( new ClubsFragment() );
+                updateFragment(new ClubsFragment());
                 break;
             case R.id.nav_timetable:
-                handler.postDelayed( runnable, 300 );
-                navigationView.setCheckedItem( R.id.nav_home );
+                handler.postDelayed(runnable, 300);
+                navigationView.setCheckedItem(R.id.nav_home);
                 break;
             case R.id.nav_calender:
-                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
 //                updateFragment( new CalenderFragment() );
                 break;
             case R.id.nav_mess:
                 currentFragment = R.id.nav_mess;
-                updateFragment( new MessFragment() );
+                updateFragment(new MessFragment());
                 break;
             case R.id.nav_internship:
-                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
                 //updateFragment(new InternshipFragment() );
                 break;
             case R.id.nav_tech:
-                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
 //                updateFragment(new SettingFragment());
                 break;
             case R.id.nav_exam:
-                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
 //                updateFragment( new ExamFragment() );
                 break;
             case R.id.nav_links:
                 currentFragment = R.id.nav_links;
-                updateFragment( new LinksFragment() );
+                updateFragment(new LinksFragment());
                 break;
             case R.id.nav_services:
                 currentFragment = R.id.nav_services;
-                updateFragment( new ServicesFragment() );
+                updateFragment(new ServicesFragment());
                 break;
             case R.id.nav_setting:
                 currentFragment = R.id.nav_setting;
-                updateFragment( new SettingFragment() );
+                updateFragment(new SettingFragment());
                 break;
         }
-        handler.postDelayed( runnable2, 300 );
-        DrawerLayout drawer = findViewById( R.id.drawer_layout );
-        drawer.closeDrawer( GravityCompat.START );
+        handler.postDelayed(runnable2, 300);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
-    public void onClubSelected(int id, View view, int position) {
-        Fragment current = manager.findFragmentById( R.id.frame_layout_main );
+    public void onClubSelected(String id, View view, int position) {
+        Fragment current = manager.findFragmentById(R.id.frame_layout_main);
 
         Fragment newFragment = new ClubDetailsFragment();
         Bundle bundle = new Bundle();
-        bundle.putString( "transitionName", "transition" + position );
-        bundle.putInt( "clubId", id );
-        newFragment.setArguments( bundle );
+        bundle.putString("transitionName", "transition" + position);
+        bundle.putString("clubId", id);
+        newFragment.setArguments(bundle);
 
-        showFragmentWithTransition( current, newFragment, view, "transition" + position );
+        showFragmentWithTransition(current, newFragment, view, "transition" + position);
     }
 
     @Override
     protected void onDestroy() {
         if (state == 1) {
-            handler.removeCallbacks( runnable );
-            handler.removeCallbacks( runnable2 );
+            handler.removeCallbacks(runnable);
+            handler.removeCallbacks(runnable2);
 
         }
         super.onDestroy();
+    }
+
+    private void updateApp(boolean cancelable) {
+
+        String currentVersion = remoteConfig.getString(KEY_CURRENT_VERSION);
+        String appVersion = utils.getAppVersion(this);
+
+        if (!TextUtils.equals(currentVersion, appVersion)) {
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this)
+                    .setTitle("New version available")
+                    .setMessage("Please, update app to new version to continue using.\nCurrent Version: " + appVersion + "\nNew Version: " + currentVersion)
+                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            utils.openPlayStoreForApp(MainActivity.this);
+                        }
+                    }).setCancelable(cancelable);
+
+            if (cancelable) {
+                dialogBuilder.setNeutralButton("Later", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+            }
+
+            dialogBuilder.create().show();
+        }
+
     }
 
 }
