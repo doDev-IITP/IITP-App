@@ -10,37 +10,29 @@
     <LinearLayout
         android:id="@+id/signup_cover_ll"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:background="@drawable/gradient_splash_background"
         android:orientation="vertical"
+        android:padding="10dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/signup_image_cv"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="45dp"
-            android:id="@+id/signup_image_cv"
             app:cardCornerRadius="75dp"
             app:cardElevation="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:text="Click here to upload photo"
-                android:textColor="@color/black"
-                android:translationZ="2dp" />
 
             <ImageView
+                android:id="@+id/signup_profile_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/logo"
                 android:scaleType="centerCrop"
-                android:id="@+id/signup_profile_image"
-                android:src="@drawable/profile_photo" />
+                android:src="@drawable/iitp" />
 
         </androidx.cardview.widget.CardView>
 
@@ -63,9 +55,10 @@
             android:padding="4dp">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/ic_person_black_24dp"
                 android:tint="#555" />
 
@@ -75,7 +68,7 @@
                 android:layout_margin="8dp"
                 android:layout_marginStart="20dp"
                 android:gravity="center_vertical"
-                android:textColorHint="@color/black">
+                android:textColorHint="@color/shadow">
 
                 <EditText
                     android:id="@+id/signup_input_name"
@@ -83,8 +76,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Name"
                     android:inputType="text"
-                    android:text="Aman Jee"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:text="Aman Jee" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -97,9 +90,10 @@
             android:padding="4dp">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/ic_fingerprint_black_24dp"
                 android:tint="#555" />
 
@@ -109,7 +103,7 @@
                 android:layout_margin="8dp"
                 android:layout_marginStart="20dp"
                 android:gravity="center_vertical"
-                android:textColorHint="@color/black">
+                android:textColorHint="@color/shadow">
 
                 <EditText
                     android:id="@+id/signup_input_roll"
@@ -117,8 +111,43 @@
                     android:layout_height="wrap_content"
                     android:hint="Roll Number"
                     android:inputType="text"
-                    android:text="1801ee03"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:text="1801ee03" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/ic_phone_black_24dp"
+                android:tint="#555" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                android:textColorHint="@color/shadow">
+
+                <EditText
+                    android:id="@+id/signup_input_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mobile no."
+                    android:inputType="text"
+                    android:textColor="@color/black"
+                    tools:text="1234567890" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
