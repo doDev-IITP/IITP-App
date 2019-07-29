@@ -235,6 +235,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     parseData( person );
                 } else {
                     Toast.makeText( LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT ).show();
+                    Log.e("bad request", response.body().toString());
                 }
                 progressDialog.dismiss();
             }
@@ -371,6 +372,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     showFragmentWithTransition( new OtpFragment() );
                 } else {
                     Toast.makeText( LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT ).show();
+                    Log.e("bad request", response.toString());
                 }
                 progressDialog.dismiss();
             }

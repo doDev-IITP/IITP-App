@@ -3,9 +3,7 @@ package com.grobo.notifications.account;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,12 +15,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
 
-import java.io.IOException;
 import java.util.Map;
 
 public class SignUpFragment extends Fragment {
@@ -57,11 +53,10 @@ public class SignUpFragment extends Fragment {
                 Log.e("passw", args.getString("password"));
             }
         }
-        EditText name = view.findViewById(R.id.signup_input_name);
-        jsonParams.put("name", name.getText().toString());
 
-        EditText roll = view.findViewById(R.id.signup_input_roll);
-        jsonParams.put("instituteId", roll.getText().toString());
+        final EditText name = view.findViewById(R.id.signup_input_name);
+        final EditText roll = view.findViewById(R.id.signup_input_roll);
+        final EditText phone = view.findViewById(R.id.signup_input_phone);
 
 //        CardView signUpImageCard = view.findViewById(R.id.signup_image_cv);
 //        signUpImageCard.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +71,21 @@ public class SignUpFragment extends Fragment {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onFinishSelected(jsonParams);
+                name.setError(null);
+                roll.setError(null);
+                phone.setError(null);
+                if (name.getText().toString().equals("")) {
+                    name.setError("Enter a valid name");
+                } else if (roll.getText().toString().equals("")) {
+                    roll.setError("Enter a valid roll");
+                } else if (phone.getText().toString().equals("") || phone.getText().toString().length() != 10) {
+                    roll.setError("Enter a valid phone number");
+                } else {
+                    jsonParams.put("name", name.getText().toString());
+                    jsonParams.put("instituteId", roll.getText().toString());
+                    jsonParams.put("phone", phone.getText().toString());
+                    callback.onFinishSelected(jsonParams);
+                }
             }
         });
 

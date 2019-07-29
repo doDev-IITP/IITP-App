@@ -141,7 +141,7 @@
                 android:textColorHint="@color/shadow">
 
                 <EditText
-                    android:id="@+id/signup_input_number"
+                    android:id="@+id/signup_input_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Mobile no."
