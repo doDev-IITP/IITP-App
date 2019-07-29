@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
-import com.grobo.notifications.utils.utils;
 
 public class LoginFragment extends Fragment {
 
@@ -47,14 +46,11 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (utils.isNetworkConnected(getContext())) {
-                    if (!validateInput()) {
-                        Toast.makeText(getContext(), "Please check input fields!", Toast.LENGTH_LONG).show();
-                        return;
-                    } else {
-                        callback.onLoginSelected(email, password);
-                    }
-                } else Toast.makeText(getContext(), "No internet connection!!", Toast.LENGTH_SHORT).show();
+                if (!validateInput()) {
+                    Toast.makeText(getContext(), "Please check input fields!", Toast.LENGTH_LONG).show();
+                } else {
+                    callback.onLoginSelected(email, password);
+                }
             }
         });
 
@@ -62,14 +58,13 @@ public class LoginFragment extends Fragment {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (utils.isNetworkConnected(getContext())) {
-                    if (!validateInput()) {
-                        Toast.makeText(getContext(), "SignUp failed", Toast.LENGTH_LONG).show();
-                    } else {
-                        callback.onSignUpSelected(email, password);
-                    }
+                if (!validateInput()) {
+                    Toast.makeText(getContext(), "SignUp failed", Toast.LENGTH_LONG).show();
+                } else {
+                    callback.onSignUpSelected(email, password);
                 }
             }
+
         });
 
         return view;

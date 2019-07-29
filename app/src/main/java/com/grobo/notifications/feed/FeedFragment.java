@@ -1,6 +1,7 @@
 package com.grobo.notifications.feed;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -48,19 +49,22 @@ public class FeedFragment extends Fragment {
     private View emptyView;
     private RadioGroup radioGroup;
     private FloatingActionButton addFab;
+    private SharedPreferences prefs;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         feedViewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        super.onViewCreated( view, savedInstanceState );
-        if(getActivity()!=null)
-        getActivity().setTitle( "Feed" );
+        super.onViewCreated(view, savedInstanceState);
+        if (getActivity() != null)
+            getActivity().setTitle("Feed");
     }
 
     @Override
@@ -75,6 +79,11 @@ public class FeedFragment extends Fragment {
                 updateData();
             }
         });
+
+        if ((System.currentTimeMillis() - prefs.getLong("last_feed_update_time", 0)) >= (10 * 1000)) {
+            swipeRefreshLayout.setRefreshing(true);
+            updateData();
+        }
 
         addFab = view.findViewById(R.id.add_feed_fab);
 
@@ -105,7 +114,7 @@ public class FeedFragment extends Fragment {
                             break;
                         case R.id.feed_radio_my:
                             addFab.show();
-                            observeMy(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_MONGO_ID, ""));
+                            observeMy(prefs.getString(USER_MONGO_ID, ""));
                             break;
                     }
                 }
@@ -120,7 +129,7 @@ public class FeedFragment extends Fragment {
                 }
             });
 
-        } else if (getContext() instanceof XPortal){
+        } else if (getContext() instanceof XPortal) {
 
 
 //            radioGroup.setVisibility(View.GONE);
@@ -159,9 +168,8 @@ public class FeedFragment extends Fragment {
                     for (FeedItem newItem : allItems) {
                         if (feedViewModel.getFeedCount(newItem.getId()) == 0)
                             feedViewModel.insert(newItem);
-                        Log.e("feed", newItem.getFeedPoster().getName());
                     }
-
+                    prefs.edit().putLong("last_feed_update_time", System.currentTimeMillis()).apply();
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -223,7 +231,8 @@ public class FeedFragment extends Fragment {
 
                 List<FeedItem> newList = new ArrayList<>();
                 for (FeedItem n : feedItems) {
-                    if (n.getFeedPoster().getId().equals(poster)) newList.add(n);
+                    if (n.getFeedPoster().getId() != null && n.getFeedPoster().getId().equals(poster))
+                        newList.add(n);
                 }
                 adapter.setFeedItemList(newList);
                 if (newList.size() == 0) {

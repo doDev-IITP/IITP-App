@@ -30,6 +30,9 @@ public interface FeedDao {
     @Query("DELETE FROM feed WHERE eventDate < :time and interested = 0")
     void deleteOldFeed(long time);
 
+    @Query("DELETE FROM feed WHERE interested = 0")
+    void deleteAllFeed();
+
     @Query("delete from feed where eventId like :eventId")
     void deleteFeedByEventId(long eventId);
 

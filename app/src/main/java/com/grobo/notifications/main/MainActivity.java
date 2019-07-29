@@ -28,7 +28,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.R;
@@ -45,6 +44,7 @@ import com.grobo.notifications.notifications.NotificationsFragment;
 import com.grobo.notifications.services.ServicesFragment;
 import com.grobo.notifications.setting.SettingFragment;
 import com.grobo.notifications.timetable.TimetableActivity;
+import com.grobo.notifications.utils.KeyboardUtils;
 import com.grobo.notifications.utils.utils;
 
 import static com.grobo.notifications.utils.Constants.IS_ADMIN;
@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity
                 updateApp(true);
             }
         }
+
+        KeyboardUtils.hideSoftInput(this);
     }
 
     @Override

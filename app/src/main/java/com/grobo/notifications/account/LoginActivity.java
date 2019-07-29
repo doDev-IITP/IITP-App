@@ -149,6 +149,11 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
     @Override
     public void onLoginSelected(final String email, final String password) {
+
+        this.email = email;
+        progressDialog.setMessage( "Logging In..." );
+        progressDialog.show();
+
         Credential credential = new Credential.Builder( email )
                 .setPassword( password )  // Important: only store passwords in this field.
                 // Android autofill uses this value to complete
@@ -217,9 +222,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
     private void login(String email, String password) {
 
-        progressDialog.setMessage( "Logging In..." );
-        progressDialog.show();
-
         Map<String, Object> jsonParams = new ArrayMap<>();
         jsonParams.put( "email", email );
         jsonParams.put( "password", password );
@@ -235,7 +237,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     parseData( person );
                 } else {
                     Toast.makeText( LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT ).show();
-                    Log.e("bad request", response.body().toString());
                 }
                 progressDialog.dismiss();
             }
@@ -249,30 +250,37 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     }
 
     private void parseData(Person person) {
-        SharedPreferences.Editor prefsEditor = prefs.edit();
 
-        prefsEditor.putString( USER_YEAR, person.getUser().getBatch() )
-                .putString( USER_BRANCH, person.getUser().getBranch() )
-                .putString( USER_NAME, person.getUser().getName() )
-                .putString( WEBMAIL, person.getUser().getEmail() )
-                .putString( ROLL_NUMBER, person.getUser().getInstituteId() )
-                .putString( PHONE_NUMBER, person.getUser().getPhone() )
-                .putString( USER_TOKEN, person.getToken() )
-                .putString( USER_MONGO_ID, person.getUser().getStudentMongoId() );
+        if (person.getUser().getActive() == 0) {
+            Toast.makeText(this, "You need to verify your account first", Toast.LENGTH_LONG).show();
+            showFragmentWithTransition( new OtpFragment() );
+        } else {
 
-        String porString = Converters.stringFromArray( person.getUser().getPor() );
-        prefsEditor.putString( USER_POR, porString );
+            SharedPreferences.Editor prefsEditor = prefs.edit();
 
-        if (person.getUser().getPor().size() != 0) {
-            prefsEditor.putBoolean( IS_ADMIN, true );
+            prefsEditor.putString(USER_YEAR, person.getUser().getBatch())
+                    .putString(USER_BRANCH, person.getUser().getBranch())
+                    .putString(USER_NAME, person.getUser().getName())
+                    .putString(WEBMAIL, person.getUser().getEmail())
+                    .putString(ROLL_NUMBER, person.getUser().getInstituteId())
+                    .putString(PHONE_NUMBER, person.getUser().getPhone())
+                    .putString(USER_TOKEN, person.getToken())
+                    .putString(USER_MONGO_ID, person.getUser().getStudentMongoId());
+
+            String porString = Converters.stringFromArray(person.getUser().getPor());
+            prefsEditor.putString(USER_POR, porString);
+
+            if (person.getUser().getPor().size() != 0) {
+                prefsEditor.putBoolean(IS_ADMIN, true);
+            }
+
+            prefsEditor.putBoolean(LOGIN_STATUS, true);
+            prefsEditor.apply();
+
+            Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+            finish();
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }
-
-        prefsEditor.putBoolean( LOGIN_STATUS, true );
-        prefsEditor.apply();
-
-        Toast.makeText( LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT ).show();
-        finish();
-        startActivity( new Intent( LoginActivity.this, MainActivity.class ) );
         mCredentialClient.disconnect();
     }
 

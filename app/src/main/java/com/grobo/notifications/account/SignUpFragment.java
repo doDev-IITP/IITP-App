@@ -71,9 +71,6 @@ public class SignUpFragment extends Fragment {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                name.setError(null);
-                roll.setError(null);
-                phone.setError(null);
                 if (name.getText().toString().equals("")) {
                     name.setError("Enter a valid name");
                 } else if (roll.getText().toString().equals("")) {
