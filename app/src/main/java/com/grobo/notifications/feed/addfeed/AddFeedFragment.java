@@ -1,4 +1,4 @@
-package com.grobo.notifications.admin.feed;
+package com.grobo.notifications.feed.addfeed;
 
 import android.content.Context;
 import android.content.SharedPreferences;

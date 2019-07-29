@@ -1,6 +1,7 @@
 package com.grobo.notifications.feed;
 
 import androidx.annotation.NonNull;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -29,7 +30,8 @@ public class FeedItem {
     private List<String> postLinks = null;
     @SerializedName("feedPoster")
     @Expose
-    private String feedPoster;
+    @Embedded(prefix = "user_")
+    private FeedPoster feedPoster;
     @SerializedName("eventDate")
     @Expose
     private long eventDate;
@@ -48,11 +50,11 @@ public class FeedItem {
 
     private boolean interested = false;
 
-    public void setFeedPoster(String feedPoster) {
+    public void setFeedPoster(FeedPoster feedPoster) {
         this.feedPoster = feedPoster;
     }
 
-    public String getFeedPoster() {
+    public FeedPoster getFeedPoster() {
         return feedPoster;
     }
 
@@ -151,3 +153,4 @@ public class FeedItem {
         }
     }
 }
+

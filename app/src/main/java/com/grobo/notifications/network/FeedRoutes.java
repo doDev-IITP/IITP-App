@@ -15,7 +15,6 @@ import retrofit2.http.Path;
 
 public interface FeedRoutes {
 
-
     //feeds
     @GET("/feeds")
     Call<List<FeedItem>> getAllFeeds(@Header("Authorization") String credentials);

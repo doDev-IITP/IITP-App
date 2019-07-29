@@ -17,7 +17,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".admin.feed.AddFeedActivity"
+            android:name=".feed.addfeed.AddFeedActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".admin.XPortal">
             <meta-data

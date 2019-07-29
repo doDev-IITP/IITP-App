@@ -1,4 +1,4 @@
-package com.grobo.notifications.admin.feed;
+package com.grobo.notifications.feed.addfeed;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -30,6 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 public class AddFeedActivity extends AppCompatActivity implements AddFeedFragment.OnFeedPreviewListener {
@@ -42,7 +43,7 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
 
         getSupportActionBar().setTitle("Post new feed");
 
-        feedPoster = getIntent().getExtras().getString("club", "");
+        feedPoster = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_MONGO_ID,"");
 
         setBaseFragment(savedInstanceState);
     }
