@@ -76,6 +76,11 @@ public class FeedFragment extends Fragment {
             }
         });
 
+        if ((System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getContext()).getLong("last_feed_update_time", 0)) >= (10*1000)) {
+            swipeRefreshLayout.setRefreshing(true);
+            updateData();
+        }
+
         addFab = view.findViewById(R.id.add_feed_fab);
 
         emptyView = view.findViewById(R.id.feed_empty_view);
@@ -159,9 +164,8 @@ public class FeedFragment extends Fragment {
                     for (FeedItem newItem : allItems) {
                         if (feedViewModel.getFeedCount(newItem.getId()) == 0)
                             feedViewModel.insert(newItem);
-                        Log.e("feed", newItem.getFeedPoster().getName());
                     }
-
+                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putLong("last_feed_update_time", System.currentTimeMillis()).apply();
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -223,7 +227,7 @@ public class FeedFragment extends Fragment {
 
                 List<FeedItem> newList = new ArrayList<>();
                 for (FeedItem n : feedItems) {
-                    if (n.getFeedPoster().getId().equals(poster)) newList.add(n);
+                    if (n.getFeedPoster().getId() != null && n.getFeedPoster().getId().equals(poster)) newList.add(n);
                 }
                 adapter.setFeedItemList(newList);
                 if (newList.size() == 0) {
