@@ -4,6 +4,8 @@ package com.grobo.notifications.account;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.goodiebag.pinview.Pinview;
+
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ public class OtpFragment extends Fragment {
 
 
     private OnOtpListener callback;
+    private int otpValue;
 
     public OtpFragment() {
         // Required empty public constructor
@@ -30,29 +33,37 @@ public class OtpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(  R.layout.fragment_otp, container, false );
-        FloatingActionButton button=view.findViewById( R.id.otp_next );
+        View view = inflater.inflate( R.layout.fragment_otp, container, false );
+        Pinview pinview = view.findViewById( R.id.otpView );
+        pinview.setPinViewEventListener( new Pinview.PinViewEventListener() {
+            @Override
+            public void onDataEntered(Pinview pinview, boolean fromUser) {
+                otpValue = Integer.parseInt( pinview.getValue() );
+            }
+        } );
+        FloatingActionButton button = view.findViewById( R.id.otp_next );
         button.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.OnOtpCorrect( 1 );
+                callback.OnOtpCorrect( 1, otpValue );
             }
         } );
         return view;
     }
-    public interface OnOtpListener{
-        void OnOtpCorrect(int status);
+
+    public interface OnOtpListener {
+        void OnOtpCorrect(int status, int otpValue);
     }
 
     @Override
     public void onAttach(Context context) {
-        callback=(OnOtpListener) getActivity();
+        callback = (OnOtpListener) getActivity();
         super.onAttach( context );
     }
 
     @Override
     public void onDestroy() {
-        callback=null;
+        callback = null;
         super.onDestroy();
     }
 }

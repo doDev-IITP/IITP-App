@@ -60,6 +60,9 @@ public class Person {
         @SerializedName("_id")
         @Expose
         private String studentMongoId;
+        @SerializedName("active")
+        @Expose
+        private int active;
 
         public List<String> getPor() {
             return por;
@@ -132,5 +135,16 @@ public class Person {
         public void setStudentMongoId(String studentMongoId) {
             this.studentMongoId = studentMongoId;
         }
+
+        public int getActive() {
+            return active;
+        }
+
+
+        public void setActive(int active) {
+            this.active = active;
+        }
+
+
     }
 }
