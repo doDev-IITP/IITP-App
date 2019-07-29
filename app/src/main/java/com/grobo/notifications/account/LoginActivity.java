@@ -151,8 +151,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     public void onLoginSelected(final String email, final String password) {
 
         this.email = email;
-        progressDialog.setMessage( "Logging In..." );
-        progressDialog.show();
 
         Credential credential = new Credential.Builder( email )
                 .setPassword( password )  // Important: only store passwords in this field.
@@ -221,6 +219,9 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     }
 
     private void login(String email, String password) {
+
+        progressDialog.setMessage( "Logging In..." );
+        progressDialog.show();
 
         Map<String, Object> jsonParams = new ArrayMap<>();
         jsonParams.put( "email", email );
