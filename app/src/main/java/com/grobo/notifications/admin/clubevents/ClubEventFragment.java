@@ -18,7 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.XPortal;
-import com.grobo.notifications.admin.feed.AddFeedActivity;
+import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.network.UserRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;

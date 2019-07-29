@@ -21,7 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.XPortal;
-import com.grobo.notifications.admin.feed.AddFeedActivity;
+import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.network.FeedRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
@@ -33,6 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 public class FeedFragment extends Fragment {
@@ -95,37 +96,43 @@ public class FeedFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     switch (checkedId) {
                         case R.id.feed_radio_all:
+                            addFab.hide();
                             observeAll();
                             break;
                         case R.id.feed_radio_starred:
+                            addFab.hide();
                             observeStarred();
+                            break;
+                        case R.id.feed_radio_my:
+                            addFab.show();
+                            observeMy(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_MONGO_ID, ""));
                             break;
                     }
                 }
             });
             radioGroup.check(R.id.feed_radio_all);
 
-        } else if (getContext() instanceof XPortal){
-
-            addFab.show();
-
-            radioGroup.setVisibility(View.GONE);
-            final String feedPoster = getArguments().getString("club", "");
-            if (feedPoster.equals("gymkhana")) {
-                observeAll();
-            } else {
-                observeMy(feedPoster);
-            }
-            //TODO: add button
-
             addFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), AddFeedActivity.class);
-                    intent.putExtra("club", feedPoster);
                     startActivity(intent);
                 }
             });
+
+        } else if (getContext() instanceof XPortal){
+
+
+//            radioGroup.setVisibility(View.GONE);
+//            final String feedPoster = getArguments().getString("club", "");
+//            if (feedPoster.equals("gymkhana")) {
+//                observeAll();
+//            } else {
+//                observeMy(feedPoster);
+//            }
+//            //TODO: add button
+
+
         }
 
         return view;
@@ -152,7 +159,7 @@ public class FeedFragment extends Fragment {
                     for (FeedItem newItem : allItems) {
                         if (feedViewModel.getFeedCount(newItem.getId()) == 0)
                             feedViewModel.insert(newItem);
-                        Log.e("feed", newItem.getEventName());
+                        Log.e("feed", newItem.getFeedPoster().getName());
                     }
 
                 }
@@ -216,7 +223,7 @@ public class FeedFragment extends Fragment {
 
                 List<FeedItem> newList = new ArrayList<>();
                 for (FeedItem n : feedItems) {
-                    if (n.getFeedPoster().equals(poster)) newList.add(n);
+                    if (n.getFeedPoster().getId().equals(poster)) newList.add(n);
                 }
                 adapter.setFeedItemList(newList);
                 if (newList.size() == 0) {

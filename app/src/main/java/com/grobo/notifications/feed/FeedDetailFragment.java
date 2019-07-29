@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.XPortal;
-import com.grobo.notifications.admin.feed.AddFeedActivity;
+import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
 
 import java.text.SimpleDateFormat;

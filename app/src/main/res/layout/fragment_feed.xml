@@ -23,16 +23,23 @@
             <RadioButton
                 android:id="@+id/feed_radio_all"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_width="wrap_content"
-                android:layout_marginEnd="32dp"
                 android:text="All Feed" />
 
             <RadioButton
                 android:id="@+id/feed_radio_starred"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_marginStart="32dp"
                 android:text="Starred" />
+
+            <RadioButton
+                android:id="@+id/feed_radio_my"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="My Feed" />
 
         </RadioGroup>
 

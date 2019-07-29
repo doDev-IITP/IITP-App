@@ -1,21 +1,16 @@
 package com.grobo.notifications.admin;
 
 import android.os.Bundle;
-import android.transition.TransitionInflater;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.positions.CRFragment;
 import com.grobo.notifications.admin.positions.CoordinatorFragment;
 import com.grobo.notifications.admin.positions.SecretaryFragment;
 import com.grobo.notifications.admin.positions.VPFragment;
-import com.grobo.notifications.feed.FeedDetailFragment;
-import com.grobo.notifications.feed.FeedRecyclerAdapter;
 
 import static com.grobo.notifications.utils.Constants.COORDINATOR;
 import static com.grobo.notifications.utils.Constants.CR;
@@ -24,7 +19,7 @@ import static com.grobo.notifications.utils.Constants.SECRETARY;
 import static com.grobo.notifications.utils.Constants.SUB_COORDINATOR;
 import static com.grobo.notifications.utils.Constants.VP;
 
-public class XPortal extends AppCompatActivity implements XPortalFragment.OnPORSelectedListener, FeedRecyclerAdapter.OnFeedSelectedListener {
+public class XPortal extends AppCompatActivity implements XPortalFragment.OnPORSelectedListener {
 
     FragmentManager manager;
     Fragment activeFragment;
@@ -92,29 +87,6 @@ public class XPortal extends AppCompatActivity implements XPortalFragment.OnPORS
         }
         next.setArguments(bundle);
         transactFragment(next);
-    }
-
-    @Override
-    public void onFeedSelected(String id, View view, int position) {
-        Fragment current = manager.findFragmentById(R.id.frame_layout_main);
-
-        Fragment newFragment = new FeedDetailFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("transitionName", "transition" + position);
-        bundle.putString("id", id);
-        newFragment.setArguments(bundle);
-
-        current.setSharedElementReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
-        current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
-
-        newFragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
-        newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_bottom));
-
-        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout_main, newFragment);
-        fragmentTransaction.addToBackStack("later_fragment");
-        fragmentTransaction.addSharedElement(view, "transition" + position);
-        fragmentTransaction.commit();
     }
 
     @Override

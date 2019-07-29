@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.AddNotificationFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventFragment;
-import com.grobo.notifications.feed.FeedFragment;
 import com.grobo.notifications.utils.MistakeFragment;
 
 public class CoordinatorFragment extends Fragment implements View.OnClickListener {
@@ -31,12 +30,10 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_coordinator, container, false);
 
-        CardView feed = view.findViewById(R.id.coordinator_feed_cv);
         CardView notification = view.findViewById(R.id.coordinator_notification_cv);
         CardView events = view.findViewById(R.id.coordinator_events_cv);
         CardView projects = view.findViewById(R.id.coordinator_projects_cv);
 
-        feed.setOnClickListener(this);
         notification.setOnClickListener(this);
         events.setOnClickListener(this);
         projects.setOnClickListener(this);
@@ -51,9 +48,6 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
         bundle.putString("power", args.getString("power", ""));
         Fragment next;
         switch (v.getId()) {
-            case R.id.coordinator_feed_cv:
-                next = new FeedFragment();
-                break;
             case R.id.coordinator_notification_cv:
                 next = new AddNotificationFragment();
                 break;
