@@ -36,10 +36,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cursorVisible="false"
+            android:layout_margin="10dp"
             app:forceKeyboard="true"
             app:inputType="number"
             android:focusedByDefault="true"
-            app:pinLength="5" />
+            app:pinLength="6"
+            app:splitWidth="5dp"
+            app:pinWidth="35dp"
+            app:pinHeight="36dp"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/otp_next"

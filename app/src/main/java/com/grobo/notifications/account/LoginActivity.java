@@ -67,6 +67,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     private int RC_SAVE = 1;
     private int RC_READ = 10;
     private Map<String, Object> json;
+    private String email;
 
     UserRoutes service;
 
@@ -275,16 +276,17 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     }
 
     @Override
-    public void onSignUpSelected(String email, String password) {
+    public void onSignUpSelected(String email1, String password) {
 
-        if (validateWithWebmail( email, password )) {
+        if (validateWithWebmail( email1, password )) {
             Fragment current = manager.findFragmentById( R.id.frame_account );
 
             Fragment next = new SignUpFragment();
             Bundle bundle = new Bundle();
-            bundle.putString( "email", email );
+            bundle.putString( "email", email1 );
             bundle.putString( "password", password );
             next.setArguments( bundle );
+            email = email1;
 
             current.setExitTransition( TransitionInflater.from( this ).inflateTransition( android.R.transition.slide_left ) );
             next.setEnterTransition( TransitionInflater.from( this ).inflateTransition( android.R.transition.slide_right ) );
@@ -310,14 +312,52 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     @Override
     public void onFinishSelected(Map<String, Object> jsonParams) {
         json = jsonParams;
-        showFragmentWithTransition( new OtpFragment() );
+        completeSignup();
 
 
     }
 
     @Override
-    public void OnOtpCorrect(int status) {
+    public void OnOtpCorrect(int status, int otp) {
 
+        progressDialog.setMessage( "Verifying..." );
+        progressDialog.show();
+        //otp verification
+        Map<String, Object> jsonParams = new ArrayMap<>();
+        jsonParams.put( "email", email );
+        jsonParams.put( "code", otp );
+        RequestBody bodyotp = RequestBody.create( okhttp3.MediaType.parse( "application/json; charset=utf-8" ), (new JSONObject( jsonParams )).toString() );
+
+        Call<Person> call1 = service.otp( bodyotp );
+        call1.enqueue( new Callback<Person>() {
+            @Override
+            public void onResponse(Call<Person> call, Response<Person> response) {
+
+                if (response.isSuccessful())
+                    Toast.makeText( LoginActivity.this, "success", Toast.LENGTH_SHORT ).show();
+                Person person = response.body();
+                if (person != null) {
+                    Log.e( "response", person.getUser().getEmail() );
+                    parseData( person );
+                } else
+                    Toast.makeText( LoginActivity.this, "Verification failed", Toast.LENGTH_SHORT ).show();
+
+                if (progressDialog != null)
+                    progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<Person> call, Throwable t) {
+                Toast.makeText( LoginActivity.this, "Failure", Toast.LENGTH_SHORT ).show();
+
+            }
+        } );
+
+
+        //signup
+    }
+
+    private void completeSignup() {
         progressDialog.setMessage( "Signing Up" );
         progressDialog.show();
 
@@ -328,9 +368,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             @Override
             public void onResponse(Call<Person> call, Response<Person> response) {
                 if (response.isSuccessful()) {
-                    Person person = response.body();
-                    Log.e( "response", person.getUser().getEmail() );
-                    parseData( person );
+                    showFragmentWithTransition( new OtpFragment() );
                 } else {
                     Toast.makeText( LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT ).show();
                 }
@@ -344,5 +382,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             }
         } );
         mCredentialClient.disconnect();
+
     }
 }

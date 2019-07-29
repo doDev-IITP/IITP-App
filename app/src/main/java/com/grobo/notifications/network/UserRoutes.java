@@ -27,6 +27,9 @@ public interface UserRoutes {
     @POST("/users/signUp")
     Call<Person> register(@Body RequestBody body);
 
+    @POST("/users/activate")
+    Call<Person> otp(@Body RequestBody body);
+
     @GET("/users/batch/{year}")
     Call<List<Person>> getUsersByBatch(@Header("Authorization") String credentials, @Path("year") String batch);
 
