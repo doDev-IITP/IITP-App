@@ -23,6 +23,9 @@ import com.grobo.notifications.R;
 
 import java.util.Objects;
 
+import static com.grobo.notifications.utils.Constants.USER_BRANCH;
+import static com.grobo.notifications.utils.Constants.USER_YEAR;
+
 public class TimetableActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     private static final String TIMETABLE_URL = "https://timetable-grobo.firebaseio.com/";
@@ -45,8 +48,10 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
         if (getIntent().hasExtra( "day" )) {
             mViewPager.setCurrentItem( getIntent().getIntExtra( "day", 2 ) - 2 );
         }
-        getLoaderManager().initLoader( 1, null, this );
 
+        if(PreferenceManager.getDefaultSharedPreferences( this ).getString( "jsonString" , "").equals( "" )){
+            getLoaderManager().initLoader( 1,null,this );
+        }
     }
 
 
@@ -75,7 +80,7 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
     public Loader<String> onCreateLoader(int id, Bundle args) {
         return new AsyncTaskLoader<String>( this ) {
 
-            String mUrl = TIMETABLE_URL + "1801" + "/" + "ee" + "/.json/";
+            String mUrl = TIMETABLE_URL + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_YEAR, "" ) + "/" + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_BRANCH, "" ).toLowerCase() + "/.json/";
 
 
             @Override
