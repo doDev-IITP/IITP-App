@@ -5,9 +5,9 @@ public class Constants {
     public static final String ANONYMOUS = "anonymous";
     public static final int RC_SIGN_IN = 123;
 
-    public static final String TIMETABLE_URL = "https://timetable-grobo.firebaseio.com/";
-
     public static final String BASE_URL = "http://172.16.26.43/";
+
+    public static final String TIMETABLE_URL = "timetable_url";
 
     public static final String ROLL_NUMBER = "roll_number";
     public static final String WEBMAIL = "webmail";
