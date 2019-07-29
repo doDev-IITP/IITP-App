@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,28 +41,29 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate( R.layout.fragment_home, container, false );
 
         Calendar calendar = Calendar.getInstance();
-        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        dayOfWeek = calendar.get( Calendar.DAY_OF_WEEK );
+        Toast.makeText( getContext(), String.valueOf( dayOfWeek ), Toast.LENGTH_SHORT ).show();
 
-        CardView qrCard = rootView.findViewById(R.id.card_home_qr);
+        CardView qrCard = rootView.findViewById( R.id.card_home_qr );
 
-        int margin = ViewUtils.dpToPx(8);
-        int screenWidth = ViewUtils.getScreenWidth(getContext()) / 2 - (2 * margin);
+        int margin = ViewUtils.dpToPx( 8 );
+        int screenWidth = ViewUtils.getScreenWidth( getContext() ) / 2 - (2 * margin);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(screenWidth, screenWidth));
-        int p=screenWidth/2;
-        lp.setMargins(p+margin, margin, margin, margin);
-        qrCard.setLayoutParams(lp);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( new ViewGroup.LayoutParams( screenWidth, screenWidth ) );
+        int p = screenWidth / 2;
+        lp.setMargins( p + margin, margin, margin, margin );
+        qrCard.setLayoutParams( lp );
 
-        View qrFragment = rootView.findViewById(R.id.home_fr_mess_qr);
+        View qrFragment = rootView.findViewById( R.id.home_fr_mess_qr );
 
-        qrFragment.setOnClickListener(new View.OnClickListener() {
+        qrFragment.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final QRFragment frag = new QRFragment();
-                transactFragment(frag);
+                transactFragment( frag );
                 new CountDownTimer( 200, 1000 ) {
                     @Override
                     public void onTick(long l) {
@@ -76,30 +78,30 @@ public class HomeFragment extends Fragment {
 
 
             }
-        });
+        } );
 
-        View view2 = rootView.findViewById(R.id.home_view_2);
-        view2.setOnClickListener(new View.OnClickListener() {
+        View view2 = rootView.findViewById( R.id.home_view_2 );
+        view2.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TimetableActivity.class);
-                intent.putExtra("day", dayOfWeek);
-                startActivity(intent);
+                Intent intent = new Intent( getActivity(), TimetableActivity.class );
+                intent.putExtra( "day", dayOfWeek );
+                startActivity( intent );
             }
-        });
+        } );
 
-        Fragment fragment4 = DayFragment.newInstance((dayOfWeek - 1), "short");
-        Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
-                .add(R.id.home_frame_2, fragment4).commit();
+        Fragment fragment4 = DayFragment.newInstance( (dayOfWeek) );
+        Objects.requireNonNull( getActivity() ).getSupportFragmentManager().beginTransaction()
+                .add( R.id.home_frame_2, fragment4 ).commit();
 
         return rootView;
     }
 
     private void transactFragment(Fragment frag) {
-        FragmentTransaction fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
-        fragmentManager.setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
-                .replace(R.id.frame_layout_main, frag)
-                .addToBackStack("later_fragment")
+        FragmentTransaction fragmentManager = Objects.requireNonNull( getActivity() ).getSupportFragmentManager().beginTransaction();
+        fragmentManager.setCustomAnimations( R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out )
+                .replace( R.id.frame_layout_main, frag )
+                .addToBackStack( "later_fragment" )
                 .commit();
     }
 
