@@ -51,17 +51,24 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <FrameLayout
-            android:id="@+id/home_frame_2"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp" />
+            android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/home_view_2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <FrameLayout
+                android:id="@+id/home_frame_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp" />
+
+            <View
+                android:id="@+id/home_view_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:translationZ="1dp" />
+
+        </RelativeLayout>
 
 
     </LinearLayout>
