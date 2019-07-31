@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -33,6 +34,7 @@ import com.grobo.notifications.feed.Converters;
 import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.network.UserRoutes;
+import com.grobo.notifications.timetable.TimetableUtility;
 
 import org.json.JSONObject;
 
@@ -239,7 +241,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 } else {
                     Toast.makeText( LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT ).show();
                 }
-                progressDialog.dismiss();
+
             }
 
             @Override
@@ -279,8 +281,8 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             prefsEditor.apply();
 
             Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-            finish();
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            downloadTimetable();
+
         }
         mCredentialClient.disconnect();
     }
@@ -383,7 +385,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     Toast.makeText( LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT ).show();
                     Log.e("bad request", response.toString());
                 }
-                progressDialog.dismiss();
             }
 
             @Override
@@ -394,5 +395,28 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         } );
         mCredentialClient.disconnect();
 
+    }
+    private void downloadTimetable()
+    {
+        final String TIMETABLE_URL = "https://timetable-grobo.firebaseio.com/";
+        new AsyncTask<String, Void, String>() {
+
+            @Override
+            protected String doInBackground(String... strings) {
+                String mUrl = TIMETABLE_URL + PreferenceManager.getDefaultSharedPreferences( LoginActivity.this ).getString( USER_YEAR, "" ) + "/" + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_BRANCH, "" ).toLowerCase() + "/.json/";
+                String jsonResponse = TimetableUtility.doEverything( mUrl );
+
+                return jsonResponse;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                PreferenceManager.getDefaultSharedPreferences( LoginActivity.this ).edit().putString( "jsonString", s ).apply();
+                progressDialog.dismiss();
+                finish();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+            }
+        }.execute(  );
     }
 }

@@ -1,7 +1,9 @@
 package com.grobo.notifications.clubs;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,7 @@ public class ClubsFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ClubsRecyclerAdapter adapter;
     private RecyclerView clubsRecyclerView;
+    private SharedPreferences prefs;
 
     public ClubsFragment() {
     }
@@ -66,6 +69,12 @@ public class ClubsFragment extends Fragment {
                 updateData();
             }
         });
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (prefs.getInt("last_club_update_time", 0)==0) {
+            swipeRefreshLayout.setRefreshing(true);
+            prefs.edit().putInt( "last_club_update_time",1 ).apply();
+            updateData();
+        }
         emptyView = view.findViewById(R.id.clubs_empty_view);
 
         clubsRecyclerView = view.findViewById(R.id.rv_clubs);

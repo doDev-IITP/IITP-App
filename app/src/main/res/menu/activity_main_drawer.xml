@@ -35,6 +35,7 @@
         <item
             android:id="@+id/nav_internship"
             android:icon="@drawable/ic_widgets_black_24dp"
+            android:visible="false"
             android:title="Internship Portal" />
         <item
             android:id="@+id/nav_tech"
@@ -54,11 +55,11 @@
             android:title="Services" />
         <item
             android:id="@+id/nav_fresher"
-            android:icon="@drawable/baseline_explore_24"
+            android:icon="@drawable/ic_child_care_black_24dp"
             android:title="Fresher Zone" />
         <item
             android:id="@+id/nav_virtual"
-            android:icon="@drawable/baseline_explore_24"
+            android:icon="@drawable/ic_map_black_24dp"
             android:title="Virtual Tour" />
         <item
             android:id="@+id/nav_setting"
