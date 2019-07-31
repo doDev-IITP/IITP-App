@@ -103,6 +103,8 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
                 if (response.isSuccessful()) {
                     Toast.makeText(AddFeedActivity.this, "Feed Successfully posted", Toast.LENGTH_SHORT).show();
                     finish();
+                } else {
+                    Log.e("failure", String.valueOf(response.code()));
                 }
                 if (dialog.isShowing()) {
                     dialog.dismiss();
