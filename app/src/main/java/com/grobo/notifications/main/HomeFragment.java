@@ -6,9 +6,7 @@ import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +14,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.timetable.DayFragment;
 import com.grobo.notifications.timetable.TimetableActivity;
@@ -45,7 +42,6 @@ public class HomeFragment extends Fragment {
 
         Calendar calendar = Calendar.getInstance();
         dayOfWeek = calendar.get( Calendar.DAY_OF_WEEK );
-        Toast.makeText( getContext(), String.valueOf( dayOfWeek ), Toast.LENGTH_SHORT ).show();
 
         CardView qrCard = rootView.findViewById( R.id.card_home_qr );
 
