@@ -70,9 +70,8 @@ public class ClubsFragment extends Fragment {
             }
         });
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if (prefs.getInt("last_club_update_time", 0)==0) {
+        if ((System.currentTimeMillis() - prefs.getLong("last_club_update_time", 0)) >= (60 * 1000)) {
             swipeRefreshLayout.setRefreshing(true);
-            prefs.edit().putInt( "last_club_update_time",1 ).apply();
             updateData();
         }
         emptyView = view.findViewById(R.id.clubs_empty_view);
@@ -107,7 +106,9 @@ public class ClubsFragment extends Fragment {
                     }
 
                 }
+                prefs.edit().putLong("last_club_update_time", System.currentTimeMillis()).apply();
                 swipeRefreshLayout.setRefreshing(false);
+
             }
 
             @Override

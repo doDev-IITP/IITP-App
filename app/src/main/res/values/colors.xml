@@ -10,6 +10,7 @@
     <color name="black">#000000</color>
     <color name="very_light_grey">#eeeeee</color>
     <color name="shadow">#999999</color>
+    <color name="shadow2">#DCDCDC</color>
     <color name="dark_gray">#696969</color>
     <color name="transparent">#00000000</color>
     <color name="fb">#3b5998</color>

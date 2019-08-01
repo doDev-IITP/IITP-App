@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -29,6 +30,8 @@ public class MistakeFragment extends Fragment {
                 getActivity().onBackPressed();
             }
         });
+        TextView mistake=view.findViewById( R.id.temp_tv_mistake );
+        mistake.setText( "You landed here by mistake, please go back "+new String(  Character.toChars( 0x1F609 ) ));
 
         return view;
     }

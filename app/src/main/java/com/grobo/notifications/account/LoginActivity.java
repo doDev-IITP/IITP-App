@@ -70,6 +70,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     private int RC_READ = 10;
     private Map<String, Object> json;
     private String email;
+    private String password;
 
     UserRoutes service;
 
@@ -154,25 +155,9 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
         this.email = email;
 
-        Credential credential = new Credential.Builder( email )
-                .setPassword( password )  // Important: only store passwords in this field.
-                // Android autofill uses this value to complete
-                // sign-in forms, so repurposing this field will
-                // likely cause errors.
-                .build();
 
-        save( credential );
-        new CountDownTimer( 2000, 1000 ) {
-            @Override
-            public void onTick(long millisUntilFinished) {
+        login( email, password );
 
-            }
-
-            @Override
-            public void onFinish() {
-                login( email, password );
-            }
-        }.start();
 
     }
 
@@ -255,32 +240,32 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     private void parseData(Person person) {
 
         if (person.getUser().getActive() == 0) {
-            Toast.makeText(this, "You need to verify your account first", Toast.LENGTH_LONG).show();
+            Toast.makeText( this, "You need to verify your account first", Toast.LENGTH_LONG ).show();
             showFragmentWithTransition( new OtpFragment() );
         } else {
 
             SharedPreferences.Editor prefsEditor = prefs.edit();
 
-            prefsEditor.putString(USER_YEAR, person.getUser().getBatch())
-                    .putString(USER_BRANCH, person.getUser().getBranch())
-                    .putString(USER_NAME, person.getUser().getName())
-                    .putString(WEBMAIL, person.getUser().getEmail())
-                    .putString(ROLL_NUMBER, person.getUser().getInstituteId())
-                    .putString(PHONE_NUMBER, person.getUser().getPhone())
-                    .putString(USER_TOKEN, person.getToken())
-                    .putString(USER_MONGO_ID, person.getUser().getStudentMongoId());
+            prefsEditor.putString( USER_YEAR, person.getUser().getBatch() )
+                    .putString( USER_BRANCH, person.getUser().getBranch() )
+                    .putString( USER_NAME, person.getUser().getName() )
+                    .putString( WEBMAIL, person.getUser().getEmail() )
+                    .putString( ROLL_NUMBER, person.getUser().getInstituteId() )
+                    .putString( PHONE_NUMBER, person.getUser().getPhone() )
+                    .putString( USER_TOKEN, person.getToken() )
+                    .putString( USER_MONGO_ID, person.getUser().getStudentMongoId() );
 
-            String porString = Converters.stringFromArray(person.getUser().getPor());
-            prefsEditor.putString(USER_POR, porString);
+            String porString = Converters.stringFromArray( person.getUser().getPor() );
+            prefsEditor.putString( USER_POR, porString );
 
             if (person.getUser().getPor().size() != 0) {
-                prefsEditor.putBoolean(IS_ADMIN, true);
+                prefsEditor.putBoolean( IS_ADMIN, true );
             }
 
-            prefsEditor.putBoolean(LOGIN_STATUS, true);
+            prefsEditor.putBoolean( LOGIN_STATUS, true );
             prefsEditor.apply();
 
-            Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText( LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT ).show();
             downloadTimetable();
 
         }
@@ -288,17 +273,18 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     }
 
     @Override
-    public void onSignUpSelected(String email1, String password) {
+    public void onSignUpSelected(String email1, String password1) {
 
-        if (validateWithWebmail( email1, password )) {
+        if (validateWithWebmail( email1, password1 )) {
             Fragment current = manager.findFragmentById( R.id.frame_account );
 
             Fragment next = new SignUpFragment();
             Bundle bundle = new Bundle();
             bundle.putString( "email", email1 );
-            bundle.putString( "password", password );
+            bundle.putString( "password", password1 );
             next.setArguments( bundle );
             email = email1;
+            password = password1;
 
             current.setExitTransition( TransitionInflater.from( this ).inflateTransition( android.R.transition.slide_left ) );
             next.setEnterTransition( TransitionInflater.from( this ).inflateTransition( android.R.transition.slide_right ) );
@@ -351,6 +337,24 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 if (person != null) {
                     Log.e( "response", person.getUser().getEmail() );
                     parseData( person );
+                    new CountDownTimer( 2000, 1000 ) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                            Credential credential = new Credential.Builder( email )
+                                    .setPassword( password )  // Important: only store passwords in this field.
+                                    // Android autofill uses this value to complete
+                                    // sign-in forms, so repurposing this field will
+                                    // likely cause errors.
+                                    .build();
+                            save( credential );
+                        }
+                    }.start();
                 } else
                     Toast.makeText( LoginActivity.this, "Verification failed", Toast.LENGTH_SHORT ).show();
 
@@ -383,7 +387,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     showFragmentWithTransition( new OtpFragment() );
                 } else {
                     Toast.makeText( LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT ).show();
-                    Log.e("bad request", response.toString());
+                    Log.e( "bad request", response.toString() );
                 }
             }
 
@@ -396,8 +400,8 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         mCredentialClient.disconnect();
 
     }
-    private void downloadTimetable()
-    {
+
+    private void downloadTimetable() {
         final String TIMETABLE_URL = "https://timetable-grobo.firebaseio.com/";
         new AsyncTask<String, Void, String>() {
 
@@ -414,9 +418,9 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 PreferenceManager.getDefaultSharedPreferences( LoginActivity.this ).edit().putString( "jsonString", s ).apply();
                 progressDialog.dismiss();
                 finish();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                startActivity( new Intent( LoginActivity.this, MainActivity.class ) );
 
             }
-        }.execute(  );
+        }.execute();
     }
 }
