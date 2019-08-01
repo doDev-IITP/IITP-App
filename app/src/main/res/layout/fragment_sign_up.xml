@@ -32,7 +32,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/logo"
                 android:scaleType="centerCrop"
-                android:src="@drawable/iitp" />
+                android:src="@drawable/profile_photo" />
 
         </androidx.cardview.widget.CardView>
 

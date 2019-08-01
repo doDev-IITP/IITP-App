@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/logo"
-                android:src="@drawable/iitp" />
+                android:src="@drawable/profile_photo" />
 
         </com.google.android.material.card.MaterialCardView>
 

@@ -120,7 +120,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                             } catch (IntentSender.SendIntentException e) {
                                 e.printStackTrace();
                             }
-                            Toast.makeText( LoginActivity.this, "No credentials", Toast.LENGTH_SHORT ).show();
                         }
                     }
                 } );
