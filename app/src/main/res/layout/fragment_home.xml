@@ -34,7 +34,7 @@
 
             <fragment
                 android:id="@+id/home_fr_mess_qr"
-                android:name="com.grobo.notifications.main.QRFragment"
+                android:name="com.grobo.notifications.Mess.QRFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

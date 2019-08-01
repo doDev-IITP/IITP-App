@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.grobo.notifications.Mess.QRFragment;
 import com.grobo.notifications.R;
 import com.grobo.notifications.timetable.DayFragment;
 import com.grobo.notifications.timetable.TimetableActivity;

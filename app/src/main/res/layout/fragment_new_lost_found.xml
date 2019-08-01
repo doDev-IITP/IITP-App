@@ -14,174 +14,161 @@
         android:orientation="vertical">
 
         <RadioGroup
+            android:id="@+id/radio_group_lost_found"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <RadioButton
                 android:id="@+id/radio_lost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Did you lose something?"
-                android:checked="true"/>
+                android:checked="true"
+                android:text="Did you lose something?" />
 
             <RadioButton
                 android:id="@+id/radio_found"
                 android:layout_width="wrap_content"
-                android:text="No, I found something."
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="No, I found something." />
         </RadioGroup>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Name:"/>
+                android:text="Name:"
+                android:textSize="20sp" />
 
             <EditText
-                android:layout_width="0dp"
                 android:id="@+id/lost_found_name"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="20sp"
+                android:hint="Enter item name"
                 android:inputType="text"
-                android:hint="Enter your name"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="What?"/>
+                android:text="What?"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/lost_found_description"
                 android:layout_width="0dp"
                 android:layout_height="120dp"
                 android:layout_weight="1"
-                android:textSize="20sp"
-                android:gravity="top"
-                android:padding="4dp"
-                android:inputType="textMultiLine"
                 android:background="@drawable/bg_edittext"
-                android:hint="Describe the item briefly."/>
+                android:gravity="top"
+                android:hint="Describe the item briefly."
+                android:inputType="textMultiLine"
+                android:padding="4dp"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Where?"/>
+                android:text="Where?"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/lost_found_place"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="20sp"
+                android:hint="Place where lost/found"
                 android:inputType="text"
-                android:hint="Place where lost/found"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="When?"/>
+                android:text="When?"
+                android:textSize="20sp" />
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:id="@+id/lost_found_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="20sp"
+                android:hint="Date"
                 android:inputType="date"
-                android:hint="Date"/>
+                android:textSize="20sp" />
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:id="@+id/lost_found_time"
-                android:textSize="20sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Time"
                 android:inputType="time"
-                android:layout_weight="1"
-                android:hint="Time"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Contact:"/>
+                android:text="Contact:"
+                android:textSize="20sp" />
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="20sp"
                 android:id="@+id/lost_found_contact"
-                android:inputType="phone"
-                android:hint="Phone number"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Place:"/>
-
-            <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="20sp"
-                android:inputType="text"
-                android:id="@+id/lost_found_room"
-                android:hint="to receive/deliver"/>
+                android:hint="Phone number"
+                android:inputType="phone"
+                android:textSize="20sp" />
 
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/post_lost_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="8dp"
+            android:text="Post" />
 
     </LinearLayout>
 </ScrollView>

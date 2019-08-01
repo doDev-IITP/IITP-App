@@ -17,19 +17,19 @@
             android:layout_height="100dp"
             android:layout_row="0"
             android:layout_rowWeight="1"
-            android:layout_column="0"
+            android:layout_column="1"
             android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/blue_grey_light"
             app:cardCornerRadius="8dp"
             android:id="@+id/maintenance_cv"
             android:layout_columnWeight="1" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@drawable/side_nav_bar"
                 android:text="Maintenance"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="20sp"/>
 
         </androidx.cardview.widget.CardView>
@@ -41,17 +41,17 @@
             android:layout_rowWeight="1"
             android:layout_margin="8dp"
             app:cardCornerRadius="8dp"
-            android:id="@+id/complaints_cv"
-            app:cardBackgroundColor="@color/blue_grey_light"
-            android:layout_column="1"
+            android:id="@+id/lost_found_cv"
+            android:layout_column="0"
             android:layout_columnWeight="1" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Complaints"
-                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@drawable/side_nav_bar"
+                android:text="Lost &amp; Found"
+                android:textColor="@color/white"
                 android:textSize="20sp" />
 
         </androidx.cardview.widget.CardView>
@@ -63,17 +63,39 @@
             android:layout_rowWeight="1"
             android:layout_margin="8dp"
             app:cardCornerRadius="8dp"
-            android:id="@+id/lost_found_cv"
-            app:cardBackgroundColor="@color/blue_grey_light"
+            android:id="@+id/sharing_portal_cv"
             android:layout_column="0"
             android:layout_columnWeight="1" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Lost &amp; Found"
-                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@drawable/side_nav_bar"
+                android:text="Sharing Portal"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_row="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="8dp"
+            android:id="@+id/cab_sharing_cv"
+            android:layout_column="1"
+            android:layout_columnWeight="1" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@drawable/side_nav_bar"
+                android:text="Cab Sharing"
+                android:textColor="@color/white"
                 android:textSize="20sp" />
 
         </androidx.cardview.widget.CardView>

@@ -7,7 +7,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -64,10 +64,7 @@ dependencies {
 
     //pdf
     implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
-    implementation 'org.jsoup:jsoup:1.8.3' // required
-
-//    //google material
-//    implementation 'com.google.android.material:material:1.1.0-alpha08'
+    implementation 'org.jsoup:jsoup:1.8.3'
 
     //goodiebag
     implementation 'com.github.GoodieBag:Pinview:v1.4'

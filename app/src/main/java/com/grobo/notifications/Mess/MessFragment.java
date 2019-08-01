@@ -1,9 +1,8 @@
-package com.grobo.notifications.main;
+package com.grobo.notifications.Mess;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.ArrayMap;
@@ -11,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,12 +24,10 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.grobo.notifications.Mess.MessMenu;
+import com.grobo.notifications.utils.ImageViewerActivity;
 import com.grobo.notifications.R;
 import com.grobo.notifications.network.MessRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
-import com.grobo.notifications.utils.ZoomImage;
-import com.grobo.notifications.utils.utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,8 +40,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -102,7 +95,7 @@ public class MessFragment extends Fragment {
         messMenu.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity( new Intent( getContext(), MessMenu.class ) );
+                startActivity( new Intent( getContext(), ImageViewerActivity.class ) );
             }
         } );
 

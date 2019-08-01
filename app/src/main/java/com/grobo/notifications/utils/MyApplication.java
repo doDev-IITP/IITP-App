@@ -103,7 +103,7 @@ public class MyApplication extends Application {
 
         Map<String, Object> remoteConfigDefaults = new HashMap<>();
         remoteConfigDefaults.put(Constants.KEY_UPDATE_REQUIRED, false);
-        remoteConfigDefaults.put(Constants.KEY_CURRENT_VERSION, "1.0");
+        remoteConfigDefaults.put(Constants.KEY_CURRENT_VERSION, "1.0.0");
         remoteConfigDefaults.put(Constants.TIMETABLE_URL,"https://timetable-grobo.firebaseio.com/");
         remoteConfigDefaults.put( Constants.MESS_MENU_URL,"https://i.ytimg.com/vi/OjIXzZ25tjA/maxresdefault.jpg" );
 

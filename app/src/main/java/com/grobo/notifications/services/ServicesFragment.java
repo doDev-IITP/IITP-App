@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +16,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.services.lostandfound.LostAndFoundActivity;
-import com.grobo.notifications.services.maintenance.MaintenanceActivity;
 
 public class ServicesFragment extends Fragment implements View.OnClickListener {
 
@@ -36,12 +36,14 @@ public class ServicesFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_services, container, false);
 
         CardView maintenance = view.findViewById(R.id.maintenance_cv);
-        CardView complaints = view.findViewById(R.id.complaints_cv);
+        CardView sharingPortal = view.findViewById(R.id.sharing_portal_cv);
         CardView lostFound = view.findViewById(R.id.lost_found_cv);
+        CardView cabSharing = view.findViewById(R.id.cab_sharing_cv);
 
         maintenance.setOnClickListener(this);
-        complaints.setOnClickListener(this);
+        sharingPortal.setOnClickListener(this);
         lostFound.setOnClickListener(this);
+        cabSharing.setOnClickListener(this);
 
         return view;
     }
@@ -50,12 +52,16 @@ public class ServicesFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
 
-            case R.id.complaints_cv:
-                transactFragment(new ComplaintFragment());
+            case R.id.sharing_portal_cv:
+                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();;
+                break;
+
+            case R.id.cab_sharing_cv:
+                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();;
                 break;
 
             case R.id.maintenance_cv:
-                startActivity(new Intent(getActivity(), MaintenanceActivity.class));
+                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();;
                 break;
 
             case R.id.lost_found_cv:
