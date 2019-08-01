@@ -80,7 +80,7 @@ public class FeedFragment extends Fragment {
             }
         });
 
-        if ((System.currentTimeMillis() - prefs.getLong("last_feed_update_time", 0)) >= (10 * 1000)) {
+        if ((System.currentTimeMillis() - prefs.getLong("last_feed_update_time", 0)) >= (60 * 1000)) {
             swipeRefreshLayout.setRefreshing(true);
             updateData();
         }

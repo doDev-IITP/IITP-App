@@ -1,24 +1,21 @@
 package com.grobo.notifications.timetable;
 
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.content.AsyncTaskLoader;
 import android.content.Loader;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-
-import com.google.android.material.tabs.TabLayout;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
-
+import com.google.android.material.tabs.TabLayout;
 import com.grobo.notifications.R;
 
 import java.util.Objects;
@@ -29,11 +26,15 @@ import static com.grobo.notifications.utils.Constants.USER_YEAR;
 public class TimetableActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     private static final String TIMETABLE_URL = "https://timetable-grobo.firebaseio.com/";
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_timetable );
+        progressDialog = new ProgressDialog( this );
+        progressDialog.setIndeterminate( true );
+        progressDialog.setCanceledOnTouchOutside( false );
 
         Objects.requireNonNull( getSupportActionBar() ).setElevation( 0 );
 
@@ -66,10 +67,8 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.update_timetable) {
-            getLoaderManager().initLoader( 1, null, this );
+        if (id == R.id.update_timetable) {
+            getLoaderManager().restartLoader(  1, null, this );
             return true;
         }
 
@@ -85,6 +84,8 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
 
             @Override
             protected void onStartLoading() {
+                progressDialog.setMessage( "Updating..." );
+                progressDialog.show();
                 forceLoad();
             }
 
@@ -99,9 +100,10 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
 
     @Override
     public void onLoadFinished(Loader<String> loader, String jsonResponse) {
+        progressDialog.dismiss();
         if (jsonResponse != null && !jsonResponse.isEmpty()) {
             PreferenceManager.getDefaultSharedPreferences( this ).edit().putString( "jsonString", jsonResponse ).apply();
-//            recreate();
+            recreate();
 
         }
     }

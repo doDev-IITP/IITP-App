@@ -8,15 +8,13 @@
 
     <TextView
         android:id="@+id/temp_tv_mistake"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
         android:gravity="center"
-        android:text="You landed here by mistake, please go back"
+        android:text="You landed here by mistake, please go back :)"
         android:textSize="22sp"
+        android:layout_margin="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
