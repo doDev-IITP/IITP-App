@@ -1,7 +1,5 @@
 package com.grobo.notifications.main;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.grobo.notifications.Mess.MessFragment;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
@@ -202,9 +201,6 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
-    @SuppressLint("StaticFieldLeak")
-    public static Activity mainActivityRef;
-
     @Override
     public void onFeedSelected(String id, View view, int position) {
         Fragment current = manager.findFragmentById(R.id.frame_layout_main);
@@ -365,5 +361,4 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
-
 }

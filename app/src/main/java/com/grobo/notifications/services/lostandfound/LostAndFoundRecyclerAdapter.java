@@ -4,27 +4,29 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
 
 import java.util.List;
 
-import static com.grobo.notifications.services.lostandfound.LostAndFoundItem.ITEM_FOUND;
-import static com.grobo.notifications.services.lostandfound.LostAndFoundItem.ITEM_LOST;
-import static com.grobo.notifications.services.lostandfound.LostAndFoundItem.ITEM_RECOVERED;
+import static com.grobo.notifications.utils.Constants.ITEM_FOUND;
+import static com.grobo.notifications.utils.Constants.ITEM_LOST;
+import static com.grobo.notifications.utils.Constants.ITEM_RECOVERED;
 
 public class LostAndFoundRecyclerAdapter extends RecyclerView.Adapter<LostAndFoundRecyclerAdapter.LostFoundViewHolder> {
 
     private Context context;
     private List<LostAndFoundItem> itemList;
-    final private OnItemSelectedListener callback;
+    final private OnLostFoundSelectedListener callback;
 
-    public LostAndFoundRecyclerAdapter(Context context, OnItemSelectedListener listener) {
+    public LostAndFoundRecyclerAdapter(Context context, OnLostFoundSelectedListener listener) {
         this.context = context;
         callback = listener;
     }
@@ -49,20 +51,32 @@ public class LostAndFoundRecyclerAdapter extends RecyclerView.Adapter<LostAndFou
 
                 case ITEM_LOST:
                     holder.status.setText("LOST");
+                    break;
                 case ITEM_FOUND:
                     holder.status.setText("FOUND");
+                    break;
                 case ITEM_RECOVERED:
                     holder.status.setText("RECOVERED");
+                    break;
 
             }
 
             holder.date.setText(current.getDate());
             holder.time.setText(current.getTime());
+            holder.description.setText(current.getDescription());
+            holder.contact.setText(current.getContact());
+            holder.place.setText(current.getPlace());
 
-            holder.root.setOnClickListener(new View.OnClickListener() {
+            Glide.with(context)
+                    .load(current.getImage())
+                    .centerCrop()
+                    .placeholder(R.drawable.baseline_dashboard_24)
+                    .into(holder.image);
+            holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callback.onItemSelected(current.getId());
+                    if (current.getImage() != null)
+                        callback.onLostFoundSelected(current.getImage());
                 }
             });
 
@@ -85,7 +99,11 @@ public class LostAndFoundRecyclerAdapter extends RecyclerView.Adapter<LostAndFou
         TextView name;
         TextView date;
         TextView time;
-        LinearLayout root;
+        CardView root;
+        TextView contact;
+        ImageView image;
+        TextView place;
+        TextView description;
 
         LostFoundViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -95,6 +113,10 @@ public class LostAndFoundRecyclerAdapter extends RecyclerView.Adapter<LostAndFou
             date = itemView.findViewById(R.id.lost_found_date);
             time = itemView.findViewById(R.id.lost_found_time);
             root = itemView.findViewById(R.id.card_lost_found_root);
+            contact = itemView.findViewById(R.id.lost_found_contact);
+            image = itemView.findViewById(R.id.lost_found_image);
+            place = itemView.findViewById(R.id.lost_found_place);
+            description = itemView.findViewById(R.id.lost_found_description);
         }
     }
 
@@ -103,7 +125,7 @@ public class LostAndFoundRecyclerAdapter extends RecyclerView.Adapter<LostAndFou
         notifyDataSetChanged();
     }
 
-    public interface OnItemSelectedListener {
-        void onItemSelected(int id);
+    public interface OnLostFoundSelectedListener {
+        void onLostFoundSelected(String id);
     }
 }

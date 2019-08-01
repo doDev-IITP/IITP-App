@@ -1,4 +1,4 @@
-package com.grobo.notifications.main;
+package com.grobo.notifications.Mess;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,11 +27,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
-import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 
 public class QRFragment extends Fragment {
 
@@ -169,7 +167,7 @@ public class QRFragment extends Fragment {
     }
 
     public void change(boolean check) {
-        if (check == true) {
+        if (check) {
             changeqr.show();
             new CountDownTimer( 10000, 1000 ) {
                 @Override

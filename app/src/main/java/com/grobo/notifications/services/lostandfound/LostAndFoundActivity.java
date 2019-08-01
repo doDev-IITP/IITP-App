@@ -1,5 +1,6 @@
 package com.grobo.notifications.services.lostandfound;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
 import android.view.View;
@@ -11,8 +12,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
+import com.grobo.notifications.utils.ImageViewerActivity;
 
-public class LostAndFoundActivity extends AppCompatActivity implements LostAndFoundRecyclerAdapter.OnItemSelectedListener {
+public class LostAndFoundActivity extends AppCompatActivity implements LostAndFoundRecyclerAdapter.OnLostFoundSelectedListener {
 
     FloatingActionButton fab;
     FragmentManager manager;
@@ -68,7 +70,7 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
         activeFragment = fragment;
-        if (fragment instanceof NewLostAndFound){
+        if (fragment instanceof NewLostAndFound) {
             fab.hide();
             activeFragment = fragment;
         }
@@ -76,14 +78,16 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
 
     @Override
     public void onBackPressed() {
-        if (activeFragment instanceof NewLostAndFound){
+        if (activeFragment instanceof NewLostAndFound) {
             if (fab.isOrWillBeHidden()) fab.show();
         }
         super.onBackPressed();
     }
 
     @Override
-    public void onItemSelected(int id) {
-        //TODO: start a new fragment and show entry data
+    public void onLostFoundSelected(String image) {
+        Intent i = new Intent(LostAndFoundActivity.this, ImageViewerActivity.class);
+        i.putExtra("image_url", image);
+        startActivity(i);
     }
 }

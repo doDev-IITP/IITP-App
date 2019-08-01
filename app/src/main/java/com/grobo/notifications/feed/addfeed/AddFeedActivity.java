@@ -36,6 +36,7 @@ import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 public class AddFeedActivity extends AppCompatActivity implements AddFeedFragment.OnFeedPreviewListener {
 
     String feedPoster;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,7 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
 
         getSupportActionBar().setTitle("Post new feed");
 
-        feedPoster = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_MONGO_ID,"");
+        feedPoster = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_MONGO_ID, "");
 
         setBaseFragment(savedInstanceState);
     }
@@ -59,6 +60,7 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
                     .add(R.id.frame_layout_add_feed, firstFragment).commit();
         }
     }
+
     String title;
     String description;
     String image;
@@ -172,7 +174,7 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.add_feed_action_save) {
-            if(getSupportFragmentManager().findFragmentById(R.id.frame_layout_add_feed) instanceof FeedDetailFragment) {
+            if (getSupportFragmentManager().findFragmentById(R.id.frame_layout_add_feed) instanceof FeedDetailFragment) {
                 showUnsavedChangesDialog();
             } else {
                 Toast.makeText(AddFeedActivity.this, "Please preview the feed first", Toast.LENGTH_SHORT).show();

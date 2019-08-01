@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.MessFragment">
+    tools:context=".Mess.MessFragment">
 
 
     <RelativeLayout
@@ -22,7 +22,7 @@
 
         <fragment
             android:id="@+id/mess_fr_qr"
-            android:name="com.grobo.notifications.main.QRFragment"
+            android:name="com.grobo.notifications.Mess.QRFragment"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_below="@id/title"

@@ -42,4 +42,7 @@ public class Constants {
     public static final String MESS_MENU_URL="mess_menu";
 
 
+    public static final int ITEM_LOST = 1;
+    public static final int ITEM_FOUND = 2;
+    public static final int ITEM_RECOVERED = 3;
 }
