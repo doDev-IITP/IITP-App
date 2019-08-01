@@ -16,16 +16,20 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
 import com.grobo.notifications.R;
 
 import java.util.Objects;
 
+import static com.grobo.notifications.utils.Constants.TIMETABLE_URL;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
 public class TimetableActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
-    private static final String TIMETABLE_URL = "https://timetable-grobo.firebaseio.com/";
+
     private ProgressDialog progressDialog;
 
     @Override
@@ -79,8 +83,7 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
     public Loader<String> onCreateLoader(int id, Bundle args) {
         return new AsyncTaskLoader<String>( this ) {
 
-            String mUrl = TIMETABLE_URL + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_YEAR, "" ) + "/" + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_BRANCH, "" ).toLowerCase() + "/.json/";
-
+            String mUrl = FirebaseRemoteConfig.getInstance().getString(TIMETABLE_URL) + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_YEAR, "" ) + "/" + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_BRANCH, "" ).toLowerCase() + "/.json/";
 
             @Override
             protected void onStartLoading() {
