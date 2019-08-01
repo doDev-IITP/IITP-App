@@ -18,7 +18,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".utils.ImageViewerActivity"
             android:parentActivityName=".main.MainActivity"
-            android:theme="@style/zoomStyle"></activity>
+            android:theme="@style/zoomStyle" />
         <activity
             android:name=".feed.addfeed.AddFeedActivity"
             android:launchMode="singleTop"
