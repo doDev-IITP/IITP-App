@@ -120,7 +120,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                             } catch (IntentSender.SendIntentException e) {
                                 e.printStackTrace();
                             }
-                            Toast.makeText( LoginActivity.this, "No credentials", Toast.LENGTH_SHORT ).show();
                         }
                     }
                 } );
@@ -154,9 +153,28 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     public void onLoginSelected(final String email, final String password) {
 
         this.email = email;
+        Credential credential = new Credential.Builder( email )
+                .setPassword( password )  // Important: only store passwords in this field.
+                // Android autofill uses this value to complete
+                // sign-in forms, so repurposing this field will
+                // likely cause errors.
+                .build();
+        save( credential );
+
+        new CountDownTimer( 3000, 1000 ) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
 
 
-        login( email, password );
+                login( email, password );
+                mCredentialClient.disconnect();
+            }
+        }.start();
 
 
     }
@@ -337,24 +355,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 if (person != null) {
                     Log.e( "response", person.getUser().getEmail() );
                     parseData( person );
-                    new CountDownTimer( 2000, 1000 ) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
 
-                        }
-
-                        @Override
-                        public void onFinish() {
-
-                            Credential credential = new Credential.Builder( email )
-                                    .setPassword( password )  // Important: only store passwords in this field.
-                                    // Android autofill uses this value to complete
-                                    // sign-in forms, so repurposing this field will
-                                    // likely cause errors.
-                                    .build();
-                            save( credential );
-                        }
-                    }.start();
                 } else
                     Toast.makeText( LoginActivity.this, "Verification failed", Toast.LENGTH_SHORT ).show();
 
@@ -389,6 +390,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     Toast.makeText( LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT ).show();
                     Log.e( "bad request", response.toString() );
                 }
+                progressDialog.dismiss();
             }
 
             @Override
