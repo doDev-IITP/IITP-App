@@ -120,10 +120,6 @@ public class MainActivity extends AppCompatActivity
             state = 1;
 
             remoteConfig = FirebaseRemoteConfig.getInstance();
-
-            if (!remoteConfig.getBoolean(KEY_UPDATE_REQUIRED)) {
-                updateApp(true);
-            }
         }
 
         KeyboardUtils.hideSoftInput(this);
@@ -138,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (remoteConfig.getBoolean(KEY_UPDATE_REQUIRED)) {
-            updateApp(false);
+            updateApp();
         }
 
     }
@@ -332,13 +328,13 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    private void updateApp(boolean cancelable) {
+    private void updateApp() {
 
         String currentVersion = remoteConfig.getString(KEY_CURRENT_VERSION);
         String appVersion = utils.getAppVersion(this);
 
         if (!TextUtils.equals(currentVersion, appVersion)) {
-            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this)
+            final AlertDialog alertDialog = new AlertDialog.Builder(this)
                     .setTitle("New version available")
                     .setMessage("Please, update app to new version to continue using.\nCurrent Version: " + appVersion + "\nNew Version: " + currentVersion)
                     .setPositiveButton("Update", new DialogInterface.OnClickListener() {
@@ -346,18 +342,9 @@ public class MainActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which) {
                             utils.openPlayStoreForApp(MainActivity.this);
                         }
-                    }).setCancelable(cancelable);
+                    }).setCancelable(false).create();
 
-            if (cancelable) {
-                dialogBuilder.setNeutralButton("Later", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-            }
-
-            dialogBuilder.create().show();
+            alertDialog.show();
         }
 
     }

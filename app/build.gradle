@@ -6,8 +6,8 @@ android {
         applicationId "com.grobo.notifications"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 8
+        versionName "1.0.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -34,7 +34,7 @@ dependencies {
     implementation 'ru.noties.markwon:core:3.0.0'
 
     //Firebase
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+//    implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.firebase:firebase-config:18.0.0'
     implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
@@ -63,8 +63,8 @@ dependencies {
     implementation "androidx.work:work-runtime:2.1.0"
 
     //pdf
-    implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
-    implementation 'org.jsoup:jsoup:1.8.3'
+//    implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
+//    implementation 'org.jsoup:jsoup:1.8.3'
 
     //goodiebag
     implementation 'com.github.GoodieBag:Pinview:v1.4'

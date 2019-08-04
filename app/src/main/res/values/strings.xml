@@ -10,8 +10,8 @@
     <string name="logo">Logo</string>
     <string name="welcome">Welcome</string>
     <string name="password">Create Password</string>
-    <string name="login">Login</string>
-    <string name="webmail_username">Webmail username</string>
+    <string name="login">Signin</string>
+    <string name="webmail_username">Webmail</string>
 
     <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
     <string name="app_market_link">"market://details?id="</string>

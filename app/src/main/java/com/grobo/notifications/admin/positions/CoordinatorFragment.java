@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -11,7 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.AddNotificationFragment;
-import com.grobo.notifications.admin.clubevents.ClubEventFragment;
 import com.grobo.notifications.utils.MistakeFragment;
 
 public class CoordinatorFragment extends Fragment implements View.OnClickListener {
@@ -50,19 +50,21 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.coordinator_notification_cv:
                 next = new AddNotificationFragment();
+                next.setArguments(bundle);
+                transactFragment(next);
                 break;
             case R.id.coordinator_projects_cv:
                 next = new MistakeFragment();
+                next.setArguments(bundle);
+                transactFragment(next);
                 break;
             case R.id.coordinator_events_cv:
-                next = new ClubEventFragment();
+                Toast.makeText(getContext(), "Coming soon...", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 next = new MistakeFragment();
         }
 
-        next.setArguments(bundle);
-        transactFragment(next);
     }
 
     private void transactFragment(Fragment frag){
