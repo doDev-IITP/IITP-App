@@ -200,5 +200,13 @@
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:padding="16dp"
+            android:text="Ideated from InstiApp of IITB"
+            android:gravity="center"/>
+
     </LinearLayout>
 </ScrollView>

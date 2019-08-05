@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.R;
 import com.grobo.notifications.database.Person;
 import com.grobo.notifications.feed.Converters;
@@ -24,6 +25,7 @@ import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.network.UserRoutes;
 import com.grobo.notifications.timetable.TimetableUtility;
+import com.grobo.notifications.utils.Constants;
 
 import org.json.JSONObject;
 
@@ -57,11 +59,9 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 //    private GoogleApiClient mCredentialClient;
 //    private int RC_SAVE = 1;
 //    private int RC_READ = 10;
-    private Map<String, Object> json;
-    private String email;
-    private String password;
 
-    UserRoutes service;
+    private String email;
+    private UserRoutes service;
 
 
     @Override
@@ -77,7 +77,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         service = RetrofitClientInstance.getRetrofitInstance().create(UserRoutes.class);
 
         setBaseFragment(savedInstanceState);
-        final String call = getIntent().getStringExtra("call");
+//        final String call = getIntent().getStringExtra("call");
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
@@ -113,14 +113,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 //                    }
 //                });
 
-        service = RetrofitClientInstance.getRetrofitInstance().create(UserRoutes.class);
-
-        setBaseFragment(savedInstanceState);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCanceledOnTouchOutside(false);
-
     }
 
 
@@ -132,9 +124,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             }
 
             LoginFragment firstFragment = new LoginFragment();
-            firstFragment.setArguments(getIntent().getExtras());
-            manager.beginTransaction()
-                    .add(R.id.frame_account, firstFragment).commit();
+            manager.beginTransaction().add(R.id.frame_account, firstFragment).commit();
         }
     }
 
@@ -160,7 +150,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 //            public void onFinish() {
 
 
-                login(email, password);
+        login(email, password);
 //                mCredentialClient.disconnect();
 //            }
 //        }.start();
@@ -227,12 +217,10 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             public void onResponse(Call<Person> call, Response<Person> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Person person = response.body();
-                    Log.e("response", person.getUser().getEmail());
                     parseData(person);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Login failed, error " + response.code(), Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override
@@ -247,6 +235,8 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
         if (person.getUser().getActive() == 0) {
             Toast.makeText(this, "You need to verify your account first", Toast.LENGTH_LONG).show();
+            if (progressDialog != null && progressDialog.isShowing())
+                progressDialog.dismiss();
             showFragmentWithTransition(new OtpFragment());
         } else {
 
@@ -279,17 +269,16 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     }
 
     @Override
-    public void onSignUpSelected(String email1, String password1) {
+    public void onSignUpSelected(String email, String password) {
 
         Fragment current = manager.findFragmentById(R.id.frame_account);
 
         Fragment next = new SignUpFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("email", email1);
-        bundle.putString("password", password1);
+        bundle.putString("email", email);
+        bundle.putString("password", password);
         next.setArguments(bundle);
-        email = email1;
-        password = password1;
+        this.email = email;
 
         current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_left));
         next.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_right));
@@ -308,10 +297,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
     @Override
     public void onFinishSelected(Map<String, Object> jsonParams) {
-        json = jsonParams;
-        completeSignup();
-
-
+        completeSignup(jsonParams);
     }
 
     @Override
@@ -323,9 +309,9 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         Map<String, Object> jsonParams = new ArrayMap<>();
         jsonParams.put("email", email);
         jsonParams.put("code", otp);
-        RequestBody bodyotp = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+        RequestBody bodyOtp = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
 
-        Call<Person> call1 = service.otp(bodyotp);
+        Call<Person> call1 = service.otp(bodyOtp);
         call1.enqueue(new Callback<Person>() {
             @Override
             public void onResponse(Call<Person> call, Response<Person> response) {
@@ -355,11 +341,11 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         //signup
     }
 
-    private void completeSignup() {
+    private void completeSignup(Map<String, Object> jsonParams) {
         progressDialog.setMessage("Signing Up");
         progressDialog.show();
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(json)).toString());
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
 
         Call<Person> call = service.register(body);
         call.enqueue(new Callback<Person>() {
@@ -385,7 +371,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     }
 
     private void downloadTimetable() {
-        final String TIMETABLE_URL = "https://timetable-grobo.firebaseio.com/";
+        final String TIMETABLE_URL = FirebaseRemoteConfig.getInstance().getString(Constants.TIMETABLE_URL);
         new AsyncTask<String, Void, String>() {
 
             @Override
@@ -399,7 +385,8 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             @Override
             protected void onPostExecute(String s) {
                 PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("jsonString", s).apply();
-                progressDialog.dismiss();
+                if (progressDialog != null && progressDialog.isShowing())
+                    progressDialog.dismiss();
                 finish();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
 

@@ -25,8 +25,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import ru.noties.markwon.Markwon;
-import ru.noties.markwon.image.ImagesPlugin;
+import io.noties.markwon.Markwon;
+import io.noties.markwon.html.HtmlPlugin;
+import io.noties.markwon.image.glide.GlideImagesPlugin;
 
 import static com.grobo.notifications.utils.Constants.USER_POR;
 
@@ -84,8 +85,12 @@ public class FeedDetailFragment extends Fragment {
                 if (current.getEventDescription() == null) {
                     current.setEventDescription("No Description");
                 }
+
                 final Markwon markwon = Markwon.builder(getContext())
-                        .usePlugin(ImagesPlugin.create(getContext())).build();
+                        .usePlugin(GlideImagesPlugin.create(getContext()))
+                        .usePlugin(HtmlPlugin.create())
+                        .build();
+
                 final Spanned spanned = markwon.toMarkdown(current.getEventDescription());
                 markwon.setParsedMarkdown(eventDescription, spanned);
 
@@ -122,7 +127,10 @@ public class FeedDetailFragment extends Fragment {
                 eventVenue.setText(b.getString("venue"));
 
                 final Markwon markwon = Markwon.builder(getContext())
-                        .usePlugin(ImagesPlugin.create(getContext())).build();
+                        .usePlugin(GlideImagesPlugin.create(getContext()))
+                        .usePlugin(HtmlPlugin.create())
+                        .build();
+
                 final Spanned spanned = markwon.toMarkdown(b.getString("description", "No Description"));
                 markwon.setParsedMarkdown(eventDescription, spanned);
 

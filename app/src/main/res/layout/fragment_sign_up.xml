@@ -145,7 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Mobile no."
-                    android:inputType="text"
+                    android:inputType="phone"
                     android:textColor="@color/black"
                     tools:text="1234567890" />
 
@@ -156,12 +156,11 @@
     </LinearLayout>
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/signup_finish_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:background="@drawable/button_style"
         android:backgroundTint="#171132"
         android:text="Proceed to verify email Id"
         android:textColor="#fff"

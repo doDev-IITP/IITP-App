@@ -3,6 +3,8 @@ package com.grobo.notifications.utils;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,9 +23,9 @@ public class ImageViewerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mess_menu);
-        final ZoomImage messMenu = findViewById(R.id.messMenu);
+        final ImageView messMenu = findViewById(R.id.messMenu);
 
-        String url;
+        String url = "";
 
         if (getIntent().hasExtra("image_url")) {
             url = getIntent().getStringExtra("image_url");
@@ -32,12 +34,13 @@ public class ImageViewerActivity extends AppCompatActivity {
             url = remoteConfig.getString(MESS_MENU_URL);
         }
 
-        final Future<Bitmap> futureTarget = Glide.with(this).asBitmap().load(url).submit();
+        Log.e("url", url);
 
-        new AsyncTask<Void, Void, Bitmap>() {
+        new AsyncTask<String, Void, Bitmap>() {
 
             @Override
-            protected Bitmap doInBackground(Void... voids) {
+            protected Bitmap doInBackground(String... params) {
+                final Future<Bitmap> futureTarget = Glide.with(ImageViewerActivity.this).asBitmap().load(params[0]).encodeQuality(80).submit();
                 try {
                     return futureTarget.get();
                 } catch (Exception e) {
@@ -54,6 +57,6 @@ public class ImageViewerActivity extends AppCompatActivity {
                 }
                 messMenu.setImageBitmap(bitmap);
             }
-        }.execute();
+        }.execute(url);
     }
 }

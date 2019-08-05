@@ -6,8 +6,8 @@ android {
         applicationId "com.grobo.notifications"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 8
-        versionName "1.0.8"
+        versionCode 10
+        versionName "1.0.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -31,7 +31,10 @@ dependencies {
     implementation 'androidx.browser:browser:1.0.0'
 
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
-    implementation 'ru.noties.markwon:core:3.0.0'
+
+    implementation "io.noties.markwon:core:4.0.2"
+    implementation "io.noties.markwon:html:4.0.2"
+    implementation "io.noties.markwon:image-glide:4.0.2"
 
     //Firebase
 //    implementation 'com.google.android.gms:play-services-auth:17.0.0'

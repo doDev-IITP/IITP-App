@@ -18,8 +18,10 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 
-import ru.noties.markwon.Markwon;
-import ru.noties.markwon.image.ImagesPlugin;
+import io.noties.markwon.Markwon;
+import io.noties.markwon.html.HtmlPlugin;
+import io.noties.markwon.image.glide.GlideImagesPlugin;
+
 
 public class ClubDetailsFragment extends Fragment {
 
@@ -67,7 +69,9 @@ public class ClubDetailsFragment extends Fragment {
                 current.setDescription("No Description");
             }
             final Markwon markwon = Markwon.builder(getContext())
-                    .usePlugin(ImagesPlugin.create(getContext())).build();
+                    .usePlugin(GlideImagesPlugin.create(getContext()))
+                    .usePlugin(HtmlPlugin.create())
+                    .build();
             final Spanned spanned = markwon.toMarkdown(current.getDescription());
             markwon.setParsedMarkdown(description, spanned);
 

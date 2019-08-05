@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.ArrayMap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,11 +45,9 @@ public class SignUpFragment extends Fragment {
         if (args != null) {
             if (args.containsKey("email")) {
                 jsonParams.put("email", args.getString("email"));
-                Log.e("email", args.getString("email"));
             }
             if (args.containsKey("password")) {
                 jsonParams.put("password", args.getString("password"));
-                Log.e("passw", args.getString("password"));
             }
         }
 
@@ -75,8 +72,8 @@ public class SignUpFragment extends Fragment {
                     name.setError("Enter a valid name");
                 } else if (roll.getText().toString().equals("")) {
                     roll.setError("Enter a valid roll");
-                } else if (phone.getText().toString().equals("") || phone.getText().toString().length() != 10) {
-                    roll.setError("Enter a valid phone number");
+                } else if (phone.getText().toString().equals("") || (phone.getText().toString().length() != 10 && phone.getText().toString().length() != 13)) {
+                    phone.setError("Enter a valid phone number");
                 } else {
                     jsonParams.put("name", name.getText().toString());
                     jsonParams.put("instituteId", roll.getText().toString());
