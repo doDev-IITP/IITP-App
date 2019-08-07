@@ -34,7 +34,7 @@ dependencies {
 
     implementation "io.noties.markwon:core:4.0.2"
     implementation "io.noties.markwon:html:4.0.2"
-    implementation "io.noties.markwon:image-glide:4.0.2"
+    implementation "io.noties.markwon:image-glide:4.1.0"
 
     //Firebase
 //    implementation 'com.google.android.gms:play-services-auth:17.0.0'
