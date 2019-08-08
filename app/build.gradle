@@ -31,10 +31,13 @@ dependencies {
     implementation 'androidx.browser:browser:1.0.0'
 
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
-    implementation 'ru.noties.markwon:core:3.0.0'
+
+    implementation "io.noties.markwon:core:4.1.0"
+    implementation "io.noties.markwon:html:4.1.0"
+    implementation "io.noties.markwon:image-glide:4.1.0"
 
     //Firebase
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+//    implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.firebase:firebase-config:18.0.0'
     implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
@@ -44,10 +47,10 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
 
-    implementation "com.squareup.okhttp3:okhttp:3.12.1"
-    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.12.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation "com.squareup.okhttp3:okhttp:4.0.1"
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.0.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
 
 
     // Room components
@@ -63,8 +66,8 @@ dependencies {
     implementation "androidx.work:work-runtime:2.1.0"
 
     //pdf
-    implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
-    implementation 'org.jsoup:jsoup:1.8.3'
+//    implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
+//    implementation 'org.jsoup:jsoup:1.8.3'
 
     //goodiebag
     implementation 'com.github.GoodieBag:Pinview:v1.4'

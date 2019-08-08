@@ -34,7 +34,7 @@ public class ZoomImage extends androidx.appcompat.widget.AppCompatImageView {
     // min/max zoom boundary.
     //
     private static final float SUPER_MIN_MULTIPLIER = .75f;
-    private static final float SUPER_MAX_MULTIPLIER = 1.25f;
+    private static final float SUPER_MAX_MULTIPLIER = 1.5f;
 
     //
     // Scale of image ranges from minScale to maxScale, where minScale == 1

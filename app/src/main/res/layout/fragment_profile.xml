@@ -30,8 +30,6 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="45dp"
                     app:cardElevation="8dp"
-                    app:strokeWidth="4dp"
-                    app:strokeColor="@color/light_blue"
                     app:cardCornerRadius="75dp">
 
                     <ImageView

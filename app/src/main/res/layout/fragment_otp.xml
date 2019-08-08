@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".account.OtpFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        android:paddingBottom="16dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
-            android:text="Please enter verification code sent on your email id"
+            android:text="Please enter verification code sent on your\ncollege webmail id"
             android:textAlignment="center"
             android:textColor="@color/black" />
 
@@ -35,15 +36,15 @@
             android:id="@+id/otpView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cursorVisible="false"
             android:layout_margin="10dp"
+            android:focusedByDefault="true"
+            app:cursorVisible="false"
             app:forceKeyboard="true"
             app:inputType="number"
-            android:focusedByDefault="true"
+            app:pinHeight="36dp"
             app:pinLength="6"
-            app:splitWidth="5dp"
             app:pinWidth="35dp"
-            app:pinHeight="36dp"/>
+            app:splitWidth="5dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/otp_next"
@@ -55,23 +56,34 @@
             android:src="@drawable/ic_arrow_forward_black_24dp"
             app:backgroundTint="@color/colorPrimaryDark" />
 
-        <TextView
-            android:id="@+id/timer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+        <!--<TextView-->
+        <!--android:id="@+id/timer"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal" />-->
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/resend_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:padding="16dp"
-            android:text="Resend Otp"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:visibility="gone" />
+        <!--<com.google.android.material.button.MaterialButton-->
+        <!--android:id="@+id/resend_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:padding="16dp"-->
+        <!--android:text="Resend Otp"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="16sp"-->
+        <!--android:visibility="gone" />-->
+
     </LinearLayout>
 
-</ScrollView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="32dp"
+        android:gravity="center"
+        android:id="@+id/tv_problem"
+        android:layout_alignParentBottom="true"
+        android:text="For problems in verification, go back and login again with the account you just created. For other problems, click here."/>
+
+</RelativeLayout>
+

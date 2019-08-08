@@ -2,16 +2,17 @@ package com.grobo.notifications.account;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-
-import com.goodiebag.pinview.Pinview;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
+import com.goodiebag.pinview.Pinview;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 
@@ -48,6 +49,15 @@ public class OtpFragment extends Fragment {
                 callback.OnOtpEntered( 1, otpValue );
             }
         } );
+
+        TextView problem = view.findViewById(R.id.tv_problem);
+        problem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://forms.gle/HdTdTK9VnA25FvGy6"));
+                startActivity(browserIntent);
+            }
+        });
         return view;
     }
 

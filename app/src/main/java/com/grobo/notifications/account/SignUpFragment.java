@@ -53,8 +53,8 @@ public class SignUpFragment extends Fragment {
                     name.setError("Enter a valid name");
                 } else if (roll.getText().toString().equals("")) {
                     roll.setError("Enter a valid roll");
-                } else if (phone.getText().toString().equals("") || phone.getText().toString().length() != 10) {
-                    roll.setError("Enter a valid phone number");
+                } else if (phone.getText().toString().equals("") || (phone.getText().toString().length() != 10 && phone.getText().toString().length() != 13)) {
+                    phone.setError("Enter a valid phone number");
                 } else {
 
                     callback.onRegisterSelected(name.getText().toString(), roll.getText().toString(), phone.getText().toString());

@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity
         String appVersion = utils.getAppVersion(this);
 
         if (!TextUtils.equals(currentVersion, appVersion)) {
-            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this)
+            final AlertDialog alertDialog = new AlertDialog.Builder(this)
                     .setTitle("New version available")
                     .setMessage("Please, update app to new version to continue using.\nCurrent Version: " + appVersion + "\nNew Version: " + currentVersion)
                     .setPositiveButton("Update", new DialogInterface.OnClickListener() {
@@ -347,9 +347,10 @@ public class MainActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which) {
                             utils.openPlayStoreForApp(MainActivity.this);
                         }
-                    }).setCancelable(false);
 
-            dialogBuilder.create().show();
+                    }).setCancelable(false).create();
+
+            alertDialog.show();
         }
 
     }

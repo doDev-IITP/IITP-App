@@ -25,6 +25,7 @@ import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.network.UserRoutes;
 import com.grobo.notifications.timetable.TimetableUtility;
+import com.grobo.notifications.utils.Constants;
 
 import org.json.JSONObject;
 
@@ -79,11 +80,9 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         progressDialog.setCancelable(false);
     }
 
-
     private void setBaseFragment() {
         if (findViewById(R.id.frame_account) != null) {
             LoginFragment firstFragment = new LoginFragment();
-            firstFragment.setArguments(getIntent().getExtras());
             manager.beginTransaction()
                     .add(R.id.frame_account, firstFragment).commit();
         }
@@ -109,7 +108,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         Call<Person> call = service.login(body);
         call.enqueue(new Callback<Person>() {
             @Override
-
             public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
                 if (response.code() == 200 && response.body() != null) {
 
@@ -129,7 +127,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Login failed, error " + response.code(), Toast.LENGTH_LONG).show();
                 }
-
             }
 
             @Override
@@ -145,6 +142,8 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
 
         if (person.getUser().getActive() == 0) {
             Toast.makeText(this, "You need to verify your account first", Toast.LENGTH_LONG).show();
+            if (progressDialog != null && progressDialog.isShowing())
+                progressDialog.dismiss();
             showFragmentWithTransition(new OtpFragment());
         } else {
 
@@ -225,7 +224,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         progressDialog.show();
 
         Map<String, Object> jsonParams = new ArrayMap<>();
-
         jsonParams.put("email", email);
         jsonParams.put("code", otp);
 
@@ -259,16 +257,15 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     Toast.makeText(LoginActivity.this, "Verification failed. Error " + response.code(), Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
                 }
-
             }
 
             @Override
             public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
                 progressDialog.dismiss();
+                Log.e("responsebad", t.toString());
                 Toast.makeText(LoginActivity.this, "Login failure, error", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     private void showFragmentWithTransition(Fragment newFragment) {
@@ -286,7 +283,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     }
 
     private void downloadTimetable() {
-        final String TIMETABLE_URL = "https://timetable-grobo.firebaseio.com/";
+        final String TIMETABLE_URL = FirebaseRemoteConfig.getInstance().getString(Constants.TIMETABLE_URL);
         new AsyncTask<String, Void, String>() {
 
             @Override
@@ -307,5 +304,4 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             }
         }.execute();
     }
-
 }
