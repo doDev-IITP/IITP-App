@@ -123,9 +123,7 @@
                     android:imeOptions="actionGo"
                     android:importantForAutofill="no"
                     android:nextFocusForward="@id/login_login_button"
-                    android:imeOptions="actionGo"
                     android:inputType="textPassword"
-                    android:nextFocusForward="@id/login_login_button"
                     android:textColor="@color/black"
                     tools:ignore="UnusedAttribute"
                     tools:text="testing" />
@@ -160,14 +158,5 @@
         android:gravity="center"
         android:text="By logging in, you agree to our privacy policy.\nClick here to view it."
         app:layout_constraintBottom_toBottomOf="parent" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:id="@+id/tv_privacy_policy"
-        android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="By logging in or signing up, you agree to our privacy policy.\nClick here to view it."/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

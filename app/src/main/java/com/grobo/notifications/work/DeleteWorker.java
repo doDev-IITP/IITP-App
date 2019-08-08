@@ -31,7 +31,7 @@ public class DeleteWorker extends Worker {
 
         AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
         FeedDao feedDao = db.feedDao();
-        feedDao.deleteAllFeed();
+        feedDao.deleteOldFeed(System.currentTimeMillis() - (10*24*60*60*1000));
         PreferenceManager.getDefaultSharedPreferences(context).edit().putLong("last_feed_update_time", 0).apply();
 
     }

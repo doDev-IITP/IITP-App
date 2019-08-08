@@ -16,11 +16,7 @@ import com.goodiebag.pinview.Pinview;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class OtpFragment extends Fragment {
-
 
     private OnOtpEnteredListener callback;
     private int otpValue;
