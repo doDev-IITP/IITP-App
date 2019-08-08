@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.services.lostandfound.LostAndFoundActivity;
+import com.grobo.notifications.utils.ZoomImage;
 
 public class ServicesFragment extends Fragment implements View.OnClickListener {
 
@@ -39,11 +40,14 @@ public class ServicesFragment extends Fragment implements View.OnClickListener {
         CardView sharingPortal = view.findViewById(R.id.sharing_portal_cv);
         CardView lostFound = view.findViewById(R.id.lost_found_cv);
         CardView cabSharing = view.findViewById(R.id.cab_sharing_cv);
+        CardView busSharing = view.findViewById(R.id.bus_sharing_cv);
+
 
         maintenance.setOnClickListener(this);
         sharingPortal.setOnClickListener(this);
         lostFound.setOnClickListener(this);
         cabSharing.setOnClickListener(this);
+        busSharing.setOnClickListener( this );
 
         return view;
     }
@@ -67,6 +71,10 @@ public class ServicesFragment extends Fragment implements View.OnClickListener {
             case R.id.lost_found_cv:
                 startActivity(new Intent(getActivity(), LostAndFoundActivity.class));
                 break;
+            case R.id.bus_sharing_cv:
+                startActivity(new Intent(getActivity(), ZoomImage.class));
+                break;
+
 
         }
     }
