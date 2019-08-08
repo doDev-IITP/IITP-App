@@ -36,6 +36,8 @@ import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.clubs.ClubDetailsFragment;
 import com.grobo.notifications.clubs.ClubsFragment;
 import com.grobo.notifications.clubs.ClubsRecyclerAdapter;
+import com.grobo.notifications.clubs.PorAdapter;
+import com.grobo.notifications.clubs.PorItem;
 import com.grobo.notifications.feed.FeedDetailFragment;
 import com.grobo.notifications.feed.FeedFragment;
 import com.grobo.notifications.feed.FeedRecyclerAdapter;
@@ -55,7 +57,7 @@ import static com.grobo.notifications.utils.Constants.USER_NAME;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, Preference.OnPreferenceChangeListener,
-        FeedRecyclerAdapter.OnFeedSelectedListener, ClubsRecyclerAdapter.OnClubSelectedListener {
+        FeedRecyclerAdapter.OnFeedSelectedListener, ClubsRecyclerAdapter.OnClubSelectedListener, PorAdapter.OnCategorySelectedListener {
 
     private FragmentManager manager;
     private SharedPreferences prefs;
@@ -346,6 +348,11 @@ public class MainActivity extends AppCompatActivity
 
             alertDialog.show();
         }
+
+    }
+
+    @Override
+    public void onNameSelected(PorItem pos) {
 
     }
 }
