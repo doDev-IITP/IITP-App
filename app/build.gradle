@@ -33,7 +33,7 @@ dependencies {
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
 
     implementation "io.noties.markwon:core:4.0.2"
-    implementation "io.noties.markwon:html:4.0.2"
+    implementation "io.noties.markwon:html:4.1.0"
     implementation "io.noties.markwon:image-glide:4.1.0"
 
     //Firebase
