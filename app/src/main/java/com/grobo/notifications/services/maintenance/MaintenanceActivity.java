@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 
-public class MaintenanceActivity extends AppCompatActivity implements MaintenanceRecyclerAdapter.OnItemSelectedListener {
+public class MaintenanceActivity extends AppCompatActivity implements MaintenanceRecyclerAdapter.OnMaintenanceSelectedListener {
 
     FloatingActionButton fab;
     FragmentManager manager;
@@ -82,7 +82,7 @@ public class MaintenanceActivity extends AppCompatActivity implements Maintenanc
     }
 
     @Override
-    public void onItemSelected(int id) {
+    public void onMaintenanceSelected(String id) {
 
     }
 }
