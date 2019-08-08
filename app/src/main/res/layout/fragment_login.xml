@@ -48,7 +48,7 @@
         android:layout_margin="24dp"
         android:maxWidth="400dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/login_signup_ll"
+        app:layout_constraintBottom_toTopOf="@id/login_login_button"
         app:layout_constraintTop_toBottomOf="@id/login_cover_ll"
         tools:ignore="ContentDescription">
 
@@ -61,8 +61,8 @@
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginTop="4dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/ic_person_black_24dp"
                 android:tint="#555" />
 
@@ -79,13 +79,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/webmail_username"
-                    android:inputType="text"
                     android:imeOptions="actionNext"
-                    android:textColor="@color/black"
+                    android:inputType="text"
                     android:nextFocusDown="@id/login_input_password"
-                    tools:text="1801ee03@iitp.ac.in" >
+                    android:textColor="@color/black"
+                    tools:text="1801ee03@iitp.ac.in">
 
-                    <requestFocus/>
+                    <requestFocus />
                 </EditText>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -101,8 +101,8 @@
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginTop="4dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/ic_fingerprint_black_24dp"
                 android:tint="#555" />
 
@@ -120,10 +120,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
+                    android:imeOptions="actionGo"
                     android:importantForAutofill="no"
                     android:nextFocusForward="@id/login_login_button"
                     android:imeOptions="actionGo"
                     android:inputType="textPassword"
+                    android:nextFocusForward="@id/login_login_button"
                     android:textColor="@color/black"
                     tools:ignore="UnusedAttribute"
                     tools:text="testing" />
@@ -134,38 +136,30 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/login_signup_ll"
-        android:layout_width="match_parent"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_login_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="48dp"
+        android:backgroundTint="#171132"
+        android:clickable="true"
+        android:focusable="true"
         android:gravity="center"
-        android:orientation="horizontal"
+        android:text="@string/login"
+        android:textColor="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/login_login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:focusable="true"
-            android:clickable="true"
-            android:backgroundTint="#171132"
-            android:text="@string/login"
-            android:textColor="#fff" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/login_signup_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:backgroundTint="#171132"
-            android:text="SignUp"
-            android:textColor="#fff" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_privacy_policy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        android:text="By logging in, you agree to our privacy policy.\nClick here to view it."
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:layout_width="match_parent"

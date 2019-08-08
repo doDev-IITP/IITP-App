@@ -12,12 +12,12 @@ import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.R;
 import com.grobo.notifications.database.Person;
 import com.grobo.notifications.feed.Converters;
@@ -49,157 +49,51 @@ import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
 public class LoginActivity extends FragmentActivity implements LoginFragment.OnSignInInteractionListener,
-        SignUpFragment.OnSignUpInteractionListener, OtpFragment.OnOtpListener {
+        SignUpFragment.OnSignUpInteractionListener, OtpFragment.OnOtpEnteredListener {
 
 
     private FragmentManager manager;
     private SharedPreferences prefs;
     private ProgressDialog progressDialog;
 
-//    private GoogleApiClient mCredentialClient;
-//    private int RC_SAVE = 1;
-//    private int RC_READ = 10;
-
     private String email;
+    private String password;
     private UserRoutes service;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        getWindow().setStatusBarColor(Color.parseColor("#8548a3"));
+
         manager = getSupportFragmentManager();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        getWindow().setStatusBarColor(Color.parseColor("#8548a3"));
-
         service = RetrofitClientInstance.getRetrofitInstance().create(UserRoutes.class);
 
-        setBaseFragment(savedInstanceState);
-//        final String call = getIntent().getStringExtra("call");
+        setBaseFragment();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setCanceledOnTouchOutside(false);
-//        CredentialsOptions options =
-//                new CredentialsOptions.Builder().forceEnableSaveDialog().build();
-//        mCredentialClient = new GoogleApiClient.Builder(this)
-//                .addApi(Auth.CREDENTIALS_API, options)
-//                .setAccountName("youremail")
-//                .build();
-//        mCredentialClient.connect();
-//        CredentialRequest mCredentialRequest = new CredentialRequest.Builder()
-//                .setPasswordLoginSupported(true)
-//                .setAccountTypes(IdentityProviders.GOOGLE, IdentityProviders.TWITTER)
-//                .build();
-
-//        Auth.CredentialsApi.request(mCredentialClient, mCredentialRequest).setResultCallback(
-//                new ResultCallback<CredentialRequestResult>() {
-//                    @Override
-//                    public void onResult(CredentialRequestResult credentialRequestResult) {
-//                        if (credentialRequestResult.getStatus().isSuccess() && call == null) {
-//                            // Handle successful credential requests
-//                            login(credentialRequestResult.getCredential().getId(), credentialRequestResult.getCredential().getPassword());
-//                        } else if (credentialRequestResult.getStatus().isSuccess()) {
-//                        } else {
-//                            // Handle unsuccessful and incomplete credential requests
-//                            try {
-//                                credentialRequestResult.getStatus().startResolutionForResult(LoginActivity.this, RC_READ);
-//                            } catch (IntentSender.SendIntentException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                });
-
+        progressDialog.setCancelable(false);
     }
 
-
-    private void setBaseFragment(Bundle savedInstanceState) {
+    private void setBaseFragment() {
         if (findViewById(R.id.frame_account) != null) {
-
-            if (savedInstanceState != null) {
-                return;
-            }
-
             LoginFragment firstFragment = new LoginFragment();
-            manager.beginTransaction().add(R.id.frame_account, firstFragment).commit();
+            manager.beginTransaction()
+                    .add(R.id.frame_account, firstFragment).commit();
         }
     }
 
     @Override
     public void onLoginSelected(final String email, final String password) {
-
         this.email = email;
-//        Credential credential = new Credential.Builder(email)
-//                .setPassword(password)  // Important: only store passwords in this field.
-//                // Android autofill uses this value to complete
-//                // sign-in forms, so repurposing this field will
-//                // likely cause errors.
-//                .build();
-//        save(credential);
-
-//        new CountDownTimer(3000, 1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//
-//            }
-//
-//            @Override
-//            public void onFinish() {
-
-
+        this.password = password;
         login(email, password);
-//                mCredentialClient.disconnect();
-//            }
-//        }.start();
-
     }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == RC_READ) {
-//            if (resultCode == RESULT_OK) {
-//                Log.e("ye", "SAVE: OK");
-//                Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-//                login(credential.getId(), credential.getPassword());
-//            } else {
-//                Log.e("ye", "SAVE: Canceled by user");
-//            }
-//        }
-//    }
-
-//    private void save(Credential credential) {
-//        Auth.CredentialsApi.save(mCredentialClient, credential).setResultCallback(
-//                new ResultCallback<Status>() {
-//                    @Override
-//                    public void onResult(Status status) {
-//                        if (status.isSuccess()) {
-//                            // Credentials were saved
-//                        } else {
-//                            if (status.hasResolution()) {
-//                                // Try to resolve the save request. This will prompt the user if
-//                                // the credential is new.
-//                                try {
-//                                    Toast.makeText(LoginActivity.this, "new saviing", Toast.LENGTH_SHORT).show();
-//                                    status.startResolutionForResult(LoginActivity.this, RC_SAVE);
-//                                } catch (IntentSender.SendIntentException e) {
-//                                    // Could not resolve the request
-//                                }
-//                            }
-//                        }
-//                    }
-//                });
-////        Auth.CredentialsApi.delete( mCredentialClient, credential ).setResultCallback( new ResultCallback<Status>() {
-////            @Override
-////            public void onResult(@NonNull Status status) {
-////                Toast.makeText( LoginActivity.this, "deleted", Toast.LENGTH_SHORT ).show();
-////            }
-////        } );
-//    }
 
     private void login(String email, String password) {
 
@@ -214,19 +108,32 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         Call<Person> call = service.login(body);
         call.enqueue(new Callback<Person>() {
             @Override
-            public void onResponse(Call<Person> call, Response<Person> response) {
-                if (response.isSuccessful() && response.body() != null) {
+            public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
+                if (response.code() == 200 && response.body() != null) {
+
                     Person person = response.body();
-                    parseData(person);
+                    if (person.getUser() != null)
+                        parseData(person);
+                    else
+                        Toast.makeText(LoginActivity.this, "User account error, please contact administrator.", Toast.LENGTH_SHORT).show();
+
+                } else if (response.code() == 500) {
+
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "User not registered", Toast.LENGTH_LONG).show();
+                    showFragmentWithTransition(new SignUpFragment());
+
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login failed, error " + response.code(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Login failed, error " + response.code(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Person> call, Throwable t) {
+            public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
                 progressDialog.dismiss();
                 Log.e("responsebad", t.toString());
+                Toast.makeText(LoginActivity.this, "Login failure, error", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -240,109 +147,49 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             showFragmentWithTransition(new OtpFragment());
         } else {
 
-            SharedPreferences.Editor prefsEditor = prefs.edit();
+            if (person.getUser().getStudentMongoId() != null) {
+                SharedPreferences.Editor prefsEditor = prefs.edit();
 
-            prefsEditor.putString(USER_YEAR, person.getUser().getBatch())
-                    .putString(USER_BRANCH, person.getUser().getBranch())
-                    .putString(USER_NAME, person.getUser().getName())
-                    .putString(WEBMAIL, person.getUser().getEmail())
-                    .putString(ROLL_NUMBER, person.getUser().getInstituteId())
-                    .putString(PHONE_NUMBER, person.getUser().getPhone())
-                    .putString(USER_TOKEN, person.getToken())
-                    .putString(USER_MONGO_ID, person.getUser().getStudentMongoId());
+                prefsEditor.putString(USER_YEAR, person.getUser().getBatch())
+                        .putString(USER_BRANCH, person.getUser().getBranch())
+                        .putString(USER_NAME, person.getUser().getName())
+                        .putString(WEBMAIL, person.getUser().getEmail())
+                        .putString(ROLL_NUMBER, person.getUser().getInstituteId())
+                        .putString(PHONE_NUMBER, person.getUser().getPhone())
+                        .putString(USER_TOKEN, person.getToken())
+                        .putString(USER_MONGO_ID, person.getUser().getStudentMongoId());
 
-            String porString = Converters.stringFromArray(person.getUser().getPor());
-            prefsEditor.putString(USER_POR, porString);
+                String porString = Converters.stringFromArray(person.getUser().getPor());
+                prefsEditor.putString(USER_POR, porString);
 
-            if (person.getUser().getPor().size() != 0) {
-                prefsEditor.putBoolean(IS_ADMIN, true);
+                if (person.getUser().getPor().size() != 0) {
+                    prefsEditor.putBoolean(IS_ADMIN, true);
+                }
+
+                prefsEditor.putBoolean(LOGIN_STATUS, true);
+                prefsEditor.apply();
+
+                Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                downloadTimetable();
             }
-
-            prefsEditor.putBoolean(LOGIN_STATUS, true);
-            prefsEditor.apply();
-
-            Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-            downloadTimetable();
-
         }
-//        mCredentialClient.disconnect();
     }
 
     @Override
-    public void onSignUpSelected(String email, String password) {
+    public void onRegisterSelected(String name, String roll, String phone) {
 
-        Fragment current = manager.findFragmentById(R.id.frame_account);
+        Map<String, Object> jsonParams = new ArrayMap<>();
+        jsonParams.put("email", this.email);
+        jsonParams.put("password", this.password);
+        jsonParams.put("name", name);
+        jsonParams.put("instituteId", roll);
+        jsonParams.put("phone", phone);
 
-        Fragment next = new SignUpFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("email", email);
-        bundle.putString("password", password);
-        next.setArguments(bundle);
-        this.email = email;
-
-        current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_left));
-        next.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_right));
-
-        showFragmentWithTransition(next);
-
-    }
-
-    private void showFragmentWithTransition(Fragment newFragment) {
-
-        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_account, newFragment);
-        fragmentTransaction.addToBackStack("later_fragment");
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onFinishSelected(Map<String, Object> jsonParams) {
         completeSignup(jsonParams);
     }
 
-    @Override
-    public void OnOtpCorrect(int status, int otp) {
-
-        progressDialog.setMessage("Verifying...");
-        progressDialog.show();
-        //otp verification
-        Map<String, Object> jsonParams = new ArrayMap<>();
-        jsonParams.put("email", email);
-        jsonParams.put("code", otp);
-        RequestBody bodyOtp = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
-
-        Call<Person> call1 = service.otp(bodyOtp);
-        call1.enqueue(new Callback<Person>() {
-            @Override
-            public void onResponse(Call<Person> call, Response<Person> response) {
-
-                if (response.isSuccessful())
-                    Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
-                Person person = response.body();
-                if (person != null) {
-                    Log.e("response", person.getUser().getEmail());
-                    parseData(person);
-
-                } else
-                    Toast.makeText(LoginActivity.this, "Verification failed", Toast.LENGTH_SHORT).show();
-
-                if (progressDialog != null)
-                    progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<Person> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Failure", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-
-        //signup
-    }
-
     private void completeSignup(Map<String, Object> jsonParams) {
-        progressDialog.setMessage("Signing Up");
+        progressDialog.setMessage("Signing Up...");
         progressDialog.show();
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
@@ -353,9 +200,10 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             public void onResponse(Call<Person> call, Response<Person> response) {
                 if (response.isSuccessful()) {
                     showFragmentWithTransition(new OtpFragment());
+                } else if (response.code() == 403) {
+                    Toast.makeText(LoginActivity.this, "User already exists, please login. Error " + response.code(), Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Signup failed, error " + response.code(), Toast.LENGTH_SHORT).show();
-                    Log.e("bad request", response.toString());
+                    Toast.makeText(LoginActivity.this, "Could not register account. Error " + response.code(), Toast.LENGTH_LONG).show();
                 }
                 progressDialog.dismiss();
             }
@@ -363,11 +211,75 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             @Override
             public void onFailure(Call<Person> call, Throwable t) {
                 progressDialog.dismiss();
-                Log.e("responsebad", t.toString());
+                Log.e("responseBad", t.toString());
+                Toast.makeText(LoginActivity.this, "SignUp failure, error", Toast.LENGTH_LONG).show();
             }
         });
-//        mCredentialClient.disconnect();
+    }
 
+    @Override
+    public void OnOtpEntered(int status, int otp) {
+
+        progressDialog.setMessage("Verifying...");
+        progressDialog.show();
+
+        Map<String, Object> jsonParams = new ArrayMap<>();
+        jsonParams.put("email", email);
+        jsonParams.put("code", otp);
+
+        RequestBody bodyOtp = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+
+        Call<Person> call1 = service.verifyOtp(bodyOtp);
+        call1.enqueue(new Callback<Person>() {
+            @Override
+            public void onResponse
+                    (@NonNull Call<Person> call, @NonNull Response<Person> response) {
+
+                if (response.code() == 200) {
+                    Toast.makeText(LoginActivity.this, "Verification Successful", Toast.LENGTH_SHORT).show();
+                    Person person = response.body();
+
+                    if (person != null && person.getUser() != null)
+                        parseData(person);
+                    else
+                        Toast.makeText(LoginActivity.this, "User account error, please contact administrator.", Toast.LENGTH_SHORT).show();
+
+                } else if (response.code() == 404) {
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "User not registered. Error (404)", Toast.LENGTH_LONG).show();
+                } else if (response.code() == 408) {
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "User already activated. Error (408)", Toast.LENGTH_LONG).show();
+                } else if (response.code() == 409) {
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Invalid activation code. Error (409)", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Verification failed. Error " + response.code(), Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
+                progressDialog.dismiss();
+                Log.e("responsebad", t.toString());
+                Toast.makeText(LoginActivity.this, "Login failure, error", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void showFragmentWithTransition(Fragment newFragment) {
+
+        Fragment current = manager.findFragmentById(R.id.frame_account);
+
+        if (current != null)
+            current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_left));
+
+        newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_right));
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_account, newFragment);
+        fragmentTransaction.addToBackStack("later_fragment");
+        fragmentTransaction.commit();
     }
 
     private void downloadTimetable() {
@@ -385,8 +297,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             @Override
             protected void onPostExecute(String s) {
                 PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("jsonString", s).apply();
-                if (progressDialog != null && progressDialog.isShowing())
-                    progressDialog.dismiss();
+                progressDialog.dismiss();
                 finish();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
