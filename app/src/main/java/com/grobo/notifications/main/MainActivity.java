@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.Mess.MessFragment;
 import com.grobo.notifications.R;
@@ -51,7 +52,9 @@ import static com.grobo.notifications.utils.Constants.KEY_CURRENT_VERSION;
 import static com.grobo.notifications.utils.Constants.KEY_UPDATE_REQUIRED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
+import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
+import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, Preference.OnPreferenceChangeListener,
@@ -121,9 +124,7 @@ public class MainActivity extends AppCompatActivity
 
             remoteConfig = FirebaseRemoteConfig.getInstance();
 
-            if (!remoteConfig.getBoolean(KEY_UPDATE_REQUIRED)) {
-                updateApp(true);
-            }
+            subscribeFcmTopics();
         }
 
         KeyboardUtils.hideSoftInput(this);
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (remoteConfig.getBoolean(KEY_UPDATE_REQUIRED)) {
-            updateApp(false);
+            updateApp();
         }
 
     }
@@ -332,7 +333,7 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    private void updateApp(boolean cancelable) {
+    private void updateApp() {
 
         String currentVersion = remoteConfig.getString(KEY_CURRENT_VERSION);
         String appVersion = utils.getAppVersion(this);
@@ -346,19 +347,23 @@ public class MainActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which) {
                             utils.openPlayStoreForApp(MainActivity.this);
                         }
-                    }).setCancelable(cancelable);
-
-            if (cancelable) {
-                dialogBuilder.setNeutralButton("Later", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-            }
+                    }).setCancelable(false);
 
             dialogBuilder.create().show();
         }
 
+    }
+
+    private void subscribeFcmTopics() {
+        FirebaseMessaging fcm = FirebaseMessaging.getInstance();
+
+        fcm.subscribeToTopic("all");
+        fcm.subscribeToTopic("dev");
+        if (prefs.getBoolean(LOGIN_STATUS, false)) {
+            fcm.subscribeToTopic(prefs.getString(USER_BRANCH, "junk"));
+            fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk"));
+            fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
+            fcm.subscribeToTopic(prefs.getString(ROLL_NUMBER, "junk"));
+        }
     }
 }

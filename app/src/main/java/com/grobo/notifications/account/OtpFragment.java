@@ -21,7 +21,7 @@ import com.grobo.notifications.R;
 public class OtpFragment extends Fragment {
 
 
-    private OnOtpListener callback;
+    private OnOtpEnteredListener callback;
     private int otpValue;
 
     public OtpFragment() {
@@ -45,19 +45,19 @@ public class OtpFragment extends Fragment {
         button.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.OnOtpCorrect( 1, otpValue );
+                callback.OnOtpEntered( 1, otpValue );
             }
         } );
         return view;
     }
 
-    public interface OnOtpListener {
-        void OnOtpCorrect(int status, int otpValue);
+    public interface OnOtpEnteredListener {
+        void OnOtpEntered(int status, int otpValue);
     }
 
     @Override
     public void onAttach(Context context) {
-        callback = (OnOtpListener) getActivity();
+        callback = (OnOtpEnteredListener) getActivity();
         super.onAttach( context );
     }
 
