@@ -21,7 +21,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
-import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.network.FeedRoutes;
@@ -80,7 +79,7 @@ public class FeedFragment extends Fragment {
             }
         });
 
-        if ((System.currentTimeMillis() - prefs.getLong("last_feed_update_time", 0)) >= (60 * 1000)) {
+        if ((System.currentTimeMillis() - prefs.getLong("last_feed_update_time", 0)) >= (5 * 60 * 1000)) {
             swipeRefreshLayout.setRefreshing(true);
             updateData();
         }
@@ -129,19 +128,6 @@ public class FeedFragment extends Fragment {
                 }
             });
 
-        } else if (getContext() instanceof XPortal) {
-
-
-//            radioGroup.setVisibility(View.GONE);
-//            final String feedPoster = getArguments().getString("club", "");
-//            if (feedPoster.equals("gymkhana")) {
-//                observeAll();
-//            } else {
-//                observeMy(feedPoster);
-//            }
-//            //TODO: add button
-
-
         }
 
         return view;
@@ -163,11 +149,11 @@ public class FeedFragment extends Fragment {
             public void onResponse(Call<FeedItem.FeedItemSuper1> call, Response<FeedItem.FeedItemSuper1> response) {
 
                 if (response.isSuccessful()) {
+
                     List<FeedItem> allItems = response.body().getLatestFeeds();
 
                     for (FeedItem newItem : allItems) {
-                        if (feedViewModel.getFeedCount(newItem.getId()) == 0)
-                            feedViewModel.insert(newItem);
+                        feedViewModel.insert(newItem);
                     }
                     prefs.edit().putLong("last_feed_update_time", System.currentTimeMillis()).apply();
                 }

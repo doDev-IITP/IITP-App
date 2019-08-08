@@ -22,16 +22,13 @@ public class LoginFragment extends Fragment {
     private OnSignInInteractionListener callback;
 
     private Button loginButton;
-    private Button signUpButton;
     private EditText emailInput;
     private EditText passwordInput;
 
     private String email;
     private String password;
 
-    public LoginFragment() {
-        // Required empty public constructor
-    }
+    public LoginFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,19 +52,6 @@ public class LoginFragment extends Fragment {
                     callback.onLoginSelected(email, password);
                 }
             }
-        });
-
-        signUpButton = view.findViewById(R.id.login_signup_button);
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!validateInput()) {
-                    Toast.makeText(getContext(), "SignUp failed", Toast.LENGTH_LONG).show();
-                } else {
-                    callback.onSignUpSelected(email, password);
-                }
-            }
-
         });
 
         TextView privacyPolicy = view.findViewById(R.id.tv_privacy_policy);
@@ -118,8 +102,6 @@ public class LoginFragment extends Fragment {
     }
 
     public interface OnSignInInteractionListener {
-        void onSignUpSelected(String email, String password);
-
         void onLoginSelected(String email, String password);
     }
 }

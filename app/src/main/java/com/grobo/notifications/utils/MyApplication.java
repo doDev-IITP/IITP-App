@@ -47,25 +47,13 @@ public class MyApplication extends Application {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         createNotificationChannel();
-        subscribeFcmTopics();
 
         scheduleTask();
 
         remoteConfig();
     }
 
-    private void subscribeFcmTopics() {
-        FirebaseMessaging fcm = FirebaseMessaging.getInstance();
 
-        fcm.subscribeToTopic("all");
-        fcm.subscribeToTopic("dev");
-        if (prefs.getBoolean(LOGIN_STATUS, false)) {
-            fcm.subscribeToTopic(prefs.getString(USER_BRANCH, "junk"));
-            fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk"));
-            fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
-            fcm.subscribeToTopic(prefs.getString(ROLL_NUMBER, "junk"));
-        }
-    }
 
 
     private void scheduleTask() {
