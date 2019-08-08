@@ -6,11 +6,9 @@ import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -18,7 +16,6 @@ import com.grobo.notifications.Mess.QRFragment;
 import com.grobo.notifications.R;
 import com.grobo.notifications.timetable.DayFragment;
 import com.grobo.notifications.timetable.TimetableActivity;
-import com.grobo.notifications.utils.ViewUtils;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -44,16 +41,6 @@ public class HomeFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         dayOfWeek = calendar.get( Calendar.DAY_OF_WEEK );
 
-        CardView qrCard = rootView.findViewById( R.id.card_home_qr );
-
-        int margin = ViewUtils.dpToPx( 8 );
-        int screenWidth = ViewUtils.getScreenWidth( getContext() ) / 2 - (2 * margin);
-
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( new ViewGroup.LayoutParams( screenWidth, screenWidth ) );
-        int p = screenWidth / 2;
-        lp.setMargins( p + margin, margin, margin, margin );
-        qrCard.setLayoutParams( lp );
-
         View qrFragment = rootView.findViewById( R.id.home_fr_mess_qr );
 
         qrFragment.setOnClickListener( new View.OnClickListener() {
@@ -61,7 +48,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 final QRFragment frag = new QRFragment();
                 transactFragment( frag );
-                new CountDownTimer( 200, 1000 ) {
+                new CountDownTimer( 210, 100 ) {
                     @Override
                     public void onTick(long l) {
 

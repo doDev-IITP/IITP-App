@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_lost_found"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".services.maintenance.MaintenanceFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/maintenance_fragment_recycler"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp" />
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/maintenance_fragment_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+        <include
+            android:id="@+id/lost_found_empty_view"
+            layout="@layout/item_empty_view"
+            android:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

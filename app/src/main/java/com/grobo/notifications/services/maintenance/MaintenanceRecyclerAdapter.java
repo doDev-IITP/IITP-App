@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,9 +19,9 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
 
     private Context context;
     private List<MaintenanceItem> itemList;
-    final private OnItemSelectedListener callback;
+    final private OnMaintenanceSelectedListener callback;
 
-    public MaintenanceRecyclerAdapter(Context context, OnItemSelectedListener listener) {
+    public MaintenanceRecyclerAdapter(Context context, OnMaintenanceSelectedListener listener) {
         this.context = context;
         callback = listener;
     }
@@ -42,9 +41,10 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
 
             final MaintenanceItem current = itemList.get(position);
 
-            holder.category.setText(current.getCategory());
+            holder.category.setText(String.valueOf(current.getCategory()));
             holder.status.setText(current.getStatus());
             holder.problem.setText(current.getProblem());
+            holder.poster.setText(current.getMaintenancePoster().getInstituteId());
 
             Glide.with(context)
                     .load(current.getImageUrl())
@@ -52,10 +52,12 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
                     .placeholder(R.drawable.baseline_dashboard_24)
                     .into(holder.image);
 
+
+
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callback.onItemSelected(current.getId());
+                    callback.onMaintenanceSelected(current.getId());
                 }
             });
 
@@ -77,7 +79,9 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
         TextView category;
         TextView status;
         TextView problem;
-        LinearLayout root;
+        View root;
+        TextView location;
+        TextView poster;
 
         MaintenanceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +91,8 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
             status = itemView.findViewById(R.id.maintenance_status);
             problem = itemView.findViewById(R.id.maintenance_problem);
             root = itemView.findViewById(R.id.card_maintenance_root);
+            poster = itemView.findViewById(R.id.maintenance_poster);
+            location = itemView.findViewById(R.id.maintenance_location);
 
         }
     }
@@ -96,7 +102,7 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
         notifyDataSetChanged();
     }
 
-    public interface OnItemSelectedListener {
-        void onItemSelected(int id);
+    public interface OnMaintenanceSelectedListener {
+        void onMaintenanceSelected(String id);
     }
 }
