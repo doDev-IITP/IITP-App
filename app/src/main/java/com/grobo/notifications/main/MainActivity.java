@@ -269,7 +269,6 @@ public class MainActivity extends AppCompatActivity
                 navigationView.setCheckedItem(R.id.nav_home);
                 break;
             case R.id.nav_calender:
-                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
                 updateFragment( new CalenderFragment() );
                 break;
             case R.id.nav_mess:
