@@ -300,10 +300,10 @@ public class MainActivity extends AppCompatActivity
                 updateFragment(new SettingFragment());
                 break;
             case R.id.nav_fresher:
-                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_virtual:
-                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
                 break;
         }
         handler.postDelayed(runnable2, 300);
@@ -360,6 +360,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onNameSelected(PorItem pos) {
 
+    }
+
 
     private void subscribeFcmTopics() {
         FirebaseMessaging fcm = FirebaseMessaging.getInstance();
@@ -372,5 +374,5 @@ public class MainActivity extends AppCompatActivity
             fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
             fcm.subscribeToTopic(prefs.getString(ROLL_NUMBER, "junk"));
         }
-     }
+    }
 }

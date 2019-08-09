@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_refresh_lost_found"
+    android:id="@+id/swipe_refresh_complaints"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".services.maintenance.MaintenanceFragment">
+    tools:context=".services.complaints.ComplaintsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/maintenance_fragment_recycler"
+            android:id="@+id/complaints_fragment_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="invisible" />
 
         <include
-            android:id="@+id/maintenance_empty_view"
+            android:id="@+id/complaints_empty_view"
             layout="@layout/item_empty_view"
             android:visibility="visible" />
 
