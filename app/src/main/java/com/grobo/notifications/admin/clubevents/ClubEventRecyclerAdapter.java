@@ -4,22 +4,26 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecyclerAdapter.FeedViewHolder> {
 
     private Context context;
-    private List<ClubEventItem> clubEventItemList;
+    private ArrayList<ClubEventItem> clubEventItemList;
     final private OnFeedSelectedListener callback;
 
 
-    public ClubEventRecyclerAdapter(Context context, OnFeedSelectedListener listener){
+    public ClubEventRecyclerAdapter(Context context, OnFeedSelectedListener listener) {
         this.context = context;
         callback = listener;
     }
@@ -27,14 +31,18 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
     @NonNull
     @Override
     public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_schedule, parent, false);
+        View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.card_event, parent, false );
 
-        return new FeedViewHolder(view);
+        return new FeedViewHolder( view );
     }
 
     @Override
     public void onBindViewHolder(@NonNull final FeedViewHolder holder, int position) {
 
+        ClubEventItem item = clubEventItemList.get( position );
+        holder.clubname.setText( item.getName() );
+        holder.description.setText( "Shit it is" );
+        Glide.with( context ).load( item.getImageUrl() ).into( holder.imageView );
 //        if (clubEventItemList != null) {
 //            final ClubEventItem current = clubEventItemList.get(position);
 //
@@ -81,27 +89,19 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
 
     class FeedViewHolder extends RecyclerView.ViewHolder {
 
-//        View availableIndicator;
-//        TextView title;
-//        TextView time;
-//        TextView venue;
-//        LinearLayout rootLayout;
-//        LinearLayout sessionLayout;
-//        ImageView imageView;
+        ImageView imageView;
+        TextView clubname;
+        TextView description;
 
         FeedViewHolder(@NonNull View itemView) {
-            super(itemView);
-//            availableIndicator = itemView.findViewById(R.id.item_available_indicator);
-//            time = itemView.findViewById(R.id.item_time_text);
-//            title = itemView.findViewById(R.id.item_title_text);
-//            venue = itemView.findViewById(R.id.item_room_text);
-//            rootLayout = itemView.findViewById(R.id.itemScheduleRootLayout);
-//            sessionLayout = itemView.findViewById(R.id.item_session_layout);
-//            imageView = itemView.findViewById(R.id.item_speaker_image);
+            super( itemView );
+            imageView = itemView.findViewById( R.id.club_image );
+            clubname = itemView.findViewById( R.id.club_name );
+            description = itemView.findViewById( R.id.club_bio );
         }
     }
 
-    void setClubEventItemList(List<ClubEventItem> feeds){
+    public void setClubEventItemList(ArrayList<ClubEventItem> feeds) {
         clubEventItemList = feeds;
         notifyDataSetChanged();
     }
