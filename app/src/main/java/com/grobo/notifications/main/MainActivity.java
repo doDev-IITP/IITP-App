@@ -34,6 +34,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
 import com.grobo.notifications.admin.XPortal;
+import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.ClubDetailsFragment;
 import com.grobo.notifications.clubs.ClubsFragment;
 import com.grobo.notifications.clubs.ClubsRecyclerAdapter;
@@ -60,7 +61,8 @@ import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, Preference.OnPreferenceChangeListener,
-        FeedRecyclerAdapter.OnFeedSelectedListener, ClubsRecyclerAdapter.OnClubSelectedListener, PorAdapter.OnCategorySelectedListener {
+        FeedRecyclerAdapter.OnFeedSelectedListener, ClubsRecyclerAdapter.OnClubSelectedListener,
+        PorAdapter.OnCategorySelectedListener, ClubEventRecyclerAdapter.OnFeedSelectedListener {
 
     private FragmentManager manager;
     private SharedPreferences prefs;
