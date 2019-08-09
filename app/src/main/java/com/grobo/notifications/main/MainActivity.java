@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_calender:
                 Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
-//                updateFragment( new CalenderFragment() );
+                updateFragment( new CalenderFragment() );
                 break;
             case R.id.nav_mess:
                 currentFragment = R.id.nav_mess;
