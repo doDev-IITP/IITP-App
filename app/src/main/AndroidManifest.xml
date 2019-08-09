@@ -16,7 +16,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".utils.ImageViewerActivity"
+        <activity android:name=".services.complaints.ComplaintsActivity"></activity>
+        <activity
+            android:name=".utils.ImageViewerActivity"
             android:parentActivityName=".main.MainActivity"
             android:theme="@style/zoomStyle" />
         <activity

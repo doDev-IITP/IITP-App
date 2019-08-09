@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity
 
             subscribeFcmTopics();
         }
-
         KeyboardUtils.hideSoftInput(this);
     }
 
@@ -300,10 +299,10 @@ public class MainActivity extends AppCompatActivity
                 updateFragment(new SettingFragment());
                 break;
             case R.id.nav_fresher:
-                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_virtual:
-                Toast.makeText( this, "Coming Soon", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
                 break;
         }
         handler.postDelayed(runnable2, 300);
@@ -355,10 +354,48 @@ public class MainActivity extends AppCompatActivity
             alertDialog.show();
         }
 
+//        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(this);
+//        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+//
+//        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+//            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+//                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+//
+//                try {
+//                    appUpdateManager.startUpdateFlowForResult(
+//                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+//                            appUpdateInfo,
+//                            // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+//                            AppUpdateType.IMMEDIATE,
+//                            // The current activity making the update request.
+//                            this,
+//                            // Include a request code to later monitor this update request.
+//                            10101);
+//                } catch (IntentSender.SendIntentException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        });
+
     }
+
+//
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == 10101) {
+//            if (resultCode != RESULT_OK) {
+//                Log.e("log","Update flow failed! Result code: " + resultCode);
+//                // If the update is cancelled or fails,
+//                // you can request to start the update again.
+//            }
+//        }
+//    }
 
     @Override
     public void onNameSelected(PorItem pos) {
+
+    }
 
 
     private void subscribeFcmTopics() {
@@ -372,5 +409,5 @@ public class MainActivity extends AppCompatActivity
             fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
             fcm.subscribeToTopic(prefs.getString(ROLL_NUMBER, "junk"));
         }
-     }
+    }
 }

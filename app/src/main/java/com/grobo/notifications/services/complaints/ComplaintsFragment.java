@@ -1,4 +1,5 @@
-package com.grobo.notifications.services.maintenance;
+package com.grobo.notifications.services.complaints;
+
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -8,13 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grobo.notifications.R;
-import com.grobo.notifications.network.MaintenanceRoutes;
+import com.grobo.notifications.network.ComplaintsRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
 import java.util.List;
@@ -25,23 +27,22 @@ import retrofit2.Response;
 
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
-public class MaintenanceFragment extends Fragment {
-
-    public MaintenanceFragment() {}
+public class ComplaintsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private MaintenanceRecyclerAdapter adapter;
+    private ComplaintsRecyclerAdapter adapter;
     private View emptyView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    public ComplaintsFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_maintenance, container, false);
+        View view = inflater.inflate(R.layout.fragment_complaints, container, false);
 
-        emptyView = view.findViewById(R.id.maintenance_empty_view);
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lost_found);
+        emptyView = view.findViewById(R.id.complaints_empty_view);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_complaints);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -50,10 +51,10 @@ public class MaintenanceFragment extends Fragment {
         });
         swipeRefreshLayout.setRefreshing(true);
 
-        recyclerView = view.findViewById(R.id.maintenance_fragment_recycler);
+        recyclerView = view.findViewById(R.id.complaints_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new MaintenanceRecyclerAdapter(getContext(), (MaintenanceRecyclerAdapter.OnMaintenanceSelectedListener) getActivity());
+        adapter = new ComplaintsRecyclerAdapter(getContext(), (ComplaintsRecyclerAdapter.OnComplaintSelectedListener) getActivity());
         recyclerView.setAdapter(adapter);
 
         populateRecycler();
@@ -66,17 +67,17 @@ public class MaintenanceFragment extends Fragment {
         String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
         Log.e("token", token);
 
-        MaintenanceRoutes service = RetrofitClientInstance.getRetrofitInstance().create(MaintenanceRoutes.class);
+        ComplaintsRoutes service = RetrofitClientInstance.getRetrofitInstance().create(ComplaintsRoutes.class);
 
-        Call<MaintenanceItem.MaintenanceSuper> call = service.getAllMaintenance(token);
+        Call<ComplaintItem.ComplaintsSuper> call = service.getAllComplaints(token);
 
-        call.enqueue(new Callback<MaintenanceItem.MaintenanceSuper>() {
+        call.enqueue(new Callback<ComplaintItem.ComplaintsSuper>() {
             @Override
-            public void onResponse(Call<MaintenanceItem.MaintenanceSuper> call, Response<MaintenanceItem.MaintenanceSuper> response) {
+            public void onResponse(Call<ComplaintItem.ComplaintsSuper> call, Response<ComplaintItem.ComplaintsSuper> response) {
                 if (response.isSuccessful()) {
 
-                    if (response.body() != null &&response.body().getMaintenances() != null) {
-                        List<MaintenanceItem> allItems = response.body().getMaintenances();
+                    if (response.body() != null &&response.body().getComplaints() != null) {
+                        List<ComplaintItem> allItems = response.body().getComplaints();
 
                         adapter.setItemList(allItems);
                         if (allItems.size() == 0) {
@@ -92,7 +93,7 @@ public class MaintenanceFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<MaintenanceItem.MaintenanceSuper> call, Throwable t) {
+            public void onFailure(@NonNull Call<ComplaintItem.ComplaintsSuper> call, @NonNull Throwable t) {
                 Log.e("failure", t.getMessage());
                 Toast.makeText(getContext(), "Fetch failed", Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);

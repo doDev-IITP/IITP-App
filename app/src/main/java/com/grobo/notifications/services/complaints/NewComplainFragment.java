@@ -1,4 +1,4 @@
-package com.grobo.notifications.services;
+package com.grobo.notifications.services.complaints;
 
 
 import android.os.Bundle;
@@ -13,10 +13,10 @@ import com.grobo.notifications.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ComplaintFragment extends Fragment {
+public class NewComplainFragment extends Fragment {
 
 
-    public ComplaintFragment() {
+    public NewComplainFragment() {
         // Required empty public constructor
     }
 
@@ -25,7 +25,7 @@ public class ComplaintFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_complaint, container, false);
+        return inflater.inflate(R.layout.fragment_new_complain, container, false);
     }
 
 }
