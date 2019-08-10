@@ -93,6 +93,6 @@ abstract public class OnSwipeTouchListener extends ItemTouchHelper.Callback {
 
     @Override
     public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-        return 0.7f;
+        return 1.7f;
     }
 }

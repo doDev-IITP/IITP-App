@@ -32,6 +32,9 @@
                 android:id="@+id/tv_notification_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"
                 tools:text="text" />
@@ -40,7 +43,9 @@
                 android:id="@+id/tv_notification_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="middle"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 tools:text="text" />
