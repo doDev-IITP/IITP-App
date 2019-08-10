@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -97,14 +96,17 @@ public class ClubsFragment extends Fragment {
         Call<ClubItem.Clubs> call = service.getAllClubs();
         call.enqueue(new Callback<ClubItem.Clubs>() {
             @Override
-            public void onResponse(Call<ClubItem.Clubs> call, Response<ClubItem.Clubs> response) {
+            public void onResponse(@NonNull Call<ClubItem.Clubs> call, @NonNull Response<ClubItem.Clubs> response) {
                 if (response.isSuccessful()) {
-                    List<ClubItem> allItems = response.body().getClubs();
+                    if (response.body() != null && response.body().getClubs() != null) {
 
-                    for (ClubItem newItem : allItems) {
-                        clubViewModel.insert(newItem);
+                        List<ClubItem> allItems = response.body().getClubs();
+
+                        for (ClubItem newItem : allItems) {
+                            clubViewModel.insert(newItem);
+                        }
+
                     }
-
                 }
                 prefs.edit().putLong("last_club_update_time", System.currentTimeMillis()).apply();
                 swipeRefreshLayout.setRefreshing(false);
@@ -112,7 +114,7 @@ public class ClubsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ClubItem.Clubs> call, Throwable t) {
+            public void onFailure(@NonNull Call<ClubItem.Clubs> call, @NonNull Throwable t) {
                 Log.e("failure", t.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(getContext(), "Update failed!!", Toast.LENGTH_SHORT).show();
@@ -123,17 +125,14 @@ public class ClubsFragment extends Fragment {
 
     private void observeAll() {
         clubViewModel.getAllClubs().removeObservers(ClubsFragment.this);
-        clubViewModel.getAllClubs().observe(ClubsFragment.this, new Observer<List<ClubItem>>() {
-            @Override
-            public void onChanged(List<ClubItem> clubItems) {
-                adapter.setClubList(clubItems);
-                if (clubItems.size() == 0) {
-                    clubsRecyclerView.setVisibility(View.INVISIBLE);
-                    emptyView.setVisibility(View.VISIBLE);
-                } else {
-                    clubsRecyclerView.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.INVISIBLE);
-                }
+        clubViewModel.getAllClubs().observe(ClubsFragment.this, clubItems -> {
+            adapter.setClubList(clubItems);
+            if (clubItems.size() == 0) {
+                clubsRecyclerView.setVisibility(View.INVISIBLE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                clubsRecyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.INVISIBLE);
             }
         });
 

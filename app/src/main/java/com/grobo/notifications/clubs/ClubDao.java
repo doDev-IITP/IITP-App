@@ -12,7 +12,7 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 @Dao
 public interface ClubDao {
 
-    @Query("select * from clubs ORDER BY name DESC")
+    @Query("select * from clubs ORDER BY name ASC")
     LiveData<List<ClubItem>> loadAllClubs();
 
     @Query("select * from clubs where id = :id")
@@ -27,4 +27,6 @@ public interface ClubDao {
     @Insert(onConflict = REPLACE)
     void insertOrReplaceClub(ClubItem... clubItems);
 
+    @Query("DELETE FROM clubs WHERE followed = 0")
+    void deleteAllClubs();
 }

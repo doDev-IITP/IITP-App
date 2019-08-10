@@ -43,6 +43,10 @@ public class ClubViewModel extends AndroidViewModel {
         return null;
     }
 
+    public void delete () {
+        new deleteAsyncTask(clubDao).execute();
+    }
+
     private static class insertAsyncTask extends AsyncTask<ClubItem, Void, Void> {
 
         private ClubDao mAsyncTaskDao;
@@ -67,6 +71,21 @@ public class ClubViewModel extends AndroidViewModel {
         @Override
         protected ClubItem doInBackground(String... params) {
             return mAsyncTaskDao.loadClubById(params[0]);
+        }
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private ClubDao mAsyncTaskDao;
+
+        deleteAsyncTask(ClubDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            mAsyncTaskDao.deleteAllClubs();
+            return null;
         }
     }
 
