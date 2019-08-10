@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +28,6 @@ import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,6 +46,7 @@ public class CalenderFragment extends Fragment {
     private Calendar c;
     private MaterialCalendarView calendarView;
     private ClubEventRecyclerAdapter clubEventRecyclerAdapter;
+    private CalendarDay currentDay;
 
     public CalenderFragment() {
     }
@@ -56,6 +55,10 @@ public class CalenderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.fragment_calender, container, false );
+
+        c = Calendar.getInstance();
+        currentDay = CalendarDay.from( c.get( Calendar.YEAR ), c.get( Calendar.MONTH ) + 1, c.get( Calendar.DATE ) );
+
 
         dates = new ArrayList<>();
         allItems = new ArrayList<>();
@@ -67,8 +70,6 @@ public class CalenderFragment extends Fragment {
         eventList.setAdapter( clubEventRecyclerAdapter );
         populateRecycler();
         calendarView = view.findViewById( R.id.calendarView );
-
-        c = Calendar.getInstance();
 
         return view;
     }
@@ -112,7 +113,7 @@ public class CalenderFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ClubEventItem.ClubEventSuper> call, Throwable t) {
+            public void onFailure(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Throwable t) {
                 Log.e( "failure", t.getMessage() );
                 //  swipeRefreshLayout.setRefreshing(false);
             }
@@ -159,7 +160,6 @@ public class CalenderFragment extends Fragment {
         //calendarView.setDateSelected( calendarView.getCurrentDate(), true );
         calendarView.setSelectionColor( getResources().getColor( R.color.colorPrimary ) );
 
-        final CalendarDay currentDay = CalendarDay.from( c.get( Calendar.YEAR ), c.get( Calendar.MONTH ) + 1, c.get( Calendar.DATE ) );
         // CalendarDay.
 
         Log.e( "dat", String.valueOf( c.getTime() ) );
