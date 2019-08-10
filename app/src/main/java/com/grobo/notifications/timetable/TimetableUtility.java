@@ -44,12 +44,12 @@ public final class TimetableUtility {
 
     public static List<TimetableItem> extractTimetable(String jsonResponse, String dayPreference) {
 
-        if (TextUtils.isEmpty(jsonResponse)) {
-            Log.e("mylogmessage", "Problem parsing the earthquake JSON results");
+        if (jsonResponse == null || TextUtils.isEmpty(jsonResponse)) {
+            Log.e("mylogmessage", "No data in timetable json");
             return null;
         }
 
-        List<TimetableItem> timetableData = new ArrayList<TimetableItem>();
+        List<TimetableItem> timetableData = new ArrayList<>();
 
         try {
 
@@ -69,7 +69,7 @@ public final class TimetableUtility {
             }
 
         } catch (JSONException e) {
-            Log.e("mylogmessage", "Problem parsing the earthquake JSON results", e);
+            Log.e("mylogmessage", "Problem parsing the timetable JSON results", e);
         }
 
         Log.e("mylogmessage", timetableData.toString());
