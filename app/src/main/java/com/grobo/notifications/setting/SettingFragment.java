@@ -1,6 +1,5 @@
 package com.grobo.notifications.setting;
 
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
@@ -19,14 +18,10 @@ import com.grobo.notifications.utils.MistakeFragment;
 
 import java.util.Objects;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SettingFragment extends Fragment {
 
 
     public SettingFragment() {
-        // Required empty public constructor
     }
 
     @Override

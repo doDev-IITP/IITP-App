@@ -2,7 +2,6 @@ package com.grobo.notifications.main;
 
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,6 +71,20 @@ public class CalenderFragment extends Fragment {
         populateRecycler();
         calendarView = view.findViewById( R.id.calendarView );
 
+        DayViewDecorator todayDecorator = new DayViewDecorator() {
+            @Override
+            public boolean shouldDecorate(CalendarDay day) {
+                return day.equals(currentDay);
+            }
+
+            @Override
+            public void decorate(DayViewFacade view) {
+                view.setBackgroundDrawable( getResources().getDrawable( R.drawable.calendar_current ) );
+
+            }
+        };
+        calendarView.addDecorator( todayDecorator );
+
         return view;
     }
 
@@ -98,16 +112,6 @@ public class CalenderFragment extends Fragment {
                         }
                         further();
                     }
-
-
-//                    adapter.setItemList(allItems);
-//                    if (allItems.size() == 0) {
-//                        recyclerView.setVisibility(View.INVISIBLE);
-//                        emptyView.setVisibility(View.VISIBLE);
-//                    } else {
-//                        recyclerView.setVisibility(View.VISIBLE);
-//                        emptyView.setVisibility(View.INVISIBLE);
-//                    }
                 }
                 // swipeRefreshLayout.setRefreshing(false);
             }
@@ -181,23 +185,7 @@ public class CalenderFragment extends Fragment {
 
             }
         };
-        DayViewDecorator e2 = new DayViewDecorator() {
-            @Override
-            public boolean shouldDecorate(CalendarDay day) {
 
-                if (day.equals( currentDay )) {
-                    return true;
-
-                }
-                return false;
-            }
-
-            @Override
-            public void decorate(DayViewFacade view) {
-                view.setBackgroundDrawable( getResources().getDrawable( R.drawable.calendar_current ) );
-
-            }
-        };
 
         calendarView.setOnDateChangedListener( new OnDateSelectedListener() {
             @Override
@@ -208,7 +196,6 @@ public class CalenderFragment extends Fragment {
         } );
         // e.shouldDecorate( );
         calendarView.addDecorator( e );
-        calendarView.addDecorator( e2 );
 
     }
 
