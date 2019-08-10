@@ -1,6 +1,5 @@
 package com.grobo.notifications.main;
 
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +22,6 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.ArrayList;
@@ -36,14 +34,11 @@ import retrofit2.Response;
 
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
-
 public class CalenderFragment extends Fragment {
 
-    private TextView events;
-    private RecyclerView eventList;
     private ArrayList<CalendarDay> dates;
     private List<ClubEventItem> allItems;
-    private Calendar c;
+    private Calendar calendar;
     private MaterialCalendarView calendarView;
     private ClubEventRecyclerAdapter clubEventRecyclerAdapter;
     private CalendarDay currentDay;
@@ -52,24 +47,22 @@ public class CalenderFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate( R.layout.fragment_calender, container, false );
+        View view = inflater.inflate(R.layout.fragment_calender, container, false);
 
-        c = Calendar.getInstance();
-        currentDay = CalendarDay.from( c.get( Calendar.YEAR ), c.get( Calendar.MONTH ) + 1, c.get( Calendar.DATE ) );
-
+        calendar = Calendar.getInstance();
+        currentDay = CalendarDay.from(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE));
+        calendarView = view.findViewById(R.id.calendarView);
+        calendarView.setSelectionColor(getResources().getColor(R.color.colorPrimary));
 
         dates = new ArrayList<>();
         allItems = new ArrayList<>();
-        events = view.findViewById( R.id.events );
-        eventList = view.findViewById( R.id.eventlist );
-        eventList.setLayoutManager( new LinearLayoutManager( getContext() ) );
-        clubEventRecyclerAdapter = new ClubEventRecyclerAdapter( getContext(), (ClubEventRecyclerAdapter.OnFeedSelectedListener) getActivity() );
-        //eventList.addItemDecoration( new DividerItemDecoration( getContext(),DividerItemDecoration.VERTICAL ) );
-        eventList.setAdapter( clubEventRecyclerAdapter );
-        populateRecycler();
-        calendarView = view.findViewById( R.id.calendarView );
+
+        RecyclerView eventsRecycler = view.findViewById(R.id.eventlist);
+        eventsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        clubEventRecyclerAdapter = new ClubEventRecyclerAdapter(getContext(), (ClubEventRecyclerAdapter.OnEventSelectedListener) getActivity());
+        eventsRecycler.setAdapter(clubEventRecyclerAdapter);
 
         DayViewDecorator todayDecorator = new DayViewDecorator() {
             @Override
@@ -79,11 +72,12 @@ public class CalenderFragment extends Fragment {
 
             @Override
             public void decorate(DayViewFacade view) {
-                view.setBackgroundDrawable( getResources().getDrawable( R.drawable.calendar_current ) );
-
+                view.setBackgroundDrawable(getResources().getDrawable(R.drawable.calendar_current));
             }
         };
-        calendarView.addDecorator( todayDecorator );
+        calendarView.addDecorator(todayDecorator);
+
+        populateRecycler();
 
         return view;
     }
@@ -91,113 +85,89 @@ public class CalenderFragment extends Fragment {
 
     private void populateRecycler() {
 
-        String token = PreferenceManager.getDefaultSharedPreferences( getContext() ).getString( USER_TOKEN, "0" );
-        Log.e( "token", token );
+        String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
+        Log.e("token", token);
 
-        EventsRoutes service = RetrofitClientInstance.getRetrofitInstance().create( EventsRoutes.class );
+        EventsRoutes service = RetrofitClientInstance.getRetrofitInstance().create(EventsRoutes.class);
+        Call<ClubEventItem.ClubEventSuper> call = service.getAllEvents(token);
 
-        Call<ClubEventItem.ClubEventSuper> call = service.getAllEvents( token );
-
-        call.enqueue( new Callback<ClubEventItem.ClubEventSuper>() {
+        call.enqueue(new Callback<ClubEventItem.ClubEventSuper>() {
             @Override
-            public void onResponse(Call<ClubEventItem.ClubEventSuper> call, Response<ClubEventItem.ClubEventSuper> response) {
+            public void onResponse(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Response<ClubEventItem.ClubEventSuper> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getEvents() != null) {
                         allItems = response.body().getEvents();
 
-
-                        for (int i = 0; i < allItems.size(); i++) {
-                            c.setTimeInMillis( allItems.get( i ).getDate() );
-                            dates.add( CalendarDay.from( c.get( Calendar.YEAR ), c.get( Calendar.MONTH ) + 1, c.get( Calendar.DATE ) ) );
+                        for (ClubEventItem i : allItems) {
+                            calendar.setTimeInMillis(i.getDate());
+                            dates.add(CalendarDay.from(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE)));
                         }
                         further();
                     }
                 }
-                // swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Throwable t) {
-                Log.e( "failure", t.getMessage() );
-                //  swipeRefreshLayout.setRefreshing(false);
+                Log.e("failure", t.getMessage());
             }
-        } );
+        });
 
-
-    }
-
-    private void showEvents(CalendarDay date) {
-
-//        if (date.getDay() == 2 && date.getMonth() == 8 && date.getYear() == 2019)
-//            events.setText( "No events" );
-//        if (date.getDay() == 5 && date.getMonth() == 8 && date.getYear() == 2019) {
-//            events.setText( "1 event" );
-//        }
-        int x = 0;
-        ArrayList<ClubEventItem> clubEventItems = new ArrayList<>();
-        for (int i = 0; i < allItems.size(); i++) {
-            c.setTimeInMillis( allItems.get( i ).getDate() );
-
-            CalendarDay calendarDay = CalendarDay.from( c.get( Calendar.YEAR ), c.get( Calendar.MONTH ) + 1, c.get( Calendar.DATE ) );
-            if (calendarDay.equals( date )) {
-                clubEventItems.add( allItems.get( i ) );
-                x++;
-
-            }
-        }
-        clubEventRecyclerAdapter.setClubEventItemList( clubEventItems );
-        if (x != 0 && x != 1)
-            events.setText( x + " Events" );
-        else if (x == 1)
-            events.setText( "1 Event" );
-        else
-            events.setText( "No Events" );
 
     }
 
     private void further() {
 
-
-        // final CalendarDay current = CalendarDay.today();
-
-
-        //calendarView.setDateSelected( calendarView.getCurrentDate(), true );
-        calendarView.setSelectionColor( getResources().getColor( R.color.colorPrimary ) );
-
-        // CalendarDay.
-
-        Log.e( "dat", String.valueOf( c.getTime() ) );
-
         DayViewDecorator e = new DayViewDecorator() {
             @Override
             public boolean shouldDecorate(CalendarDay day) {
-
-                if (dates.contains( day )) {
-                    return true;
-
-                }
-                return false;
+                return dates.contains(day);
             }
 
             @Override
             public void decorate(DayViewFacade view) {
-                view.addSpan( new DotSpan( 5, R.color.shadow ) );
-
+                view.addSpan(new DotSpan(5, R.color.shadow));
             }
         };
+        calendarView.addDecorator(e);
 
-
-        calendarView.setOnDateChangedListener( new OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                //Toast.makeText(getContext(), date.toString(), Toast.LENGTH_SHORT).show();
-                showEvents( date );
-            }
-        } );
-        // e.shouldDecorate( );
-        calendarView.addDecorator( e );
+        calendarView.setOnDateChangedListener((widget, date, selected) -> {
+            showEvents(date);
+        });
 
     }
 
+    private void showEvents(CalendarDay date) {
 
+        int x = 0;
+        ArrayList<ClubEventItem> clubEventItems = new ArrayList<>();
+        for (ClubEventItem i : allItems) {
+            calendar.setTimeInMillis(i.getDate());
+
+            CalendarDay calendarDay = CalendarDay.from(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE));
+            if (calendarDay.equals(date)) {
+                clubEventItems.add(i);
+                x++;
+            }
+        }
+
+        clubEventRecyclerAdapter.setClubEventItemList(clubEventItems);
+
+        if (getView() != null) {
+            TextView events = getView().findViewById(R.id.events);
+            if (x != 0 && x != 1)
+                events.setText(x + " Events");
+            else if (x == 1)
+                events.setText("1 Event");
+            else
+                events.setText("No Events");
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        showEvents(calendarView.getCurrentDate());
+    }
 }

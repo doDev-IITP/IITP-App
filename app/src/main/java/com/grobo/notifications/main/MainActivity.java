@@ -10,6 +10,7 @@ import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -34,6 +36,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
 import com.grobo.notifications.admin.XPortal;
+import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.ClubDetailsFragment;
 import com.grobo.notifications.clubs.ClubsFragment;
@@ -50,6 +53,7 @@ import com.grobo.notifications.timetable.TimetableActivity;
 import com.grobo.notifications.utils.KeyboardUtils;
 import com.grobo.notifications.utils.utils;
 
+import static com.grobo.notifications.utils.Constants.BASE_URL;
 import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.KEY_CURRENT_VERSION;
 import static com.grobo.notifications.utils.Constants.KEY_UPDATE_REQUIRED;
@@ -62,7 +66,7 @@ import static com.grobo.notifications.utils.Constants.USER_YEAR;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, Preference.OnPreferenceChangeListener,
         FeedRecyclerAdapter.OnFeedSelectedListener, ClubsRecyclerAdapter.OnClubSelectedListener,
-        PorAdapter.OnCategorySelectedListener, ClubEventRecyclerAdapter.OnFeedSelectedListener {
+        PorAdapter.OnCategorySelectedListener, ClubEventRecyclerAdapter.OnEventSelectedListener {
 
     private FragmentManager manager;
     private SharedPreferences prefs;
@@ -110,20 +114,19 @@ public class MainActivity extends AppCompatActivity
 
             ((TextView) v.findViewById(R.id.user_name_nav_header)).setText(prefs.getString(USER_NAME, "Guest"));
             ((TextView) v.findViewById(R.id.user_email_nav_header)).setText(prefs.getString(ROLL_NUMBER, ""));
+            ImageView profileImage = v.findViewById(R.id.user_image_nav_header);
+            Glide.with(this)
+                    .load(BASE_URL + "img/" + prefs.getString(ROLL_NUMBER, ROLL_NUMBER).toLowerCase() + ".jpg")
+                    .centerCrop()
+                    .placeholder(R.drawable.profile_photo)
+                    .into(profileImage);
+            profileImage.setOnClickListener(view -> {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            });
 
             handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
-                }
-            };
-            runnable2 = new Runnable() {
-                @Override
-                public void run() {
-                    navigationView.setCheckedItem(currentFragment);
-                }
-            };
+            runnable = () -> startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
+            runnable2 = () -> navigationView.setCheckedItem(currentFragment);
             state = 1;
 
             remoteConfig = FirebaseRemoteConfig.getInstance();
@@ -177,11 +180,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_profile) {
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-            return true;
-        } else if (id == R.id.action_admin) {
+        if (item.getItemId() == R.id.action_admin) {
             startActivity(new Intent(MainActivity.this, XPortal.class));
             return true;
         }
@@ -269,7 +268,7 @@ public class MainActivity extends AppCompatActivity
                 navigationView.setCheckedItem(R.id.nav_home);
                 break;
             case R.id.nav_calender:
-                updateFragment( new CalenderFragment() );
+                updateFragment(new CalenderFragment());
                 break;
             case R.id.nav_mess:
                 currentFragment = R.id.nav_mess;
@@ -410,5 +409,18 @@ public class MainActivity extends AppCompatActivity
             fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
             fcm.subscribeToTopic(prefs.getString(ROLL_NUMBER, "junk"));
         }
+    }
+
+    @Override
+    public void onEventSelected(String eventId) {
+        Fragment fragment = new ClubEventDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("clubId", eventId);
+        fragment.setArguments(bundle);
+
+        manager.beginTransaction()
+                .replace(R.id.frame_layout_main, fragment)
+                .addToBackStack("later_fragment")
+                .commit();
     }
 }

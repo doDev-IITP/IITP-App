@@ -160,11 +160,13 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                         .putString(USER_TOKEN, person.getToken())
                         .putString(USER_MONGO_ID, person.getUser().getStudentMongoId());
 
-                String porString = Converters.stringFromArray(person.getUser().getPor());
-                prefsEditor.putString(USER_POR, porString);
+                if (person.getUser().getPors() != null) {
+                    String porString = Converters.stringFromArray(person.getUser().getPors());
+                    prefsEditor.putString(USER_POR, porString);
 
-                if (person.getUser().getPor().size() != 0) {
-                    prefsEditor.putBoolean(IS_ADMIN, true);
+                    if (person.getUser().getPors().size() != 0) {
+                        prefsEditor.putBoolean(IS_ADMIN, true);
+                    }
                 }
 
                 prefsEditor.putBoolean(LOGIN_STATUS, true);

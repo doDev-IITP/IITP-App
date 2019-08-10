@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.positions.CRFragment;
 import com.grobo.notifications.admin.positions.CoordinatorFragment;
-import com.grobo.notifications.admin.positions.SecretaryFragment;
+import com.grobo.notifications.admin.positions.MaintenanceSecretaryFragment;
 import com.grobo.notifications.admin.positions.VPFragment;
 
 import static com.grobo.notifications.utils.Constants.COORDINATOR;
@@ -74,7 +74,7 @@ public class XPortal extends AppCompatActivity implements XPortalFragment.OnPORS
                 next = new CoordinatorFragment();
                 break;
             case SECRETARY:
-                next = new SecretaryFragment();
+                next = new MaintenanceSecretaryFragment();
                 break;
             case CR:
                 next = new CRFragment();

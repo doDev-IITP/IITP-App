@@ -94,7 +94,7 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
         String[] array = coordinators.split(",");
         jsonParams.put("coordinators", array);
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+        RequestBody body = RequestBody.create((new JSONObject(jsonParams)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_TOKEN, "0");
 
         FeedRoutes service = RetrofitClientInstance.getRetrofitInstance().create(FeedRoutes.class);

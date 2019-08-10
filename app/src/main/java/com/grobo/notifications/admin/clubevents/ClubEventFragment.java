@@ -3,7 +3,6 @@ package com.grobo.notifications.admin.clubevents;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,8 +20,8 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
-import com.grobo.notifications.network.UserRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
+import com.grobo.notifications.network.UserRoutes;
 
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
@@ -36,12 +36,12 @@ public class ClubEventFragment extends Fragment {
     private View emptyView;
     private FloatingActionButton addFab;
 
-    private String club;
+    private String clubId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        club = getArguments().getString("club","");
+        clubId = getArguments().getString("club_id","");
     }
 
     @Override
@@ -50,27 +50,19 @@ public class ClubEventFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_club_event, container, false);
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_club_event);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Log.e("event", "refreshing");
-                updateData();
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            Log.e("event", "refreshing");
+            updateData();
         });
         swipeRefreshLayout.setRefreshing(true);
         updateData();
 
         addFab = view.findViewById(R.id.add_club_event_fab);
-
-        emptyView = view.findViewById(R.id.feed_empty_view);
-        emptyView.setVisibility(View.VISIBLE);
-
+        emptyView = view.findViewById(R.id.club_events_empty_view);
         recyclerView = view.findViewById(R.id.recycler_club_events);
-        recyclerView.setVisibility(View.INVISIBLE);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        adapter = new ClubEventRecyclerAdapter(getContext(), (ClubEventRecyclerAdapter.OnFeedSelectedListener) getActivity());
+        adapter = new ClubEventRecyclerAdapter(getContext(), (ClubEventRecyclerAdapter.OnEventSelectedListener) getActivity());
         recyclerView.setAdapter(adapter);
 
         if (getContext() instanceof MainActivity) {

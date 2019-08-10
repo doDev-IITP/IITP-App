@@ -14,70 +14,44 @@ import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecyclerAdapter.FeedViewHolder> {
+public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecyclerAdapter.EventViewHolder> {
 
     private Context context;
     private ArrayList<ClubEventItem> clubEventItemList;
-    final private OnFeedSelectedListener callback;
+    final private OnEventSelectedListener callback;
 
 
-    public ClubEventRecyclerAdapter(Context context, OnFeedSelectedListener listener) {
+    public ClubEventRecyclerAdapter(Context context, OnEventSelectedListener listener) {
         this.context = context;
         callback = listener;
     }
 
     @NonNull
     @Override
-    public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.card_event, parent, false );
+    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_event, parent, false);
 
-        return new FeedViewHolder( view );
+        return new EventViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final FeedViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final EventViewHolder holder, int position) {
 
-        ClubEventItem item = clubEventItemList.get( position );
-        holder.clubname.setText( item.getName() );
-        holder.description.setText( "Shit it is" );
-        Glide.with( context ).load( item.getImageUrl() ).into( holder.imageView );
-//        if (clubEventItemList != null) {
-//            final ClubEventItem current = clubEventItemList.get(position);
-//
-//            holder.title.setText(current.getEventName());
-//            holder.venue.setText(current.getEventVenue());
-//            Glide.with(context)
-//                    .load(current.getEventImageUrl())
-//                    .centerCrop()
-//                    .placeholder(R.drawable.baseline_dashboard_24)
-//                    .into(holder.imageView);
-//            holder.imageView.setTransitionName("transition" + position);
-//
-//            if(current.isInterested()){
-//                holder.availableIndicator.setBackgroundResource(R.color.red_dark2);
-//            } else {
-//                if (current.getEventDate() < (System.currentTimeMillis() - 3600000))
-//                    holder.availableIndicator.setBackgroundResource(R.color.dark_gray);
-//                else holder.availableIndicator.setBackgroundResource(R.color.light_green);
-//            }
-//
-//            Date date = new Date(current.getEventDate());
-//            SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a");
-//            holder.time.setText(format.format(date));
-//
-//            holder.rootLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    callback.onFeedSelected(current.getId(), holder.imageView, holder.getAdapterPosition());
-//                }
-//            });
-//
-//
-//        } else {
-//            holder.title.setText("Loading ...");
-//        }
+        if (clubEventItemList != null) {
+
+            ClubEventItem item = clubEventItemList.get(position);
+            holder.name.setText(item.getName());
+            holder.description.setText(item.getDescription());
+            Glide.with(context)
+                    .load(item.getImageUrl())
+                    .placeholder(R.drawable.baseline_dashboard_24)
+                    .into(holder.image);
+
+            holder.root.setOnClickListener(v -> callback.onEventSelected(item.getId()));
+        } else {
+            holder.name.setText("Loading ...");
+        }
     }
 
     @Override
@@ -87,26 +61,28 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
         else return 0;
     }
 
-    class FeedViewHolder extends RecyclerView.ViewHolder {
+    class EventViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
-        TextView clubname;
+        ImageView image;
+        TextView name;
         TextView description;
+        View root;
 
-        FeedViewHolder(@NonNull View itemView) {
-            super( itemView );
-            imageView = itemView.findViewById( R.id.club_image );
-            clubname = itemView.findViewById( R.id.club_name );
-            description = itemView.findViewById( R.id.club_bio );
+        EventViewHolder(@NonNull View itemView) {
+            super(itemView);
+            image = itemView.findViewById(R.id.event_image);
+            name = itemView.findViewById(R.id.event_name);
+            description = itemView.findViewById(R.id.event_description);
+            root = itemView.findViewById(R.id.card_event_root);
         }
     }
 
-    public void setClubEventItemList(ArrayList<ClubEventItem> feeds) {
-        clubEventItemList = feeds;
+    public void setClubEventItemList(ArrayList<ClubEventItem> clubEvents) {
+        clubEventItemList = clubEvents;
         notifyDataSetChanged();
     }
 
-    public interface OnFeedSelectedListener {
-        void onFeedSelected(String id, View view, int position);
+    public interface OnEventSelectedListener {
+        void onEventSelected(String eventId);
     }
 }
