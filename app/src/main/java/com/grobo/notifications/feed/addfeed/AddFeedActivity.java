@@ -3,7 +3,6 @@ package com.grobo.notifications.feed.addfeed;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.transition.TransitionInflater;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -15,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.feed.FeedDetailFragment;
@@ -94,7 +94,7 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
         String[] array = coordinators.split(",");
         jsonParams.put("coordinators", array);
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+        RequestBody body = RequestBody.create((new JSONObject(jsonParams)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_TOKEN, "0");
 
         FeedRoutes service = RetrofitClientInstance.getRetrofitInstance().create(FeedRoutes.class);

@@ -16,11 +16,14 @@ public interface EventsRoutes {
     @GET("/events")
     Call<ClubEventItem.ClubEventSuper> getAllEvents(@Header("Authorization") String credentials);
 
+    @GET("/events/date/{timestamp}")
+    Call<ClubEventItem.ClubEventSuper> getEventsByDate(@Header("Authorization") String credentials, @Path("timestamp") long timestamp);
+
     @POST("/events")
     Call<ResponseBody> postEvent(@Header("Authorization") String credentials, @Body RequestBody body);
 
-    @GET("/events/club/")
-    Call<ClubEventItem.ClubEventSuper> getEventByClub(@Header("Authorization") String credentials);
+    @GET("/events/club/{clubId}")
+    Call<ClubEventItem.ClubEventSuper> getEventsByClub(@Header("Authorization") String credentials, @Path("clubId") String id);
 
     @GET("/events/{id}")
     Call<ClubEventItem> getEventById(@Header("Authorization") String credentials, @Path("id") String id);

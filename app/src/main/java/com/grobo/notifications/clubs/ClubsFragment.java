@@ -3,7 +3,6 @@ package com.grobo.notifications.clubs;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,7 +69,7 @@ public class ClubsFragment extends Fragment {
             }
         });
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if ((System.currentTimeMillis() - prefs.getLong("last_club_update_time", 0)) >= (60 * 1000)) {
+        if ((System.currentTimeMillis() - prefs.getLong("last_club_update_time", 0)) >= ( 24 * 60 * 60 * 1000)) {
             swipeRefreshLayout.setRefreshing(true);
             updateData();
         }

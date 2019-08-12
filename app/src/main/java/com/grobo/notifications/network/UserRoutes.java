@@ -10,7 +10,6 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 
 public interface UserRoutes {
 
@@ -27,16 +26,16 @@ public interface UserRoutes {
     @POST("/users/activate")
     Call<Person> verifyOtp(@Body RequestBody body);
 
-    @GET("/users/batch/{year}")
-    Call<List<Person>> getUsersByBatch(@Header("Authorization") String credentials, @Path("year") String batch);
-
-    @GET("/users/branch/{br}")
-    Call<List<Person>> getUsersByBranch(@Header("Authorization") String credentials, @Path("br") String branch);
-
-    @GET("/users/batchAndBranch/{year}/{br}")
-    Call<List<Person>> getUsersByBatchNBranch(@Header("Authorization") String credentials, @Path("year") String batch, @Path("br") String branch);
-
-    @GET("/users/instituteId/{id}")
-    Call<Person> getUserByInstituteId(@Header("Authorization") String credentials, @Path("id") String instituteId);
+//    @GET("/users/batch/{year}")
+//    Call<List<Person>> getUsersByBatch(@Header("Authorization") String credentials, @Path("year") String batch);
+//
+//    @GET("/users/branch/{br}")
+//    Call<List<Person>> getUsersByBranch(@Header("Authorization") String credentials, @Path("br") String branch);
+//
+//    @GET("/users/batchAndBranch/{year}/{br}")
+//    Call<List<Person>> getUsersByBatchNBranch(@Header("Authorization") String credentials, @Path("year") String batch, @Path("br") String branch);
+//
+//    @GET("/users/instituteId/{id}")
+//    Call<Person> getUserByInstituteId(@Header("Authorization") String credentials, @Path("id") String instituteId);
 
 }

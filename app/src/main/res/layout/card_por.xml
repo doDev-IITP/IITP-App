@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="8dp"
+    android:id="@+id/card_por_root"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -13,12 +15,12 @@
         app:cardCornerRadius="40dp">
 
         <ImageView
-            android:id="@+id/imageurl"
+            android:id="@+id/image_url"
             android:layout_width="match_parent"
             android:scaleType="matrix"
             android:layout_height="match_parent"
             android:contentDescription="@string/logo"
-            android:src="@drawable/profile_photo" />
+            tools:src="@drawable/profile_photo" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -27,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Anmol Chaddha"
+        tools:text="Anmol Chaddha"
         android:layout_gravity="center"
         android:textColor="@color/shadow"
         android:textSize="12sp"
@@ -38,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Coordinator"
+        tools:text="Coordinator"
         android:textColor="@color/shadow"
         android:textSize="10sp"
         android:textStyle="bold" />

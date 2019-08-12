@@ -9,15 +9,16 @@ import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
 
-public class SecretaryFragment extends Fragment {
+public class TechnicalSecretaryFragment extends Fragment {
 
-    public SecretaryFragment() {}
+
+    public TechnicalSecretaryFragment() {
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_secretary, container, false);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_technical_secretary, container, false);
     }
 
 }

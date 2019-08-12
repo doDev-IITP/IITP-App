@@ -33,9 +33,9 @@ public class Person {
 
     public class User {
 
-        @SerializedName("por")
+        @SerializedName("pors")
         @Expose
-        private List<String> por = null;
+        private List<String> pors = null;
         @SerializedName("email")
         @Expose
         private String email;
@@ -63,14 +63,6 @@ public class Person {
         @SerializedName("active")
         @Expose
         private int active;
-
-        public List<String> getPor() {
-            return por;
-        }
-
-        public void setPor(List<String> por) {
-            this.por = por;
-        }
 
         public String getEmail() {
             return email;
@@ -146,5 +138,12 @@ public class Person {
         }
 
 
+        public List<String> getPors() {
+            return pors;
+        }
+
+        public void setPors(List<String> pors) {
+            this.pors = pors;
+        }
     }
 }

@@ -1,10 +1,16 @@
 package com.grobo.notifications.admin.clubevents;
 
+import androidx.annotation.NonNull;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Entity(tableName = "events")
 public class ClubEventItem {
 
     public class ClubEventSuper {
@@ -23,54 +29,20 @@ public class ClubEventItem {
 
     }
 
-    public class RelatedClub {
-
-        @SerializedName("_id")
-        @Expose
-        private String id;
-        @SerializedName("name")
-        @Expose
-        private String name;
-        @SerializedName("bio")
-        @Expose
-        private String bio;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getBio() {
-            return bio;
-        }
-
-        public void setBio(String bio) {
-            this.bio = bio;
-        }
-    }
-
     @SerializedName("coordinators")
     @Expose
-    private List<Object> coordinators = null;
+    private List<String> coordinators = null;
     @SerializedName("postLinks")
     @Expose
-    private List<Object> postLinks = null;
+    private List<String> postLinks = null;
+    @PrimaryKey
     @SerializedName("_id")
     @Expose
-    private String id;
+    @NonNull
+    private String id = "";
     @SerializedName("relatedClub")
     @Expose
+    @Embedded(prefix = "club_")
     private RelatedClub relatedClub;
     @SerializedName("venue")
     @Expose
@@ -88,27 +60,28 @@ public class ClubEventItem {
     @Expose
     private String imageUrl;
 
-    public List<Object> getCoordinators() {
+    public List<String> getCoordinators() {
         return coordinators;
     }
 
-    public void setCoordinators(List<Object> coordinators) {
+    public void setCoordinators(List<String> coordinators) {
         this.coordinators = coordinators;
     }
 
-    public List<Object> getPostLinks() {
+    public List<String> getPostLinks() {
         return postLinks;
     }
 
-    public void setPostLinks(List<Object> postLinks) {
+    public void setPostLinks(List<String> postLinks) {
         this.postLinks = postLinks;
     }
 
-    public String getId() {
+    public @NonNull
+    String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 

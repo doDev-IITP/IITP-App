@@ -3,7 +3,6 @@ package com.grobo.notifications.feed;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,8 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -72,12 +71,7 @@ public class FeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_feed);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                updateData();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> updateData());
 
         if ((System.currentTimeMillis() - prefs.getLong("last_feed_update_time", 0)) >= (5 * 60 * 1000)) {
             swipeRefreshLayout.setRefreshing(true);
@@ -99,33 +93,27 @@ public class FeedFragment extends Fragment {
 
             addFab.hide();
 
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switch (checkedId) {
-                        case R.id.feed_radio_all:
-                            addFab.hide();
-                            observeAll();
-                            break;
-                        case R.id.feed_radio_starred:
-                            addFab.hide();
-                            observeStarred();
-                            break;
-                        case R.id.feed_radio_my:
-                            addFab.show();
-                            observeMy(prefs.getString(USER_MONGO_ID, ""));
-                            break;
-                    }
+            radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                switch (checkedId) {
+                    case R.id.feed_radio_all:
+                        addFab.hide();
+                        observeAll();
+                        break;
+                    case R.id.feed_radio_starred:
+                        addFab.hide();
+                        observeStarred();
+                        break;
+                    case R.id.feed_radio_my:
+                        addFab.show();
+                        observeMy(prefs.getString(USER_MONGO_ID, ""));
+                        break;
                 }
             });
             radioGroup.check(R.id.feed_radio_all);
 
-            addFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), AddFeedActivity.class);
-                    startActivity(intent);
-                }
+            addFab.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), AddFeedActivity.class);
+                startActivity(intent);
             });
 
         }
@@ -146,7 +134,7 @@ public class FeedFragment extends Fragment {
         Call<FeedItem.FeedItemSuper1> call = service.getNewFeed(token, latest);
         call.enqueue(new Callback<FeedItem.FeedItemSuper1>() {
             @Override
-            public void onResponse(Call<FeedItem.FeedItemSuper1> call, Response<FeedItem.FeedItemSuper1> response) {
+            public void onResponse(@NonNull Call<FeedItem.FeedItemSuper1> call, @NonNull Response<FeedItem.FeedItemSuper1> response) {
 
                 if (response.isSuccessful()) {
 
@@ -161,7 +149,7 @@ public class FeedFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<FeedItem.FeedItemSuper1> call, Throwable t) {
+            public void onFailure(@NonNull Call<FeedItem.FeedItemSuper1> call, @NonNull Throwable t) {
                 Log.e("failure", t.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -172,62 +160,52 @@ public class FeedFragment extends Fragment {
 
     private void observeAll() {
         feedViewModel.loadAllFeeds().removeObservers(FeedFragment.this);
-        feedViewModel.loadAllFeeds().observe(FeedFragment.this, new Observer<List<FeedItem>>() {
-            @Override
-            public void onChanged(List<FeedItem> feedItems) {
-                adapter.setFeedItemList(feedItems);
-                if (feedItems.size() == 0) {
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    emptyView.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.INVISIBLE);
-                }
+        feedViewModel.loadAllFeeds().observe(FeedFragment.this, feedItems -> {
+            adapter.setFeedItemList(feedItems);
+            if (feedItems.size() == 0) {
+                recyclerView.setVisibility(View.INVISIBLE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     private void observeStarred() {
         feedViewModel.loadAllFeeds().removeObservers(FeedFragment.this);
-        feedViewModel.loadAllFeeds().observe(FeedFragment.this, new Observer<List<FeedItem>>() {
-            @Override
-            public void onChanged(List<FeedItem> feedItems) {
+        feedViewModel.loadAllFeeds().observe(FeedFragment.this, feedItems -> {
 
-                List<FeedItem> newList = new ArrayList<>();
-                for (FeedItem n : feedItems) {
-                    if (n.isInterested()) newList.add(n);
-                }
-                adapter.setFeedItemList(newList);
-                if (newList.size() == 0) {
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    emptyView.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.INVISIBLE);
-                }
+            List<FeedItem> newList = new ArrayList<>();
+            for (FeedItem n : feedItems) {
+                if (n.isInterested()) newList.add(n);
+            }
+            adapter.setFeedItemList(newList);
+            if (newList.size() == 0) {
+                recyclerView.setVisibility(View.INVISIBLE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     private void observeMy(final String poster) {
         feedViewModel.loadAllFeeds().removeObservers(FeedFragment.this);
-        feedViewModel.loadAllFeeds().observe(FeedFragment.this, new Observer<List<FeedItem>>() {
-            @Override
-            public void onChanged(List<FeedItem> feedItems) {
-
-                List<FeedItem> newList = new ArrayList<>();
-                for (FeedItem n : feedItems) {
-                    if (n.getFeedPoster().getId() != null && n.getFeedPoster().getId().equals(poster))
-                        newList.add(n);
-                }
-                adapter.setFeedItemList(newList);
-                if (newList.size() == 0) {
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    emptyView.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.INVISIBLE);
-                }
+        feedViewModel.loadAllFeeds().observe(FeedFragment.this, feedItems -> {
+            List<FeedItem> newList = new ArrayList<>();
+            for (FeedItem n : feedItems) {
+                if (n.getFeedPoster().getId() != null && n.getFeedPoster().getId().equals(poster))
+                    newList.add(n);
+            }
+            adapter.setFeedItemList(newList);
+            if (newList.size() == 0) {
+                recyclerView.setVisibility(View.INVISIBLE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.INVISIBLE);
             }
         });
     }

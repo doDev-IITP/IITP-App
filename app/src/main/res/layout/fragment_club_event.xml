@@ -13,14 +13,15 @@
             android:id="@+id/recycler_club_events"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp">
+            android:padding="8dp"
+            android:visibility="invisible">
 
         </androidx.recyclerview.widget.RecyclerView>
 
         <include
-            android:id="@+id/feed_empty_view"
+            android:id="@+id/club_events_empty_view"
             layout="@layout/item_empty_view"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_club_event_fab"

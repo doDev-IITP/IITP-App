@@ -70,12 +70,9 @@ public class AddNotificationFragment extends Fragment {
         reference = view.findViewById(R.id.add_notification_reference);
 
         Button sendButton = view.findViewById(R.id.add_notification_send_button);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateInput()) {
-                    showUnsavedChangesDialog();
-                }
+        sendButton.setOnClickListener(v -> {
+            if (validateInput()) {
+                showUnsavedChangesDialog();
             }
         });
 
@@ -101,7 +98,7 @@ public class AddNotificationFragment extends Fragment {
         data.put("reference", reference.getText().toString());
         jsonParams.put("data", data);
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+        RequestBody body = RequestBody.create((new JSONObject(jsonParams)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
 
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()

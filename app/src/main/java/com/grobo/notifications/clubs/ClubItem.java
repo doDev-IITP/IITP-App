@@ -23,12 +23,6 @@ public class ClubItem {
     @SerializedName("followers")
     @Expose
     private Integer followers;
-    @SerializedName("coordinators")
-    @Expose
-    private List<String> coordinators = null;
-    @SerializedName("subCoordinators")
-    @Expose
-    private List<String> subCoordinators = null;
     @SerializedName("pages")
     @Expose
     private List<String> pages = null;
@@ -72,22 +66,6 @@ public class ClubItem {
 
     public void setFollowers(Integer followers) {
         this.followers = followers;
-    }
-
-    public List<String> getCoordinators() {
-        return coordinators;
-    }
-
-    public void setCoordinators(List<String> coordinators) {
-        this.coordinators = coordinators;
-    }
-
-    public List<String> getSubCoordinators() {
-        return subCoordinators;
-    }
-
-    public void setSubCoordinators(List<String> subCoordinators) {
-        this.subCoordinators = subCoordinators;
     }
 
     public List<String> getPages() {
