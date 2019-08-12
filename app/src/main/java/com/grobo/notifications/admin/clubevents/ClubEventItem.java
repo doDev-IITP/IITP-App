@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Entity
+@Entity(tableName = "events")
 public class ClubEventItem {
 
     public class ClubEventSuper {
@@ -27,43 +27,6 @@ public class ClubEventItem {
             this.events = events;
         }
 
-    }
-
-    public class RelatedClub {
-
-        @SerializedName("_id")
-        @Expose
-        private String id;
-        @SerializedName("name")
-        @Expose
-        private String name;
-        @SerializedName("bio")
-        @Expose
-        private String bio;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getBio() {
-            return bio;
-        }
-
-        public void setBio(String bio) {
-            this.bio = bio;
-        }
     }
 
     @SerializedName("coordinators")
@@ -113,7 +76,8 @@ public class ClubEventItem {
         this.postLinks = postLinks;
     }
 
-    public @NonNull String getId() {
+    public @NonNull
+    String getId() {
         return id;
     }
 

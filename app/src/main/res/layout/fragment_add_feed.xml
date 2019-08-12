@@ -104,7 +104,8 @@
         <EditText
             android:id="@+id/add_feed_description"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:minHeight="250dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"

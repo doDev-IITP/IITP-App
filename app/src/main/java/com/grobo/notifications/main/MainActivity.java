@@ -42,7 +42,6 @@ import com.grobo.notifications.clubs.ClubDetailsFragment;
 import com.grobo.notifications.clubs.ClubsFragment;
 import com.grobo.notifications.clubs.ClubsRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
-import com.grobo.notifications.clubs.PorItem;
 import com.grobo.notifications.feed.FeedDetailFragment;
 import com.grobo.notifications.feed.FeedFragment;
 import com.grobo.notifications.feed.FeedRecyclerAdapter;
@@ -392,11 +391,6 @@ public class MainActivity extends AppCompatActivity
 //        }
 //    }
 
-    @Override
-    public void onNameSelected(PorItem pos) {
-
-    }
-
 
     private void subscribeFcmTopics() {
         FirebaseMessaging fcm = FirebaseMessaging.getInstance();
@@ -422,5 +416,10 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.frame_layout_main, fragment)
                 .addToBackStack("later_fragment")
                 .commit();
+    }
+
+    @Override
+    public void onNameSelected(String userId) {
+
     }
 }

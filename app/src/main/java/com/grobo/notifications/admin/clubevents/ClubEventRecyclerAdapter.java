@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecyclerAdapter.EventViewHolder> {
 
     private Context context;
-    private ArrayList<ClubEventItem> clubEventItemList;
+    private List<ClubEventItem> clubEventItemList;
     final private OnEventSelectedListener callback;
 
 
@@ -77,7 +77,7 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
         }
     }
 
-    public void setClubEventItemList(ArrayList<ClubEventItem> clubEvents) {
+    public void setClubEventItemList(List<ClubEventItem> clubEvents) {
         clubEventItemList = clubEvents;
         notifyDataSetChanged();
     }
