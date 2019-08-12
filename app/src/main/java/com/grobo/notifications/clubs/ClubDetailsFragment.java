@@ -27,7 +27,11 @@ import com.grobo.notifications.admin.clubevents.ClubEventFragment;
 import com.grobo.notifications.network.OtherRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import io.noties.markwon.Markwon;
 import io.noties.markwon.html.HtmlPlugin;
@@ -46,7 +50,8 @@ public class ClubDetailsFragment extends Fragment {
     }
 
     private ClubViewModel clubViewModel;
-    private RecyclerView porRecyclerView;
+    private PorAdapter porAdapter;
+    private View porListParent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +61,7 @@ public class ClubDetailsFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_club_details, container, false);
 
@@ -86,6 +91,11 @@ public class ClubDetailsFragment extends Fragment {
 
                 name.setText(current.getName());
 
+                porListParent = view.findViewById(R.id.por_cv_clubs);
+                RecyclerView porRecyclerView = view.findViewById(R.id.por_recycler_clubs);
+                porRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+                porAdapter = new PorAdapter(getContext(), (PorAdapter.OnPORSelectedListener) getActivity());
+                porRecyclerView.setAdapter(porAdapter);
                 getClubPOR(current.getId());
 
                 if (current.getDescription() == null) {
@@ -108,10 +118,7 @@ public class ClubDetailsFragment extends Fragment {
 
                 followingFab.setOnClickListener(v -> toggleStar(current));
 
-                website.setOnClickListener(v -> {
-                    openWebsite(current.getWebsite());
-                });
-
+                website.setOnClickListener(v -> openWebsite(current.getWebsite()));
 
                 if (current.getEvents() != null && current.getEvents().size() > 1) {
 
@@ -132,7 +139,6 @@ public class ClubDetailsFragment extends Fragment {
 
                 if (current.getPages() != null) {
                     for (String page : current.getPages()) {
-
                         if (page.contains("facebook")) {
                             ImageView fb = view.findViewById(R.id.club_facebook);
                             fb.setVisibility(View.VISIBLE);
@@ -152,24 +158,11 @@ public class ClubDetailsFragment extends Fragment {
                                 openWebsite(page);
                             });
                         }
-
                     }
                 }
 
             }
         }
-
-        porRecyclerView = view.findViewById(R.id.por);
-        porRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        ArrayList<PorItem> porItems = new ArrayList<>();
-        porItems.add(new PorItem("Anmol Chaddha", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2FIMG_20190726_154411(1)-min(1).jpg?alt=media&token=62203ad1-48a2-4568-a68c-f203a5a9ef14", "Coordinator"));
-        porItems.add(new PorItem("Aman Jee", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2Fimg_aman.jpg?alt=media&token=b9fb030e-ec72-4c5d-9596-08f96e423c62", "Coordinator"));
-        porItems.add(new PorItem("Ashwani Yadav", "https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/13465932_575022276008402_3643238272861381971_n.jpg?_nc_cat=107&_nc_oc=AQl6h5Kelo5Yhj3FvLsD_7DokoGGJfQfV2lS8KQ51YnH5YoMDfBB7T7T6XOO4JFVeZo&_nc_ht=scontent-bom1-1.xx&oh=53d8be896066fb79aa4dc062754507e0&oe=5DE44B87", "Coordinator"));
-        porItems.add(new PorItem("Anmol Chaddha", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2FIMG_20190726_154411(1)-min(1).jpg?alt=media&token=62203ad1-48a2-4568-a68c-f203a5a9ef14", "Coordinator"));
-        porItems.add(new PorItem("Aman Jee", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2Fimg_aman.jpg?alt=media&token=b9fb030e-ec72-4c5d-9596-08f96e423c62", "Coordinator"));
-        porItems.add(new PorItem("Ashwani Yadav", "https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/13465932_575022276008402_3643238272861381971_n.jpg?_nc_cat=107&_nc_oc=AQl6h5Kelo5Yhj3FvLsD_7DokoGGJfQfV2lS8KQ51YnH5YoMDfBB7T7T6XOO4JFVeZo&_nc_ht=scontent-bom1-1.xx&oh=53d8be896066fb79aa4dc062754507e0&oe=5DE44B87", "Coordinator"));
-        PorAdapter porAdapter = new PorAdapter(porItems, getContext(), (PorAdapter.OnCategorySelectedListener) getActivity());
-        porRecyclerView.setAdapter(porAdapter);
 
         return view;
     }
@@ -183,10 +176,7 @@ public class ClubDetailsFragment extends Fragment {
         clubViewModel.insert(item);
 
         if (getActivity() != null)
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .detach(this)
-                    .attach(this)
-                    .commit();
+            getActivity().getSupportFragmentManager().beginTransaction().detach(this).attach(this).commit();
     }
 
     private void getClubPOR(String clubId) {
@@ -200,9 +190,56 @@ public class ClubDetailsFragment extends Fragment {
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
-//TODO:sjsxjsxb
+                        List<PorItem> allPors = new ArrayList<>();
+
+                        try {
+                            JSONObject object = new JSONObject(response.body().string());
+
+                            JSONArray array = object.getJSONArray("pors");
+
+                            for (int i = 0; i < array.length(); i++) {
+
+                                PorItem newPor = new PorItem();
+                                JSONObject singlePor = array.getJSONObject(i);
+
+                                if (singlePor.has("_id"))
+                                    newPor.setPorId(singlePor.getString("_id"));
+                                if (singlePor.has("club"))
+                                    newPor.setClubId(singlePor.getString("club"));
+                                if (singlePor.has("access"))
+                                    newPor.setAccess(singlePor.getInt("access"));
+                                if (singlePor.has("position"))
+                                    newPor.setPosition(singlePor.getString("position"));
+
+                                if (singlePor.has("user")) {
+                                    JSONObject user = singlePor.getJSONObject("user");
+                                    if (user.has("_id"))
+                                        newPor.setUserId(user.getString("_id"));
+                                    if (user.has("name"))
+                                        newPor.setName(user.getString("name"));
+                                    if (user.has("instituteId"))
+                                        newPor.setInstituteId(user.getString("instituteId"));
+                                }
+
+                                allPors.add(newPor);
+                            }
 
 
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        allPors.add(new PorItem("Anmol Chaddha", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2FIMG_20190726_154411(1)-min(1).jpg?alt=media&token=62203ad1-48a2-4568-a68c-f203a5a9ef14", "Coordinator"));
+                        allPors.add(new PorItem("Aman Jee", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2Fimg_aman.jpg?alt=media&token=b9fb030e-ec72-4c5d-9596-08f96e423c62", "Coordinator"));
+                        allPors.add(new PorItem("Ashwani Yadav", "https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/13465932_575022276008402_3643238272861381971_n.jpg?_nc_cat=107&_nc_oc=AQl6h5Kelo5Yhj3FvLsD_7DokoGGJfQfV2lS8KQ51YnH5YoMDfBB7T7T6XOO4JFVeZo&_nc_ht=scontent-bom1-1.xx&oh=53d8be896066fb79aa4dc062754507e0&oe=5DE44B87", "Coordinator"));
+                        allPors.add(new PorItem("Anmol Chaddha", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2FIMG_20190726_154411(1)-min(1).jpg?alt=media&token=62203ad1-48a2-4568-a68c-f203a5a9ef14", "Coordinator"));
+                        allPors.add(new PorItem("Aman Jee", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2Fimg_aman.jpg?alt=media&token=b9fb030e-ec72-4c5d-9596-08f96e423c62", "Coordinator"));
+                        allPors.add(new PorItem("Ashwani Yadav", "https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/13465932_575022276008402_3643238272861381971_n.jpg?_nc_cat=107&_nc_oc=AQl6h5Kelo5Yhj3FvLsD_7DokoGGJfQfV2lS8KQ51YnH5YoMDfBB7T7T6XOO4JFVeZo&_nc_ht=scontent-bom1-1.xx&oh=53d8be896066fb79aa4dc062754507e0&oe=5DE44B87", "Coordinator"));
+
+                        if (!allPors.isEmpty()) {
+                            porListParent.setVisibility(View.VISIBLE);
+                            porAdapter.setItemList(allPors);
+                        }
                     }
                 } else {
                     Toast.makeText(getContext(), "Failed to get PORs!", Toast.LENGTH_SHORT).show();
@@ -226,9 +263,8 @@ public class ClubDetailsFragment extends Fragment {
             website1 = "https://" + website1;
         }
 
-        Log.e("website", website1);
-
         CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(getContext(), Uri.parse(website1));
+        if (getContext() != null)
+            customTabsIntent.launchUrl(getContext(), Uri.parse(website1));
     }
 }

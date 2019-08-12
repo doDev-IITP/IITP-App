@@ -45,7 +45,6 @@ public class FeedFragment extends Fragment {
     private FeedRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private View emptyView;
-    private RadioGroup radioGroup;
     private FloatingActionButton addFab;
     private SharedPreferences prefs;
 
@@ -53,7 +52,8 @@ public class FeedFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         feedViewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
-        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (getContext() != null)
+            prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
     }
 
@@ -66,12 +66,12 @@ public class FeedFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_feed);
-        swipeRefreshLayout.setOnRefreshListener(() -> updateData());
+        swipeRefreshLayout.setOnRefreshListener(this::updateData);
 
         if ((System.currentTimeMillis() - prefs.getLong("last_feed_update_time", 0)) >= (5 * 60 * 1000)) {
             swipeRefreshLayout.setRefreshing(true);
@@ -87,7 +87,7 @@ public class FeedFragment extends Fragment {
         adapter = new FeedRecyclerAdapter(getContext(), (FeedRecyclerAdapter.OnFeedSelectedListener) getActivity());
         recyclerView.setAdapter(adapter);
 
-        radioGroup = view.findViewById(R.id.radio_group_feed);
+        RadioGroup radioGroup = view.findViewById(R.id.radio_group_feed);
 
         if (getContext() instanceof MainActivity) {
 
@@ -124,10 +124,7 @@ public class FeedFragment extends Fragment {
     private void updateData() {
 
         long latest = feedViewModel.getMaxEventId();
-        Log.e("maxid", String.valueOf(latest));
-
         String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
-        Log.e("token", token);
 
         FeedRoutes service = RetrofitClientInstance.getRetrofitInstance().create(FeedRoutes.class);
 
@@ -137,11 +134,13 @@ public class FeedFragment extends Fragment {
             public void onResponse(@NonNull Call<FeedItem.FeedItemSuper1> call, @NonNull Response<FeedItem.FeedItemSuper1> response) {
 
                 if (response.isSuccessful()) {
+                    if (response.body() != null && response.body().getLatestFeeds() != null) {
 
-                    List<FeedItem> allItems = response.body().getLatestFeeds();
+                        List<FeedItem> allItems = response.body().getLatestFeeds();
 
-                    for (FeedItem newItem : allItems) {
-                        feedViewModel.insert(newItem);
+                        for (FeedItem newItem : allItems) {
+                            feedViewModel.insert(newItem);
+                        }
                     }
                     prefs.edit().putLong("last_feed_update_time", System.currentTimeMillis()).apply();
                 }

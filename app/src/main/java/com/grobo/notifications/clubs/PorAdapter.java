@@ -18,17 +18,16 @@ import java.util.List;
 public class PorAdapter extends RecyclerView.Adapter<PorAdapter.MyHolder> {
 
     private Context context;
-    final private OnCategorySelectedListener callback;
+    final private OnPORSelectedListener callback;
     private List<PorItem> porList;
 
-    PorAdapter(List<PorItem> nameList, Context context, OnCategorySelectedListener listener) {
-        this.porList = nameList;
+    PorAdapter(Context context, OnPORSelectedListener listener) {
         callback = listener;
         this.context = context;
     }
 
-    public interface OnCategorySelectedListener {
-        void onNameSelected(String userId);
+    public interface OnPORSelectedListener {
+        void onPORSelected(String userId);
     }
 
     @NonNull
@@ -50,7 +49,7 @@ public class PorAdapter extends RecyclerView.Adapter<PorAdapter.MyHolder> {
                     .placeholder(R.drawable.profile_photo)
                     .into(holder.profile);
 
-            holder.root.setOnClickListener(view -> callback.onNameSelected(item.getUserId()));
+            holder.root.setOnClickListener(view -> callback.onPORSelected(item.getUserId()));
         }
     }
 
@@ -61,7 +60,9 @@ public class PorAdapter extends RecyclerView.Adapter<PorAdapter.MyHolder> {
 
     @Override
     public int getItemCount() {
-        return porList.size();
+        if (porList != null)
+            return porList.size();
+        else return 0;
     }
 
     class MyHolder extends RecyclerView.ViewHolder {

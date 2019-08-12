@@ -137,7 +137,7 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginEnd="8dp"
                 app:cardCornerRadius="4dp"
-                app:cardElevation="1dp">
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -172,7 +172,7 @@
                 android:layout_marginBottom="2dp"
                 app:cardCornerRadius="4dp"
                 android:visibility="gone"
-                app:cardElevation="1dp">
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -200,16 +200,16 @@
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/pors"
+            android:id="@+id/por_cv_clubs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/linear_2"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="0dp"
-            app:cardElevation="1dp">
+            app:cardElevation="2dp">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/por"
+                android:id="@+id/por_recycler_clubs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
@@ -221,7 +221,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/pors"
+            android:layout_below="@id/por_cv_clubs"
             android:padding="8dp"
             android:gravity="center"
             android:layout_margin="24dp">
