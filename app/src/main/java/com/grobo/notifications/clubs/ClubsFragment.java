@@ -57,24 +57,21 @@ public class ClubsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_clubs, container, false);
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_clubs);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                updateData();
-            }
-        });
-        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if ((System.currentTimeMillis() - prefs.getLong("last_club_update_time", 0)) >= ( 24 * 60 * 60 * 1000)) {
+        swipeRefreshLayout.setOnRefreshListener(this::updateData);
+
+        if (getContext() != null)
+            prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if ((System.currentTimeMillis() - prefs.getLong("last_club_update_time", 0)) >= (24 * 60 * 60 * 1000)) {
             swipeRefreshLayout.setRefreshing(true);
             updateData();
         }
-        emptyView = view.findViewById(R.id.clubs_empty_view);
 
+        emptyView = view.findViewById(R.id.clubs_empty_view);
         clubsRecyclerView = view.findViewById(R.id.rv_clubs);
         clubsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -110,7 +107,6 @@ public class ClubsFragment extends Fragment {
                 }
                 prefs.edit().putLong("last_club_update_time", System.currentTimeMillis()).apply();
                 swipeRefreshLayout.setRefreshing(false);
-
             }
 
             @Override
@@ -135,7 +131,6 @@ public class ClubsFragment extends Fragment {
                 emptyView.setVisibility(View.INVISIBLE);
             }
         });
-
     }
 
 }

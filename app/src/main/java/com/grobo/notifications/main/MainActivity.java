@@ -65,7 +65,7 @@ import static com.grobo.notifications.utils.Constants.USER_YEAR;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, Preference.OnPreferenceChangeListener,
         FeedRecyclerAdapter.OnFeedSelectedListener, ClubsRecyclerAdapter.OnClubSelectedListener,
-        PorAdapter.OnCategorySelectedListener, ClubEventRecyclerAdapter.OnEventSelectedListener {
+        PorAdapter.OnPORSelectedListener, ClubEventRecyclerAdapter.OnEventSelectedListener {
 
     private FragmentManager manager;
     private SharedPreferences prefs;
@@ -187,11 +187,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void updateFragment(Fragment fragment) {
-
         manager.popBackStackImmediate("later_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.frame_layout_main, fragment);
+        if (fragment instanceof HomeFragment)
+            manager.popBackStackImmediate("main_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        else transaction.addToBackStack("main_fragment");
         transaction.commit();
     }
 
@@ -328,7 +329,6 @@ public class MainActivity extends AppCompatActivity
         if (state == 1) {
             handler.removeCallbacks(runnable);
             handler.removeCallbacks(runnable2);
-
         }
         super.onDestroy();
     }
@@ -419,7 +419,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onNameSelected(String userId) {
+    public void onPORSelected(String userId) {
 
     }
 }

@@ -8,7 +8,9 @@ public class PorItem {
     private String instituteId;
     private String clubId;
     private String porId;
-    private String access;
+    private int access;
+
+    public PorItem(){}
 
     public PorItem(String name, String image, String position) {
         this.image = image;
@@ -48,7 +50,7 @@ public class PorItem {
         return instituteId;
     }
 
-    public String getAccess() {
+    public int getAccess() {
         return access;
     }
 
@@ -64,7 +66,7 @@ public class PorItem {
         return userId;
     }
 
-    public void setAccess(String access) {
+    public void setAccess(int access) {
         this.access = access;
     }
 
