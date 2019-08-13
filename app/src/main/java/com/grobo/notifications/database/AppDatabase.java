@@ -17,7 +17,7 @@ import com.grobo.notifications.feed.FeedItem;
 import com.grobo.notifications.notifications.Notification;
 import com.grobo.notifications.notifications.NotificationDao;
 
-@Database(entities = {Notification.class, FeedItem.class, ClubItem.class, ClubEventItem.class}, version = 3, exportSchema = false)
+@Database(entities = {Notification.class, FeedItem.class, ClubItem.class, ClubEventItem.class}, version = 2, exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
 

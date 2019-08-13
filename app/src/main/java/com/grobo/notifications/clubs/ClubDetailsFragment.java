@@ -146,21 +146,15 @@ public class ClubDetailsFragment extends Fragment {
                         if (page.contains("facebook")) {
                             ImageView fb = view.findViewById(R.id.club_facebook);
                             fb.setVisibility(View.VISIBLE);
-                            fb.setOnClickListener(view1 -> {
-                                openWebsite(page);
-                            });
+                            fb.setOnClickListener(view1 -> openWebsite(page));
                         } else if (page.contains("instagram")) {
                             ImageView inst = view.findViewById(R.id.club_instagram);
                             inst.setVisibility(View.VISIBLE);
-                            inst.setOnClickListener(view1 -> {
-                                openWebsite(page);
-                            });
+                            inst.setOnClickListener(view1 -> openWebsite(page));
                         } else if (page.contains("twitter")) {
                             ImageView tw = view.findViewById(R.id.club_twitter);
                             tw.setVisibility(View.VISIBLE);
-                            tw.setOnClickListener(view1 -> {
-                                openWebsite(page);
-                            });
+                            tw.setOnClickListener(view1 -> openWebsite(page));
                         }
                     }
                 }
@@ -223,6 +217,8 @@ public class ClubDetailsFragment extends Fragment {
                                         newPor.setName(user.getString("name"));
                                     if (user.has("instituteId"))
                                         newPor.setInstituteId(user.getString("instituteId"));
+                                    if (user.has("image"))
+                                        newPor.setImage(user.getString("image"));
                                 }
 
                                 allPors.add(newPor);
