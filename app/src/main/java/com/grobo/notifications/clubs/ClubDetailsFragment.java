@@ -52,6 +52,7 @@ public class ClubDetailsFragment extends Fragment {
     private ClubViewModel clubViewModel;
     private PorAdapter porAdapter;
     private View porListParent;
+    private boolean refreshed = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +97,10 @@ public class ClubDetailsFragment extends Fragment {
                 porRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                 porAdapter = new PorAdapter(getContext(), (PorAdapter.OnPORSelectedListener) getActivity());
                 porRecyclerView.setAdapter(porAdapter);
-                getClubPOR(current.getId());
+
+                if (!refreshed) {
+                    getClubPOR(current.getId());
+                }
 
                 if (current.getDescription() == null) {
                     current.setDescription("No Description");
@@ -229,18 +233,14 @@ public class ClubDetailsFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        allPors.add(new PorItem("Anmol Chaddha", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2FIMG_20190726_154411(1)-min(1).jpg?alt=media&token=62203ad1-48a2-4568-a68c-f203a5a9ef14", "Coordinator"));
-                        allPors.add(new PorItem("Aman Jee", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2Fimg_aman.jpg?alt=media&token=b9fb030e-ec72-4c5d-9596-08f96e423c62", "Coordinator"));
-                        allPors.add(new PorItem("Ashwani Yadav", "https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/13465932_575022276008402_3643238272861381971_n.jpg?_nc_cat=107&_nc_oc=AQl6h5Kelo5Yhj3FvLsD_7DokoGGJfQfV2lS8KQ51YnH5YoMDfBB7T7T6XOO4JFVeZo&_nc_ht=scontent-bom1-1.xx&oh=53d8be896066fb79aa4dc062754507e0&oe=5DE44B87", "Coordinator"));
-                        allPors.add(new PorItem("Anmol Chaddha", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2FIMG_20190726_154411(1)-min(1).jpg?alt=media&token=62203ad1-48a2-4568-a68c-f203a5a9ef14", "Coordinator"));
-                        allPors.add(new PorItem("Aman Jee", "https://firebasestorage.googleapis.com/v0/b/timetable-grobo.appspot.com/o/developers%2Fimg_aman.jpg?alt=media&token=b9fb030e-ec72-4c5d-9596-08f96e423c62", "Coordinator"));
-                        allPors.add(new PorItem("Ashwani Yadav", "https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/13465932_575022276008402_3643238272861381971_n.jpg?_nc_cat=107&_nc_oc=AQl6h5Kelo5Yhj3FvLsD_7DokoGGJfQfV2lS8KQ51YnH5YoMDfBB7T7T6XOO4JFVeZo&_nc_ht=scontent-bom1-1.xx&oh=53d8be896066fb79aa4dc062754507e0&oe=5DE44B87", "Coordinator"));
-
                         if (!allPors.isEmpty()) {
                             porListParent.setVisibility(View.VISIBLE);
                             porAdapter.setItemList(allPors);
                         }
                     }
+
+                    Toast.makeText(getContext(), "PORs updated", Toast.LENGTH_SHORT).show();
+                    refreshed = true;
                 } else {
                     Toast.makeText(getContext(), "Failed to get PORs!", Toast.LENGTH_SHORT).show();
                 }

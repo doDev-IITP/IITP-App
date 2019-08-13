@@ -6,8 +6,10 @@ public class Constants {
     public static final int RC_SIGN_IN = 123;
 
     public static final String BASE_URL = "http://172.16.26.43/";
-
     public static final String TIMETABLE_URL = "timetable_url";
+    public static final String MESS_MENU_URL="mess_menu";
+    public static final String MAPS_URL="maps_url";
+
 
     public static final String ROLL_NUMBER = "roll_number";
     public static final String WEBMAIL = "webmail";
@@ -38,9 +40,6 @@ public class Constants {
 
     public static final String KEY_UPDATE_REQUIRED = "force_update_required";
     public static final String KEY_CURRENT_VERSION = "force_update_current_version";
-
-    public static final String MESS_MENU_URL="mess_menu";
-
 
     public static final int ITEM_LOST = 1;
     public static final int ITEM_FOUND = 2;

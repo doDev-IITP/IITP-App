@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,20 +35,14 @@ public class LostAndFoundFragment extends Fragment {
     private View emptyView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lost_and_found, container, false);
 
         emptyView = view.findViewById(R.id.lost_found_empty_view);
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lost_found);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                populateRecycler();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::populateRecycler);
         swipeRefreshLayout.setRefreshing(true);
 
         recyclerView = view.findViewById(R.id.lost_found_fragment_recycler);
@@ -71,24 +66,27 @@ public class LostAndFoundFragment extends Fragment {
         Call<LostAndFoundItem.LostNFoundSuper> call = service.getAllLostNFound(token);
         call.enqueue(new Callback<LostAndFoundItem.LostNFoundSuper>() {
             @Override
-            public void onResponse(Call<LostAndFoundItem.LostNFoundSuper> call, Response<LostAndFoundItem.LostNFoundSuper> response) {
+            public void onResponse(@NonNull Call<LostAndFoundItem.LostNFoundSuper> call, @NonNull Response<LostAndFoundItem.LostNFoundSuper> response) {
                 if (response.isSuccessful()) {
-                    List<LostAndFoundItem> allItems = response.body().getLostnfounds();
+                    if (response.body() != null && response.body().getLostnfounds() != null) {
 
-                    adapter.setItemList(allItems);
-                    if (allItems.size() == 0) {
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        emptyView.setVisibility(View.VISIBLE);
-                    } else {
-                        recyclerView.setVisibility(View.VISIBLE);
-                        emptyView.setVisibility(View.INVISIBLE);
+                        List<LostAndFoundItem> allItems = response.body().getLostnfounds();
+
+                        adapter.setItemList(allItems);
+                        if (allItems.size() == 0) {
+                            recyclerView.setVisibility(View.INVISIBLE);
+                            emptyView.setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            emptyView.setVisibility(View.INVISIBLE);
+                        }
                     }
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
-            public void onFailure(Call<LostAndFoundItem.LostNFoundSuper> call, Throwable t) {
+            public void onFailure(@NonNull Call<LostAndFoundItem.LostNFoundSuper> call, @NonNull Throwable t) {
                 Log.e("failure", t.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
             }

@@ -43,24 +43,18 @@ public class LoginFragment extends Fragment {
         passwordInput = view.findViewById(R.id.login_input_password);
 
         loginButton = view.findViewById(R.id.login_login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!validateInput()) {
-                    Toast.makeText(getContext(), "Please check input fields!", Toast.LENGTH_LONG).show();
-                } else {
-                    callback.onLoginSelected(email, password);
-                }
+        loginButton.setOnClickListener(v -> {
+            if (!validateInput()) {
+                Toast.makeText(getContext(), "Please check input fields!", Toast.LENGTH_LONG).show();
+            } else {
+                callback.onLoginSelected(email, password);
             }
         });
 
         TextView privacyPolicy = view.findViewById(R.id.tv_privacy_policy);
-        privacyPolicy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://timetable-grobo.firebaseapp.com/privacy_policy.html"));
-                startActivity(browserIntent);
-            }
+        privacyPolicy.setOnClickListener(view1 -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://timetable-grobo.firebaseapp.com/privacy_policy.html"));
+            startActivity(browserIntent);
         });
         return view;
     }
@@ -68,7 +62,7 @@ public class LoginFragment extends Fragment {
     private boolean validateInput() {
         boolean valid = true;
 
-        email = emailInput.getText().toString();
+        email = emailInput.getText().toString().trim();
         password = passwordInput.getText().toString();
 
         if (email.isEmpty() || !email.contains("@iitp.ac.in")) {

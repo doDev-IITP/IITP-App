@@ -3,6 +3,7 @@ package com.grobo.notifications.main;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -57,6 +58,7 @@ import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.KEY_CURRENT_VERSION;
 import static com.grobo.notifications.utils.Constants.KEY_UPDATE_REQUIRED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
+import static com.grobo.notifications.utils.Constants.MAPS_URL;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
@@ -173,14 +175,21 @@ public class MainActivity extends AppCompatActivity
         if (prefs.getBoolean(IS_ADMIN, false)) {
             MenuItem menuItem = menu.findItem(R.id.action_admin);
             menuItem.setVisible(true);
+        } else {
+            MenuItem menuItem = menu.findItem(R.id.action_profile);
+            menuItem.setVisible(true);
         }
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_admin) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_admin) {
             startActivity(new Intent(MainActivity.this, XPortal.class));
+            return true;
+        } else if (id == R.id.action_profile) {
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -269,6 +278,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_calender:
                 updateFragment(new CalenderFragment());
+                Toast.makeText(this, "This is an experimental feature...", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_mess:
                 currentFragment = R.id.nav_mess;
@@ -293,6 +303,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_services:
                 currentFragment = R.id.nav_services;
                 updateFragment(new ServicesFragment());
+                Toast.makeText(this, "This is an experimental feature...", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_setting:
                 currentFragment = R.id.nav_setting;
@@ -302,7 +313,9 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_virtual:
-                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
+                String uri = remoteConfig.getString(MAPS_URL);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                startActivity(intent);
                 break;
         }
         handler.postDelayed(runnable2, 300);
