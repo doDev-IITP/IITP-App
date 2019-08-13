@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +34,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
-import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 public class FeedFragment extends Fragment {
 
@@ -124,11 +124,10 @@ public class FeedFragment extends Fragment {
     private void updateData() {
 
         long latest = feedViewModel.getMaxEventId();
-        String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
 
         FeedRoutes service = RetrofitClientInstance.getRetrofitInstance().create(FeedRoutes.class);
 
-        Call<FeedItem.FeedItemSuper1> call = service.getNewFeed(token, latest);
+        Call<FeedItem.FeedItemSuper1> call = service.getNewFeed(latest);
         call.enqueue(new Callback<FeedItem.FeedItemSuper1>() {
             @Override
             public void onResponse(@NonNull Call<FeedItem.FeedItemSuper1> call, @NonNull Response<FeedItem.FeedItemSuper1> response) {
@@ -142,6 +141,7 @@ public class FeedFragment extends Fragment {
                             feedViewModel.insert(newItem);
                         }
                     }
+                    Toast.makeText(getContext(), "Feeds updated.", Toast.LENGTH_SHORT).show();
                     prefs.edit().putLong("last_feed_update_time", System.currentTimeMillis()).apply();
                 }
                 swipeRefreshLayout.setRefreshing(false);

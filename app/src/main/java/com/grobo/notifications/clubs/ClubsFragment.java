@@ -104,8 +104,9 @@ public class ClubsFragment extends Fragment {
                         }
 
                     }
+                    Toast.makeText(getContext(), "Clubs updated.", Toast.LENGTH_SHORT).show();
+                    prefs.edit().putLong("last_club_update_time", System.currentTimeMillis()).apply();
                 }
-                prefs.edit().putLong("last_club_update_time", System.currentTimeMillis()).apply();
                 swipeRefreshLayout.setRefreshing(false);
             }
 

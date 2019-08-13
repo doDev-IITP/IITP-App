@@ -17,20 +17,20 @@ public interface FeedRoutes {
 
     //feeds
     @GET("/feeds")
-    Call<List<FeedItem>> getAllFeeds(@Header("Authorization") String credentials);
+    Call<List<FeedItem>> getAllFeeds();
 
     @POST("/feeds")
     Call<Void> postFeed(@Header("Authorization") String credentials, @Body RequestBody body);
 
     @GET("/feeds/{id}")
-    Call<FeedItem> getFeedByEventId(@Header("Authorization") String credentials, @Path("id") long eventId);
+    Call<FeedItem> getFeedByEventId(@Path("id") long eventId);
 
     @DELETE("/feeds/{id}")
     void deleteFeedByEventId(@Header("Authorization") String credentials, @Path("id") long eventId);
 
     //for new feed added
     @GET("/feeds/latestFeed/{timestamp}")
-    Call<FeedItem.FeedItemSuper1> getNewFeed(@Header("Authorization") String credentials, @Path("timestamp") long eventId);
+    Call<FeedItem.FeedItemSuper1> getNewFeed(@Path("timestamp") long eventId);
 
     //for later events
     @GET("/feeds/timestamp/{timestamp}")

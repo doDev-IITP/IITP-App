@@ -135,6 +135,7 @@ public class ClubEventFragment extends Fragment {
                         }
                         refreshed = true;
                     }
+                    Toast.makeText(getContext(), "Events Updated", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Failed to get events!", Toast.LENGTH_SHORT).show();
                 }
