@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_calender:
                 updateFragment(new CalenderFragment());
-                Toast.makeText(this, "This is an experimental feature...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "This is an experimental feature...", Toast.LENGTH_LONG).show();
                 break;
             case R.id.nav_mess:
                 currentFragment = R.id.nav_mess;
@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_services:
                 currentFragment = R.id.nav_services;
                 updateFragment(new ServicesFragment());
-                Toast.makeText(this, "This is an experimental feature...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "This is an experimental feature...", Toast.LENGTH_LONG).show();
                 break;
             case R.id.nav_setting:
                 currentFragment = R.id.nav_setting;
