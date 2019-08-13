@@ -66,7 +66,7 @@ public class ClubsFragment extends Fragment {
 
         if (getContext() != null)
             prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if ((System.currentTimeMillis() - prefs.getLong("last_club_update_time", 0)) >= (24 * 60 * 60 * 1000)) {
+        if ((System.currentTimeMillis() - prefs.getLong("last_club_update_time", 0)) >= (6 * 60 * 60 * 1000)) {
             swipeRefreshLayout.setRefreshing(true);
             updateData();
         }

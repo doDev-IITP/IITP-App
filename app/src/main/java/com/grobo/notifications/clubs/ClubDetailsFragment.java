@@ -52,6 +52,7 @@ public class ClubDetailsFragment extends Fragment {
     private ClubViewModel clubViewModel;
     private PorAdapter porAdapter;
     private View porListParent;
+    private boolean refreshed = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +97,10 @@ public class ClubDetailsFragment extends Fragment {
                 porRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                 porAdapter = new PorAdapter(getContext(), (PorAdapter.OnPORSelectedListener) getActivity());
                 porRecyclerView.setAdapter(porAdapter);
-                getClubPOR(current.getId());
+
+                if (!refreshed) {
+                    getClubPOR(current.getId());
+                }
 
                 if (current.getDescription() == null) {
                     current.setDescription("No Description");
@@ -236,7 +240,7 @@ public class ClubDetailsFragment extends Fragment {
                     }
 
                     Toast.makeText(getContext(), "PORs updated", Toast.LENGTH_SHORT).show();
-
+                    refreshed = true;
                 } else {
                     Toast.makeText(getContext(), "Failed to get PORs!", Toast.LENGTH_SHORT).show();
                 }

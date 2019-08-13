@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.services.lostandfound.LostAndFoundActivity;
-import com.grobo.notifications.services.maintenance.MaintenanceActivity;
 import com.grobo.notifications.utils.ZoomImage;
 
 public class ServicesFragment extends Fragment implements View.OnClickListener {
@@ -66,7 +65,7 @@ public class ServicesFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.maintenance_cv:
-                startActivity(new Intent(getActivity(), MaintenanceActivity.class));
+                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();;
                 break;
 
             case R.id.lost_found_cv:

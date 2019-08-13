@@ -7,19 +7,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.R;
 import com.grobo.notifications.work.DeleteWorker;
@@ -29,10 +25,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.grobo.notifications.utils.Constants.KEY_CURRENT_VERSION;
-import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
-import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
-import static com.grobo.notifications.utils.Constants.USER_BRANCH;
-import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
 public class MyApplication extends Application {
 
@@ -52,8 +44,6 @@ public class MyApplication extends Application {
 
         remoteConfig();
     }
-
-
 
 
     private void scheduleTask() {
@@ -91,23 +81,21 @@ public class MyApplication extends Application {
 
         Map<String, Object> remoteConfigDefaults = new HashMap<>();
         remoteConfigDefaults.put(Constants.KEY_UPDATE_REQUIRED, false);
-        remoteConfigDefaults.put(Constants.KEY_CURRENT_VERSION, "1.0.0");
-        remoteConfigDefaults.put(Constants.TIMETABLE_URL,"https://timetable-grobo.firebaseio.com/");
-        remoteConfigDefaults.put( Constants.MESS_MENU_URL,"https://i.ytimg.com/vi/OjIXzZ25tjA/maxresdefault.jpg" );
+        remoteConfigDefaults.put(Constants.KEY_CURRENT_VERSION, utils.getAppVersion(this));
+        remoteConfigDefaults.put(Constants.TIMETABLE_URL, "https://timetable-grobo.firebaseio.com/");
+        remoteConfigDefaults.put(Constants.MESS_MENU_URL, "https://i.ytimg.com/vi/OjIXzZ25tjA/maxresdefault.jpg");
+        remoteConfigDefaults.put(Constants.MAPS_URL, "https://www.google.com/maps/d/viewer?mid=1NVE_tnItehFaMbEWddjL786SKtuCtq4X");
 
         firebaseRemoteConfig.setDefaults(remoteConfigDefaults);
         // fetch every minutes
 
-        firebaseRemoteConfig.fetch(60).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.e("Application", "remote config is fetched.");
-                    firebaseRemoteConfig.activateFetched();
-                    Log.e("Application", firebaseRemoteConfig.getString(KEY_CURRENT_VERSION));
-                } else {
-                    Log.e("Application", "remote config fetch failed.");
-                }
+        firebaseRemoteConfig.fetch(60).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.e("Application", "remote config is fetched.");
+                firebaseRemoteConfig.activateFetched();
+                Log.e("Application", firebaseRemoteConfig.getString(KEY_CURRENT_VERSION));
+            } else {
+                Log.e("Application", "remote config fetch failed.");
             }
         });
     }
