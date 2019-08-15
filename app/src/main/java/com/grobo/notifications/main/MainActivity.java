@@ -277,6 +277,7 @@ public class MainActivity extends AppCompatActivity
                 navigationView.setCheckedItem(R.id.nav_home);
                 break;
             case R.id.nav_calender:
+                currentFragment = R.id.nav_calender;
                 updateFragment(new CalenderFragment());
                 Toast.makeText(this, "This is an experimental feature...", Toast.LENGTH_LONG).show();
                 break;

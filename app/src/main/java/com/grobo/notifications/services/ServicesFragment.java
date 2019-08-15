@@ -12,11 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.services.lostandfound.LostAndFoundActivity;
-import com.grobo.notifications.utils.ZoomImage;
 
 public class ServicesFragment extends Fragment implements View.OnClickListener {
 
@@ -72,19 +70,19 @@ public class ServicesFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), LostAndFoundActivity.class));
                 break;
             case R.id.bus_sharing_cv:
-                startActivity(new Intent(getActivity(), ZoomImage.class));
+                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();;
                 break;
 
 
         }
     }
 
-    private void transactFragment(Fragment frag){
-        FragmentTransaction fragmentManager = getActivity().getSupportFragmentManager().beginTransaction();
-
-        fragmentManager.setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
-                .replace(R.id.frame_layout_main, frag, frag.getTag())
-                .addToBackStack("later_fragment")
-                .commit();
-    }
+//    private void transactFragment(Fragment frag){
+//        FragmentTransaction fragmentManager = getActivity().getSupportFragmentManager().beginTransaction();
+//
+//        fragmentManager.setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
+//                .replace(R.id.frame_layout_main, frag, frag.getTag())
+//                .addToBackStack("later_fragment")
+//                .commit();
+//    }
 }
