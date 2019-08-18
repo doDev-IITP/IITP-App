@@ -3,6 +3,7 @@ package com.grobo.notifications.clubs;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +60,7 @@ public class ClubDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         clubViewModel = ViewModelProviders.of(this).get(ClubViewModel.class);
     }
+
 
 
     @Override
@@ -167,11 +169,15 @@ public class ClubDetailsFragment extends Fragment {
 
     private void toggleStar(ClubItem item) {
         if (item.isFollowed()) {
-            item.setFollowed(false);
+            item.setFollowed( false );
         } else {
-            item.setFollowed(true);
+            item.setFollowed( true );
         }
-        clubViewModel.insert(item);
+        clubViewModel.insert( item );
+        detach();
+    }
+    private void detach()
+    {
 
         if (getActivity() != null)
             getActivity().getSupportFragmentManager().beginTransaction().detach(this).attach(this).commit();
@@ -235,7 +241,7 @@ public class ClubDetailsFragment extends Fragment {
                         }
                     }
 
-                    Toast.makeText(getContext(), "PORs updated", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "PORs updated", Toast.LENGTH_SHORT).show();
                     refreshed = true;
                 } else {
                     Toast.makeText(getContext(), "Failed to get PORs!", Toast.LENGTH_SHORT).show();
