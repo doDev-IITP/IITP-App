@@ -3,7 +3,6 @@ package com.grobo.notifications.clubs;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
