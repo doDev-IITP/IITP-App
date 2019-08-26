@@ -85,19 +85,18 @@ public class MessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate( R.layout.fragment_mess, container, false );
+        View rootView = inflater.inflate(R.layout.fragment_mess, container, false);
 
-        messMenu = rootView.findViewById( R.id.mess_menu );
+        messMenu = rootView.findViewById(R.id.mess_menu);
         remoteConfig = FirebaseRemoteConfig.getInstance();
-        String url=remoteConfig.getString( MESS_MENU_URL );
-        Glide.with( this ).load( url ).centerInside().into( messMenu );
+        String url = remoteConfig.getString(MESS_MENU_URL);
+        Glide.with(this).load(url).centerInside().into(messMenu);
 
-        messMenu.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity( new Intent( getContext(), ImageViewerActivity.class ) );
-            }
-        } );
+        messMenu.setOnClickListener(view -> {
+            Intent i = new Intent(getContext(), ImageViewerActivity.class);
+            i.putExtra("image_url", url);
+            startActivity(i);
+        });
 
 //        messLL = rootView.findViewById(R.id.ll_mess_details);
 //        messSelectionLL = rootView.findViewById(R.id.ll_mess_selection);

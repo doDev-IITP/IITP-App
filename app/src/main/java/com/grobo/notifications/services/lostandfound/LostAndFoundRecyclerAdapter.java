@@ -72,13 +72,11 @@ public class LostAndFoundRecyclerAdapter extends RecyclerView.Adapter<LostAndFou
                     .centerCrop()
                     .placeholder(R.drawable.baseline_dashboard_24)
                     .into(holder.image);
-//            holder.image.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (current.getImage() != null && !current.getImage().equals(""))
-//                        callback.onLostFoundSelected(current.getImage());
-//                }
-//            });
+
+            holder.image.setOnClickListener(v -> {
+                if (current.getImage() != null && !current.getImage().equals(""))
+                    callback.onLostFoundSelected(current.getImage());
+            });
 
         } else {
             holder.name.setText("Loading ...");

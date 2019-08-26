@@ -52,14 +52,7 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
                     .placeholder(R.drawable.baseline_dashboard_24)
                     .into(holder.image);
 
-
-
-            holder.root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.onMaintenanceSelected(current.getId());
-                }
-            });
+            holder.root.setOnClickListener(v -> callback.onMaintenanceSelected(current.getId()));
 
         } else {
             holder.category.setText("Loading ...");

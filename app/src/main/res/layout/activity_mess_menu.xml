@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.grobo.notifications.utils.ZoomImage
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/messMenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
