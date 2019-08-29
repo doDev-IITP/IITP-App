@@ -223,7 +223,8 @@ public class MainActivity extends AppCompatActivity
         bundle.putString("id", id);
         newFragment.setArguments(bundle);
 
-        showFragmentWithTransition(current, newFragment, view, "transition" + position);
+        if (current != null)
+            showFragmentWithTransition(current, newFragment, view, "transition" + position);
     }
 
     private void showFragmentWithTransition(Fragment current, Fragment newFragment, View sharedView, String sharedElementName) {

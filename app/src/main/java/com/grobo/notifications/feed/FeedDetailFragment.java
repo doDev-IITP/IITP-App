@@ -1,9 +1,8 @@
 package com.grobo.notifications.feed;
 
-
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,10 +22,12 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
+import com.grobo.notifications.utils.ImageViewerActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.noties.markwon.Markwon;
 import io.noties.markwon.html.HtmlPlugin;
@@ -35,6 +39,8 @@ public class FeedDetailFragment extends Fragment {
 
     public FeedDetailFragment() {
     }
+
+    private FeedItem current;
 
     public static FeedDetailFragment newInstance() {
         return new FeedDetailFragment();
@@ -71,10 +77,11 @@ public class FeedDetailFragment extends Fragment {
                 eventPoster.setTransitionName(transitionName);
                 String id = b.getString("id");
 
-                final FeedItem current = feedViewModel.getFeedById(id);
+                current = feedViewModel.getFeedById(id);
 
                 Glide.with(this)
-                        .load(current.getEventImageUrl())
+                        .load("")
+                        .thumbnail(Glide.with(this).load(current.getEventImageUrl()))
                         .centerInside()
                         .placeholder(R.drawable.baseline_dashboard_24)
                         .into(eventPoster);
@@ -94,22 +101,29 @@ public class FeedDetailFragment extends Fragment {
                 final Spanned spanned = markwon.toMarkdown(current.getEventDescription());
                 markwon.setParsedMarkdown(eventDescription, spanned);
 
-                SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a");
+                SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
                 eventTime.setText(format.format(new Date(current.getEventDate())));
 
                 if (current.isInterested()) {
                     interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));
                 } else {
-                    interestedFab.getBackground().setTint(getResources().getColor(R.color.dark_gray));
+                    interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.dark_gray)));
                 }
 
-                interestedFab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggleStar(current);
-                    }
-                });
+                interestedFab.setOnClickListener(v -> toggleStar());
 
+                if (current.getEventImageUrl() != null && !current.getEventImageUrl().isEmpty()) {
+                    eventPoster.setOnClickListener(v -> {
+                        Intent i = new Intent(getActivity(), ImageViewerActivity.class);
+                        i.putExtra("image_url", current.getEventImageUrl());
+
+                        if (getActivity() != null && transitionName != null) {
+                            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                    getActivity(), eventPoster, transitionName);
+                            ActivityCompat.startActivity(getContext(), i, activityOptions.toBundle());
+                        }
+                    });
+                }
             }
 
         } else if (getContext() instanceof AddFeedActivity) {
@@ -134,7 +148,7 @@ public class FeedDetailFragment extends Fragment {
                 final Spanned spanned = markwon.toMarkdown(b.getString("description", "No Description"));
                 markwon.setParsedMarkdown(eventDescription, spanned);
 
-                SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a");
+                SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
                 eventTime.setText(format.format(new Date(b.getLong("date"))));
             }
         }
@@ -144,12 +158,12 @@ public class FeedDetailFragment extends Fragment {
             List<String> itemsList = Converters.arrayFromString(PreferenceManager
                     .getDefaultSharedPreferences(getContext()).getString(USER_POR, ""));
 
-            if (itemsList != null && itemsList.size() != 0)
+            if (itemsList.size() != 0)
 
-            for (String por : itemsList) {
-                String[] array = por.split("_", 2);
-                String club = array[1];
-            }
+                for (String por : itemsList) {
+                    String[] array = por.split("_", 2);
+                    String club = array[1];
+                }
 
             //TODO : implement feed edit and delete functionality
         }
@@ -157,19 +171,15 @@ public class FeedDetailFragment extends Fragment {
         return view;
     }
 
-    private void toggleStar(FeedItem item) {
-        if (item.isInterested()) {
-            item.setInterested(false);
+    private void toggleStar() {
+        if (current.isInterested()) {
+            current.setInterested(false);
+            interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.dark_gray)));
         } else {
-            item.setInterested(true);
+            current.setInterested(true);
+            interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));
         }
-        feedViewModel.insert(item);
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .detach(this)
-                .attach(this)
-                .commit();
+        feedViewModel.insert(current);
     }
-
 
 }

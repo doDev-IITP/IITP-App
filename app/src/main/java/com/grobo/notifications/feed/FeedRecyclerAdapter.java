@@ -65,12 +65,7 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
             SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a");
             holder.time.setText(format.format(date));
 
-            holder.rootLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.onFeedSelected(current.getId(), holder.imageView, holder.getAdapterPosition());
-                }
-            });
+            holder.rootLayout.setOnClickListener(v -> callback.onFeedSelected(current.getId(), holder.imageView, holder.getAdapterPosition()));
 
 
         } else {
