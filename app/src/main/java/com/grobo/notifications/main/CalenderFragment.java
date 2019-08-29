@@ -97,7 +97,6 @@ public class CalenderFragment extends Fragment {
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getEvents() != null) {
                         allItems = response.body().getEvents();
-
                         for (ClubEventItem i : allItems) {
                             calendar.setTimeInMillis(i.getDate());
                             dates.add(CalendarDay.from(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE)));

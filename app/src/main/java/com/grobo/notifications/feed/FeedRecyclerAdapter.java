@@ -17,6 +17,7 @@ import com.grobo.notifications.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapter.FeedViewHolder> {
 
@@ -33,7 +34,7 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
     @NonNull
     @Override
     public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_schedule, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_feed, parent, false);
 
         return new FeedViewHolder(view);
     }
@@ -62,7 +63,7 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
             }
 
             Date date = new Date(current.getEventDate());
-            SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a");
+            SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
             holder.time.setText(format.format(date));
 
             holder.rootLayout.setOnClickListener(v -> callback.onFeedSelected(current.getId(), holder.imageView, holder.getAdapterPosition()));

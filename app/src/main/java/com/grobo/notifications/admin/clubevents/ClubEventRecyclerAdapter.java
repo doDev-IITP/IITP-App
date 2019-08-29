@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,7 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecyclerAdapter.EventViewHolder> {
 
@@ -30,7 +34,7 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_event, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_feed, parent, false);
 
         return new EventViewHolder(view);
     }
@@ -41,16 +45,25 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
         if (clubEventItemList != null) {
 
             ClubEventItem item = clubEventItemList.get(position);
-            holder.name.setText(item.getName());
-            holder.description.setText(item.getDescription());
+            holder.title.setText(item.getName());
             Glide.with(context)
                     .load(item.getImageUrl())
                     .placeholder(R.drawable.baseline_dashboard_24)
-                    .into(holder.image);
+                    .into(holder.imageView);
 
-            holder.root.setOnClickListener(v -> callback.onEventSelected(item.getId()));
+            holder.rootLayout.setOnClickListener(v -> callback.onEventSelected(item.getId()));
+            holder.venue.setText(item.getVenue());
+
+            Date date = new Date(item.getDate());
+            SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
+            holder.time.setText(format.format(date));
+
+            if (item.getDate() < (System.currentTimeMillis() - 3600000))
+                holder.availableIndicator.setBackgroundResource(R.color.dark_gray);
+            else holder.availableIndicator.setBackgroundResource(R.color.light_green);
+
         } else {
-            holder.name.setText("Loading ...");
+            holder.title.setText("Loading ...");
         }
     }
 
@@ -63,18 +76,25 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
 
     class EventViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView image;
-        TextView name;
-        TextView description;
-        View root;
+        View availableIndicator;
+        TextView title;
+        TextView time;
+        TextView venue;
+        LinearLayout rootLayout;
+        LinearLayout sessionLayout;
+        ImageView imageView;
 
         EventViewHolder(@NonNull View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.event_image);
-            name = itemView.findViewById(R.id.event_name);
-            description = itemView.findViewById(R.id.event_description);
-            root = itemView.findViewById(R.id.card_event_root);
+            availableIndicator = itemView.findViewById(R.id.item_available_indicator);
+            time = itemView.findViewById(R.id.item_time_text);
+            title = itemView.findViewById(R.id.item_title_text);
+            venue = itemView.findViewById(R.id.item_room_text);
+            rootLayout = itemView.findViewById(R.id.itemScheduleRootLayout);
+            sessionLayout = itemView.findViewById(R.id.item_session_layout);
+            imageView = itemView.findViewById(R.id.item_speaker_image);
         }
+
     }
 
     public void setClubEventItemList(List<ClubEventItem> clubEvents) {
