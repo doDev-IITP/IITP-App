@@ -155,7 +155,7 @@ public class ClubDetailsFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putString("club_id", current.getId());
 
-                        Navigation.findNavController(v).navigate(R.id.nav_feed_detail, bundle);
+                        Navigation.findNavController(v).navigate(R.id.nav_club_event, bundle);
                     });
                 }
 

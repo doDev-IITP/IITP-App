@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -56,13 +57,18 @@ public class ClubEventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_club_event, container, false);
+        return inflater.inflate(R.layout.fragment_club_event, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_club_event);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             Log.e("events", "refreshing");
             updateData();
         });
+
         if (!refreshed) {
             swipeRefreshLayout.setRefreshing(true);
             updateData();
@@ -93,7 +99,7 @@ public class ClubEventFragment extends Fragment {
 
         }
 
-        return view;
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private void populateRecycler() {
@@ -115,14 +121,14 @@ public class ClubEventFragment extends Fragment {
 
     private void updateData() {
 
-        String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
+        String token = PreferenceManager.getDefaultSharedPreferences(requireContext()).getString(USER_TOKEN, "0");
 
         EventsRoutes service = RetrofitClientInstance.getRetrofitInstance().create(EventsRoutes.class);
 
         Call<ClubEventItem.ClubEventSuper> call = service.getEventsByClub(token, clubId);
         call.enqueue(new Callback<ClubEventItem.ClubEventSuper>() {
             @Override
-            public void onResponse(Call<ClubEventItem.ClubEventSuper> call, Response<ClubEventItem.ClubEventSuper> response) {
+            public void onResponse(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Response<ClubEventItem.ClubEventSuper> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getEvents() != null) {
                         List<ClubEventItem> allItems = response.body().getEvents();
@@ -143,13 +149,12 @@ public class ClubEventFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ClubEventItem.ClubEventSuper> call, Throwable t) {
+            public void onFailure(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Throwable t) {
                 Log.e("failure", t.getMessage());
                 Toast.makeText(getContext(), "Event fetch failure!!", Toast.LENGTH_LONG).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
     }
 
 

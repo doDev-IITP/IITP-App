@@ -83,7 +83,11 @@ dependencies {
     //otp PinView
     implementation 'com.github.GoodieBag:Pinview:v1.4'
 
-    //Photo zoom
+    //PhotoZoom
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    //TODOList
+    implementation 'com.github.yalantis:todolist:v1.0.1'
+
 }
 apply plugin: 'com.google.gms.google-services'
