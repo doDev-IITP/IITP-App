@@ -1,6 +1,7 @@
 package com.grobo.notifications.feed;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.FragmentNavigator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,12 +26,9 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
 
     private Context context;
     private List<FeedItem> feedItemList;
-    final private OnFeedSelectedListener callback;
 
-
-    public FeedRecyclerAdapter(Context context, OnFeedSelectedListener listener){
+    public FeedRecyclerAdapter(Context context) {
         this.context = context;
-        callback = listener;
     }
 
     @NonNull
@@ -46,15 +46,17 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
             final FeedItem current = feedItemList.get(position);
 
             holder.title.setText(current.getEventName());
+            holder.title.setTransitionName("transition_title" + position);
             holder.venue.setText(current.getEventVenue());
+            holder.venue.setTransitionName("transition_venue" + position);
             Glide.with(context)
                     .load(current.getEventImageUrl())
                     .centerCrop()
                     .placeholder(R.drawable.baseline_dashboard_24)
                     .into(holder.imageView);
-            holder.imageView.setTransitionName("transition" + position);
+            holder.imageView.setTransitionName("transition_image" + position);
 
-            if(current.isInterested()){
+            if (current.isInterested()) {
                 holder.availableIndicator.setBackgroundResource(R.color.red_dark2);
             } else {
                 if (current.getEventDate() < (System.currentTimeMillis() - 3600000))
@@ -65,8 +67,26 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
             Date date = new Date(current.getEventDate());
             SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
             holder.time.setText(format.format(date));
+            holder.time.setTransitionName("transition_time" + position);
 
-            holder.rootLayout.setOnClickListener(v -> callback.onFeedSelected(current.getId(), holder.imageView, holder.getAdapterPosition()));
+            holder.rootLayout.setOnClickListener(v -> {
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("transition_position", position);
+                bundle.putString("id", current.getId());
+
+                FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
+                        .addSharedElement(holder.imageView, "transition_image" + position)
+                        .addSharedElement(holder.title, "transition_title" + position)
+                        .addSharedElement(holder.time, "transition_time" + position)
+                        .addSharedElement(holder.venue, "transition_venue" + position)
+                        .build();
+
+                Navigation.findNavController(v).navigate(R.id.nav_feed_detail,
+                        bundle,
+                        null,
+                        extras);
+            });
 
 
         } else {
@@ -103,12 +123,8 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
         }
     }
 
-    void setFeedItemList(List<FeedItem> feeds){
+    void setFeedItemList(List<FeedItem> feeds) {
         feedItemList = feeds;
         notifyDataSetChanged();
-    }
-
-    public interface OnFeedSelectedListener {
-        void onFeedSelected(String id, View view, int position);
     }
 }

@@ -15,6 +15,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
+import androidx.transition.TransitionInflater;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -53,6 +54,11 @@ public class FeedDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         feedViewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
+
+        setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
+        setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
+        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.default_transition));
+        setSharedElementReturnTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.default_transition));
     }
 
     @Override
@@ -73,8 +79,11 @@ public class FeedDetailFragment extends Fragment {
         if (getContext() instanceof MainActivity || getContext() instanceof XPortal) {
 
             if (b != null) {
-                String transitionName = b.getString("transitionName");
-                eventPoster.setTransitionName(transitionName);
+                int transitionPosition = b.getInt("transition_position");
+                eventPoster.setTransitionName("transition_image" + transitionPosition);
+                eventTime.setTransitionName("transition_time" + transitionPosition);
+                eventVenue.setTransitionName("transition_venue" + transitionPosition);
+                eventTitle.setTransitionName("transition_title" + transitionPosition);
                 String id = b.getString("id");
 
                 current = feedViewModel.getFeedById(id);
@@ -117,9 +126,9 @@ public class FeedDetailFragment extends Fragment {
                         Intent i = new Intent(getActivity(), ImageViewerActivity.class);
                         i.putExtra("image_url", current.getEventImageUrl());
 
-                        if (getActivity() != null && transitionName != null) {
+                        if (getActivity() != null) {
                             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                    getActivity(), eventPoster, transitionName);
+                                    getActivity(), eventPoster, "transition" + transitionPosition);
                             ActivityCompat.startActivity(getContext(), i, activityOptions.toBundle());
                         }
                     });

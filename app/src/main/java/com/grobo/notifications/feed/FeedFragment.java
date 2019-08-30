@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -54,7 +55,6 @@ public class FeedFragment extends Fragment {
         feedViewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
         if (getContext() != null)
             prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-
     }
 
     @Override
@@ -84,7 +84,11 @@ public class FeedFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_feed_fragment);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new FeedRecyclerAdapter(getContext(), (FeedRecyclerAdapter.OnFeedSelectedListener) getActivity());
+        ViewTreeObserver observer = recyclerView.getViewTreeObserver();
+        postponeEnterTransition();
+        observer.addOnGlobalLayoutListener(this::startPostponedEnterTransition);
+
+        adapter = new FeedRecyclerAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
         RadioGroup radioGroup = view.findViewById(R.id.radio_group_feed);

@@ -3,52 +3,39 @@ package com.grobo.notifications.main;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.Preference;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.grobo.notifications.Mess.MessFragment;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
 import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
-import com.grobo.notifications.clubs.ClubDetailsFragment;
-import com.grobo.notifications.clubs.ClubsFragment;
-import com.grobo.notifications.clubs.ClubsRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
-import com.grobo.notifications.feed.FeedDetailFragment;
-import com.grobo.notifications.feed.FeedFragment;
-import com.grobo.notifications.feed.FeedRecyclerAdapter;
-import com.grobo.notifications.notifications.NotificationsFragment;
-import com.grobo.notifications.services.ServicesFragment;
-import com.grobo.notifications.setting.SettingFragment;
 import com.grobo.notifications.timetable.TimetableActivity;
 import com.grobo.notifications.utils.KeyboardUtils;
 import com.grobo.notifications.utils.utils;
@@ -58,25 +45,17 @@ import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.KEY_CURRENT_VERSION;
 import static com.grobo.notifications.utils.Constants.KEY_UPDATE_REQUIRED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
-import static com.grobo.notifications.utils.Constants.MAPS_URL;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Preference.OnPreferenceChangeListener,
-        FeedRecyclerAdapter.OnFeedSelectedListener, ClubsRecyclerAdapter.OnClubSelectedListener,
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         PorAdapter.OnPORSelectedListener, ClubEventRecyclerAdapter.OnEventSelectedListener {
 
-    private FragmentManager manager;
     private SharedPreferences prefs;
     private NavigationView navigationView;
-    private int currentFragment;
-    private Handler handler;
-    private Runnable runnable = null;
-    private Runnable runnable2 = null;
-    private int state = 0;
+    AppBarConfiguration appBarConfiguration;
 
     private FirebaseRemoteConfig remoteConfig;
 
@@ -92,27 +71,25 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         } else {
 
-            manager = getSupportFragmentManager();
-
-
             Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             navigationView = findViewById(R.id.nav_view);
 
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
+            appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_home, R.id.nav_explore, R.id.nav_calender, R.id.nav_feed,
+                    R.id.navigation_today, R.id.navigation_mess, R.id.navigation_notifications)
+                    .setDrawerLayout(drawer)
+                    .build();
 
-            toggle.syncState();
-            navigationView.setNavigationItemSelectedListener(this);
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(navigationView, navController);
+
+//            navigationView.setNavigationItemSelectedListener(this);
+
             View v = navigationView.getHeaderView(0);
-            navigationView.setCheckedItem(R.id.nav_home);
-            currentFragment = R.id.nav_home;
-
-            setBaseFragment(savedInstanceState);
-
             ((TextView) v.findViewById(R.id.user_name_nav_header)).setText(prefs.getString(USER_NAME, "Guest"));
             ((TextView) v.findViewById(R.id.user_email_nav_header)).setText(prefs.getString(ROLL_NUMBER, ""));
             ImageView profileImage = v.findViewById(R.id.user_image_nav_header);
@@ -124,11 +101,6 @@ public class MainActivity extends AppCompatActivity
             profileImage.setOnClickListener(view -> {
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             });
-
-            handler = new Handler();
-            runnable = () -> startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
-            runnable2 = () -> navigationView.setCheckedItem(currentFragment);
-            state = 1;
 
             remoteConfig = FirebaseRemoteConfig.getInstance();
 
@@ -149,18 +121,6 @@ public class MainActivity extends AppCompatActivity
             updateApp();
         }
 
-    }
-
-    private void setBaseFragment(Bundle savedInstanceState) {
-        if (findViewById(R.id.frame_layout_main) != null) {
-
-            if (savedInstanceState != null) {
-                return;
-            }
-            HomeFragment firstFragment = new HomeFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_layout_main, firstFragment).commit();
-        }
     }
 
     @Override
@@ -195,51 +155,19 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateFragment(Fragment fragment) {
-        manager.popBackStackImmediate("later_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.frame_layout_main, fragment);
-        if (fragment instanceof HomeFragment)
-            manager.popBackStackImmediate("main_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        else transaction.addToBackStack("main_fragment");
-        transaction.commit();
-    }
-
-    @Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference.getKey().equals(LOGIN_STATUS)) {
-            recreate();
-        }
-        return false;
-    }
-
-    @Override
-    public void onFeedSelected(String id, View view, int position) {
-        Fragment current = manager.findFragmentById(R.id.frame_layout_main);
-
-        Fragment newFragment = new FeedDetailFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("transitionName", "transition" + position);
-        bundle.putString("id", id);
-        newFragment.setArguments(bundle);
-
-        if (current != null)
-            showFragmentWithTransition(current, newFragment, view, "transition" + position);
-    }
-
     private void showFragmentWithTransition(Fragment current, Fragment newFragment, View sharedView, String sharedElementName) {
 
-        current.setSharedElementReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
-        current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
-
-        newFragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
-        newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_bottom));
-
-        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout_main, newFragment);
-        fragmentTransaction.addToBackStack("later_fragment");
-        fragmentTransaction.addSharedElement(sharedView, sharedElementName);
-        fragmentTransaction.commit();
+//        current.setSharedElementReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
+//        current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
+//
+//        newFragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
+//        newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_bottom));
+//
+//        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+//        fragmentTransaction.replace(R.id.frame_layout_main, newFragment);
+//        fragmentTransaction.addToBackStack("later_fragment");
+//        fragmentTransaction.addSharedElement(sharedView, sharedElementName);
+//        fragmentTransaction.commit();
     }
 
     @Override
@@ -256,96 +184,15 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();
 
-        switch (id) {
-            case R.id.nav_home:
-                currentFragment = R.id.nav_home;
-                updateFragment(new HomeFragment());
-                break;
-            case R.id.nav_feed:
-                currentFragment = R.id.nav_feed;
-                updateFragment(new FeedFragment());
-                break;
-            case R.id.nav_notifications:
-                currentFragment = R.id.nav_notifications;
-                updateFragment(new NotificationsFragment());
-                break;
-            case R.id.nav_explore:
-                currentFragment = R.id.nav_explore;
-                updateFragment(new ClubsFragment());
-                break;
-            case R.id.nav_timetable:
-                handler.postDelayed(runnable, 300);
-                navigationView.setCheckedItem(R.id.nav_home);
-                break;
-            case R.id.nav_calender:
-                currentFragment = R.id.nav_calender;
-                updateFragment(new CalenderFragment());
-                Toast.makeText(this, "This is an experimental feature...", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.nav_mess:
-                currentFragment = R.id.nav_mess;
-                updateFragment(new MessFragment());
-                break;
-            case R.id.nav_internship:
-                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
-                //updateFragment(new InternshipFragment() );
-                break;
-            case R.id.nav_tech:
-                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
-//                updateFragment(new SettingFragment());
-                break;
-            case R.id.nav_exam:
-                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
-//                updateFragment( new ExamFragment() );
-                break;
-            case R.id.nav_links:
-                currentFragment = R.id.nav_links;
-                updateFragment(new LinksFragment());
-                break;
-            case R.id.nav_services:
-                currentFragment = R.id.nav_services;
-                updateFragment(new ServicesFragment());
-                Toast.makeText(this, "This is an experimental feature...", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.nav_setting:
-                currentFragment = R.id.nav_setting;
-                updateFragment(new SettingFragment());
-                break;
-            case R.id.nav_fresher:
-                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_virtual:
-                String uri = remoteConfig.getString(MAPS_URL);
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                startActivity(intent);
-                break;
+        if (id == R.id.nav_timetable) {
+            new Handler().postDelayed(() -> {
+                startActivity(new Intent(MainActivity.this, TimetableActivity.class));
+            }, 300);
+            navigationView.setCheckedItem(R.id.nav_home);
         }
-        handler.postDelayed(runnable2, 300);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onClubSelected(String id, View view, int position) {
-        Fragment current = manager.findFragmentById(R.id.frame_layout_main);
-
-        Fragment newFragment = new ClubDetailsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("transitionName", "transition" + position);
-        bundle.putString("clubId", id);
-        newFragment.setArguments(bundle);
-
-        showFragmentWithTransition(current, newFragment, view, "transition" + position);
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (state == 1) {
-            handler.removeCallbacks(runnable);
-            handler.removeCallbacks(runnable2);
-        }
-        super.onDestroy();
     }
 
     private void updateApp() {
@@ -427,14 +274,21 @@ public class MainActivity extends AppCompatActivity
         bundle.putString("clubId", eventId);
         fragment.setArguments(bundle);
 
-        manager.beginTransaction()
-                .replace(R.id.frame_layout_main, fragment)
-                .addToBackStack("later_fragment")
-                .commit();
+//        manager.beginTransaction()
+//                .replace(R.id.frame_layout_main, fragment)
+//                .addToBackStack("later_fragment")
+//                .commit();
     }
 
     @Override
     public void onPORSelected(String userId) {
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 }

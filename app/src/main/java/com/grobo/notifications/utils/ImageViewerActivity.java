@@ -5,7 +5,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
 
 import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
@@ -20,8 +19,8 @@ public class ImageViewerActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra("image_url")) {
             String url = getIntent().getStringExtra("image_url");
-            if (getIntent().hasExtra("transitionName"))
-                ViewCompat.setTransitionName(messMenu, getIntent().getStringExtra("transitionName"));
+            if (getIntent().hasExtra("transition"))
+                messMenu.setTransitionName(getIntent().getStringExtra("transition"));
             Glide.with(this).load(url).into(messMenu);
         } else {
             Toast.makeText(this, "Error loading the image", Toast.LENGTH_SHORT).show();

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -75,7 +76,11 @@ public class ClubsFragment extends Fragment {
         clubsRecyclerView = view.findViewById(R.id.rv_clubs);
         clubsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new ClubsRecyclerAdapter(getContext(), (ClubsRecyclerAdapter.OnClubSelectedListener) getActivity());
+        ViewTreeObserver observer = clubsRecyclerView.getViewTreeObserver();
+        postponeEnterTransition();
+        observer.addOnGlobalLayoutListener(this::startPostponedEnterTransition);
+
+        adapter = new ClubsRecyclerAdapter(getContext());
         clubsRecyclerView.setAdapter(adapter);
 
         DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), HORIZONTAL);
