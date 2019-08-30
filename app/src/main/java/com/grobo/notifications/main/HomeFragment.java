@@ -1,7 +1,7 @@
 package com.grobo.notifications.main;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.grobo.notifications.Mess.QRFragment;
 import com.grobo.notifications.R;
+import com.grobo.notifications.bubbleview.MyHoverMenuService;
 
 import java.util.Calendar;
 import java.util.Objects;
+
+import io.mattcarroll.hover.overlay.OverlayPermission;
 
 public class HomeFragment extends Fragment {
 
@@ -23,6 +25,9 @@ public class HomeFragment extends Fragment {
 
     public HomeFragment() {
     }
+
+    private static final int REQUEST_CODE_HOVER_PERMISSION = 1000;
+    private boolean mPermissionsRequested = false;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -41,19 +46,9 @@ public class HomeFragment extends Fragment {
         View qrFragment = rootView.findViewById(R.id.home_fr_mess_qr);
 
         qrFragment.setOnClickListener(v -> {
-            final QRFragment frag = new QRFragment();
-            transactFragment(frag);
-            new CountDownTimer(210, 100) {
-                @Override
-                public void onTick(long l) {
-                }
-
-                @Override
-                public void onFinish() {
-                    frag.change(true);
-                }
-            }.start();
-
+//            startActivity(new Intent(getActivity(), HoverActivity.class));
+            Intent startHoverIntent = new Intent(getContext(), MyHoverMenuService.class);
+            getContext().startService(startHoverIntent);
 
         });
 
@@ -68,6 +63,24 @@ public class HomeFragment extends Fragment {
                 .commit();
     }
 
-//    TODO: improve grid layout params
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mPermissionsRequested && !OverlayPermission.hasRuntimePermissionToDrawOverlay(getContext())) {
+            @SuppressWarnings("NewApi")
+            Intent myIntent = OverlayPermission.createIntentToRequestOverlayPermission(getContext());
+            startActivityForResult(myIntent, REQUEST_CODE_HOVER_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (REQUEST_CODE_HOVER_PERMISSION == requestCode) {
+            mPermissionsRequested = true;
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
 }

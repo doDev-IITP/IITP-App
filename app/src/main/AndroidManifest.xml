@@ -3,20 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.grobo.notifications">
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".utils.MyApplication"
         android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".services.complaints.ComplaintsActivity"></activity>
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:allowBackup">
+        <activity android:name=".services.complaints.ComplaintsActivity" />
         <activity
             android:name=".utils.ImageViewerActivity"
             android:parentActivityName=".main.MainActivity"
@@ -106,6 +108,7 @@
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
                 android:value="@string/default_notification_channel_id" />
         </service>
+        <service android:name=".bubbleview.MyHoverMenuService" />
     </application>
 
 </manifest>

@@ -79,5 +79,8 @@ dependencies {
     implementation 'com.github.GoodieBag:Pinview:v1.4'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    implementation 'io.mattcarroll.hover:hover:0.9.8'
+
 }
 apply plugin: 'com.google.gms.google-services'
