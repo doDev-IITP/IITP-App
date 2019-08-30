@@ -79,5 +79,8 @@ dependencies {
     implementation 'com.github.GoodieBag:Pinview:v1.4'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    implementation 'ru.github.igla:ferriswheel:1.2'
+
 }
 apply plugin: 'com.google.gms.google-services'
