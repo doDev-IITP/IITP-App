@@ -1,5 +1,6 @@
 package com.grobo.notifications.clubs;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
@@ -26,6 +29,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.admin.clubevents.ClubEventFragment;
 import com.grobo.notifications.network.OtherRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
+import com.grobo.notifications.utils.ImageViewerActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,14 +57,13 @@ public class ClubDetailsFragment extends Fragment {
     private PorAdapter porAdapter;
     private View porListParent;
     private boolean refreshed = false;
+    private FloatingActionButton followingFab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         clubViewModel = ViewModelProviders.of(this).get(ClubViewModel.class);
     }
-
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -69,7 +72,7 @@ public class ClubDetailsFragment extends Fragment {
 
         ImageView cover = view.findViewById(R.id.event_detail_header_bg);
         TextView name = view.findViewById(R.id.tv_event_detail_title);
-        FloatingActionButton followingFab = view.findViewById(R.id.fab_event_detail_interested);
+        followingFab = view.findViewById(R.id.fab_event_detail_interested);
         TextView bio = view.findViewById(R.id.tv_event_detail_time);
         ImageView website = view.findViewById(R.id.fab_website);
         TextView description = view.findViewById(R.id.tv_event_detail_description);
@@ -86,7 +89,8 @@ public class ClubDetailsFragment extends Fragment {
             if (current != null) {
 
                 Glide.with(this)
-                        .load(current.getImage())
+                        .load("")
+                        .thumbnail(Glide.with(this).load(current.getImage()))
                         .centerInside()
                         .placeholder(R.drawable.baseline_dashboard_24)
                         .into(cover);
@@ -118,15 +122,27 @@ public class ClubDetailsFragment extends Fragment {
                 if (current.isFollowed()) {
                     followingFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));
                 } else {
-                    followingFab.getBackground().setTint(getResources().getColor(R.color.dark_gray));
+                    followingFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.dark_gray)));
                 }
 
                 followingFab.setOnClickListener(v -> toggleStar(current));
 
                 website.setOnClickListener(v -> openWebsite(current.getWebsite()));
 
-                if (current.getEvents() != null && current.getEvents().size() > 1) {
+                if (current.getImage() != null && !current.getImage().isEmpty()) {
+                    cover.setOnClickListener(v -> {
+                        Intent i = new Intent(getActivity(), ImageViewerActivity.class);
+                        i.putExtra("image_url", current.getImage());
 
+                        if (getActivity() != null && transitionName != null) {
+                            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                    getActivity(), cover, transitionName);
+                            ActivityCompat.startActivity(getContext(), i, activityOptions.toBundle());
+                        }
+                    });
+                }
+
+                if (current.getEvents() != null && current.getEvents().size() > 1) {
                     events.setVisibility(View.VISIBLE);
                     events.setOnClickListener(v -> {
 
@@ -168,18 +184,13 @@ public class ClubDetailsFragment extends Fragment {
 
     private void toggleStar(ClubItem item) {
         if (item.isFollowed()) {
-            item.setFollowed( false );
+            item.setFollowed(false);
+            followingFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.dark_gray)));
         } else {
-            item.setFollowed( true );
+            item.setFollowed(true);
+            followingFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));
         }
-        clubViewModel.insert( item );
-        detach();
-    }
-    private void detach()
-    {
-
-        if (getActivity() != null)
-            getActivity().getSupportFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        clubViewModel.insert(item);
     }
 
     private void getClubPOR(String clubId) {
