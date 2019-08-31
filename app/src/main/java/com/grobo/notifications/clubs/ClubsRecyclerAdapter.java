@@ -49,7 +49,7 @@ public class ClubsRecyclerAdapter extends RecyclerView.Adapter<ClubsRecyclerAdap
             holder.bio.setTransitionName("transition_bio" + position);
             Glide.with(context)
                     .load(current.getImage())
-                    .placeholder(R.drawable.ic_website_black_24dp)
+                    .placeholder(R.drawable.baseline_dashboard_24)
                     .into(holder.image);
             holder.image.setTransitionName("transition" + position);
             holder.image.setTransitionName("transition_image" + position);

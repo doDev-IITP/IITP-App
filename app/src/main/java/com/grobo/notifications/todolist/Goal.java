@@ -1,15 +1,22 @@
 package com.grobo.notifications.todolist;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.yalantis.beamazingtoday.interfaces.BatModel;
 
+@Entity(tableName = "todo")
 public class Goal implements BatModel {
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String name;
-
     private boolean isChecked;
+    private long dateAdded;
 
-    public Goal(String name) {
+    public Goal(String name, long dateAdded) {
         this.name = name;
+        this.dateAdded = dateAdded;
     }
 
     public String getName() {
@@ -34,5 +41,19 @@ public class Goal implements BatModel {
         return getName();
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public long getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(long dateAdded) {
+        this.dateAdded = dateAdded;
+    }
 }

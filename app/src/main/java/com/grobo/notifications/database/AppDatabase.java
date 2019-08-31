@@ -16,8 +16,10 @@ import com.grobo.notifications.feed.FeedDao;
 import com.grobo.notifications.feed.FeedItem;
 import com.grobo.notifications.notifications.Notification;
 import com.grobo.notifications.notifications.NotificationDao;
+import com.grobo.notifications.todolist.Goal;
+import com.grobo.notifications.todolist.TodoDao;
 
-@Database(entities = {Notification.class, FeedItem.class, ClubItem.class, ClubEventItem.class}, version = 2, exportSchema = false)
+@Database(entities = {Notification.class, FeedItem.class, ClubItem.class, ClubEventItem.class, Goal.class}, version = 3, exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -27,6 +29,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract FeedDao feedDao();
     public abstract ClubDao clubDao();
     public abstract ClubEventDao eventDao();
+    public abstract TodoDao todoDao();
 
     public static AppDatabase getDatabase(Context context) {
         if (INSTANCE == null) {
