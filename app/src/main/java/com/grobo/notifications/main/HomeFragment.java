@@ -6,8 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.transition.TransitionInflater;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grobo.notifications.Mess.MessFragment;
@@ -18,6 +21,14 @@ import com.grobo.notifications.todolist.TodoFragment;
 public class HomeFragment extends Fragment {
 
     public HomeFragment() {
+    }
+
+    private FragmentManager manager;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        manager = requireActivity().getSupportFragmentManager();
     }
 
     @Override
@@ -49,8 +60,16 @@ public class HomeFragment extends Fragment {
     }
 
     private void transactFragment(Fragment frag) {
-        FragmentTransaction fragmentManager = requireActivity().getSupportFragmentManager().beginTransaction();
-        fragmentManager.replace(R.id.frame_layout_home, frag)
+
+
+        Fragment current = manager.findFragmentById(R.id.frame_layout_home);
+        if (current != null) {
+            current.setExitTransition(TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.fade));
+            frag.setEnterTransition(TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.fade));
+        }
+
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.frame_layout_home, frag)
                 .commit();
     }
 

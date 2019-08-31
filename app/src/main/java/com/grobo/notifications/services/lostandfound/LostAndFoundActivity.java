@@ -2,13 +2,14 @@ package com.grobo.notifications.services.lostandfound;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.TransitionInflater;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.transition.TransitionInflater;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
@@ -19,6 +20,7 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
     FloatingActionButton fab;
     FragmentManager manager;
     Fragment activeFragment;
+    private int currentSelected = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +32,20 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
         manager = getSupportFragmentManager();
 
         fab = findViewById(R.id.new_lost_found_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment current = manager.findFragmentById(R.id.frame_lost_found);
-                Fragment next = new NewLostAndFound();
-                showFragmentWithTransition(current, next);
-            }
+        fab.setOnClickListener(v -> {
+            showFragment(new NewLostAndFound());
+
+//            int centerX = (v.getLeft() + v.getRight()) / 2;
+//            int centerY = (v.getTop() + v.getBottom()) / 2;
+//            float finalRadius = (float) Math.hypot((double) centerX, (double) centerY);
+//
+//            Animator animator = ViewAnimationUtils.createCircularReveal(findViewById(R.id.frame_lost_found), centerX, centerY, 0, finalRadius);
+//            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+//            animator.setDuration(800);
+//
+//            animator.start();
+
+
         });
 
         setBaseFragment(savedInstanceState);
@@ -56,8 +65,11 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
         }
     }
 
-    private void showFragmentWithTransition(Fragment current, Fragment newFragment) {
-        current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
+    private void showFragment(Fragment newFragment) {
+
+        Fragment current = manager.findFragmentById(R.id.frame_lost_found);
+        if (current != null)
+            current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
         newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_bottom));
 
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
@@ -67,7 +79,7 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
     }
 
     @Override
-    public void onAttachFragment(Fragment fragment) {
+    public void onAttachFragment(@NonNull Fragment fragment) {
         super.onAttachFragment(fragment);
         activeFragment = fragment;
         if (fragment instanceof NewLostAndFound) {
@@ -85,7 +97,7 @@ public class LostAndFoundActivity extends AppCompatActivity implements LostAndFo
     }
 
     @Override
-    public void onLostFoundSelected(String image) {
+    public void onLostFoundSelected(String image, View view) {
         Intent i = new Intent(LostAndFoundActivity.this, ImageViewerActivity.class);
         i.putExtra("image_url", image);
         startActivity(i);

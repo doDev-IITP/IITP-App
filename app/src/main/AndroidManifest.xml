@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".services.complaints.ComplaintsActivity"></activity>
+        <activity android:name=".services.complaints.ComplaintsActivity" />
         <activity
             android:name=".utils.ImageViewerActivity"
             android:parentActivityName=".main.MainActivity"
