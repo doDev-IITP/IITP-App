@@ -38,15 +38,15 @@ public final class ViewUtils {
         }
     }
 
-    public static void scaleAnimateView(View view) {
+    public static void scaleAnimateView(View view, long duration) {
         ScaleAnimation animation =
                 new ScaleAnimation(
-                        1.15f, 1, 1.15f, 1,
+                        1.25f, 1, 1.25f, 1,
                         Animation.RELATIVE_TO_SELF, 0.5f,
                         Animation.RELATIVE_TO_SELF, 0.5f);
 
         view.setAnimation(animation);
-        animation.setDuration(100);
+        animation.setDuration(duration);
         animation.start();
     }
 

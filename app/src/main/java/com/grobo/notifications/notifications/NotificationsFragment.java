@@ -25,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.grobo.notifications.R;
 import com.grobo.notifications.utils.OnSwipeTouchListener;
+import com.grobo.notifications.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,9 @@ public class NotificationsFragment extends Fragment implements NotificationsRecy
                 observeAll();
                 fab.setOnClickListener( firstClick() );
                 fab.setImageDrawable( getContext().getResources().getDrawable( R.drawable.ic_star_black_24dp ) );
+                ViewUtils.scaleAnimateView(v1, 300);
             });
+            ViewUtils.scaleAnimateView(v, 300);
         };
     }
 

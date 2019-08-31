@@ -17,6 +17,7 @@ import com.grobo.notifications.Mess.MessFragment;
 import com.grobo.notifications.R;
 import com.grobo.notifications.notifications.NotificationsFragment;
 import com.grobo.notifications.todolist.TodoFragment;
+import com.grobo.notifications.utils.ViewUtils;
 
 public class HomeFragment extends Fragment {
 
