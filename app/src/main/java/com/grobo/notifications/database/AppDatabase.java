@@ -56,7 +56,10 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE `todo` (`id` INTEGER PRIMARY KEY AUTOINCREMENT,  `name` TEXT, `isChecked` INTEGER, `dateAdded` INTEGER)");
+            database.execSQL("CREATE TABLE `todo` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                    + " `name` TEXT,"
+                    + " `isChecked` INTEGER NOT NULL DEFAULT 0,"
+                    + " `dateAdded` INTEGER NOT NULL DEFAULT 0)");
         }
     };
 }
