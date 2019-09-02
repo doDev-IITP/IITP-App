@@ -13,10 +13,6 @@
             android:icon="@drawable/baseline_rss_feed_24"
             android:title="Feed" />
         <item
-            android:id="@+id/nav_notifications"
-            android:icon="@drawable/baseline_notifications_none_24"
-            android:title="Notifications" />
-        <item
             android:id="@+id/nav_explore"
             android:icon="@drawable/baseline_timeline_24"
             android:title="Explore" />
@@ -28,10 +24,6 @@
             android:id="@+id/nav_calender"
             android:icon="@drawable/ic_insert_invitation_black_24dp"
             android:title="Calender (new)" />
-        <item
-            android:id="@+id/nav_mess"
-            android:icon="@drawable/baseline_restaurant_24"
-            android:title="Mess" />
         <item
             android:id="@+id/nav_internship"
             android:icon="@drawable/ic_widgets_black_24dp"

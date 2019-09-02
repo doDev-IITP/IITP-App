@@ -1,7 +1,6 @@
 package com.grobo.notifications.main;
 
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,25 +8,28 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.transition.TransitionInflater;
 
-import com.grobo.notifications.Mess.QRFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.grobo.notifications.Mess.MessFragment;
 import com.grobo.notifications.R;
-
-import java.util.Calendar;
-import java.util.Objects;
+import com.grobo.notifications.notifications.NotificationsFragment;
+import com.grobo.notifications.todolist.TodoFragment;
+import com.grobo.notifications.utils.ViewUtils;
 
 public class HomeFragment extends Fragment {
-
-    private int dayOfWeek;
 
     public HomeFragment() {
     }
 
+    private FragmentManager manager;
+
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        getActivity().setTitle("IITP App");
-        super.onViewCreated(view, savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        manager = requireActivity().getSupportFragmentManager();
     }
 
     @Override
@@ -35,39 +37,41 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        Calendar calendar = Calendar.getInstance();
-        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        BottomNavigationView bottomNavigationView = rootView.findViewById(R.id.bottom_nav_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
+            int id = menuItem.getItemId();
 
-        View qrFragment = rootView.findViewById(R.id.home_fr_mess_qr);
+            switch (id){
+                case R.id.navigation_today:
+                    transactFragment(new TodoFragment());
+                    return true;
+                case R.id.navigation_mess:
+                    transactFragment(new MessFragment());
+                    return true;
+                case R.id.navigation_notifications:
+                    transactFragment(new NotificationsFragment());
+                    return true;
+            }
 
-        qrFragment.setOnClickListener(v -> {
-            final QRFragment frag = new QRFragment();
-            transactFragment(frag);
-            new CountDownTimer(210, 100) {
-                @Override
-                public void onTick(long l) {
-                }
-
-                @Override
-                public void onFinish() {
-                    frag.change(true);
-                }
-            }.start();
-
-
+            return false;
         });
+        bottomNavigationView.setSelectedItemId(R.id.navigation_today);
 
         return rootView;
     }
 
     private void transactFragment(Fragment frag) {
-        FragmentTransaction fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
-        fragmentManager.setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
-                .replace(R.id.frame_layout_main, frag)
-                .addToBackStack("later_fragment")
+
+
+        Fragment current = manager.findFragmentById(R.id.frame_layout_home);
+        if (current != null) {
+            current.setExitTransition(TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.fade));
+            frag.setEnterTransition(TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.fade));
+        }
+
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.frame_layout_home, frag)
                 .commit();
     }
-
-//    TODO: improve grid layout params
 
 }

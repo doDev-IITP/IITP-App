@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_side_drawer"
+    app:startDestination="@id/nav_home">
+
+    <activity
+        android:id="@+id/nav_timetable"
+        android:name="com.grobo.notifications.timetable.TimetableActivity"
+        android:label="Timetable"
+        tools:layout="@layout/activity_timetable" />
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.grobo.notifications.setting.AboutAppFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about_app" />
+    <fragment
+        android:id="@+id/nav_setting"
+        android:name="com.grobo.notifications.setting.SettingFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_setting">
+        <action
+            android:id="@+id/action_nav_setting_to_nav_about"
+            app:destination="@id/nav_about"
+            app:enterAnim="@anim/right_in"
+            app:exitAnim="@anim/left_out"
+            app:popEnterAnim="@anim/left_in"
+            app:popExitAnim="@anim/right_out" />
+        <action
+            android:id="@+id/action_nav_setting_to_nav_contribute"
+            app:destination="@id/nav_contribute"
+            app:enterAnim="@anim/right_in"
+            app:exitAnim="@anim/left_out"
+            app:popEnterAnim="@anim/left_in"
+            app:popExitAnim="@anim/right_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_contribute"
+        android:name="com.grobo.notifications.utils.MistakeFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_mistake" />
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.grobo.notifications.main.HomeFragment"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_feed"
+        android:name="com.grobo.notifications.feed.FeedFragment"
+        android:label="Feed"
+        tools:layout="@layout/fragment_feed">
+        <action
+            android:id="@+id/action_nav_feed_to_nav_feed_detail"
+            app:destination="@id/nav_feed_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_feed_detail"
+        android:name="com.grobo.notifications.feed.FeedDetailFragment"
+        android:label="Feed"
+        tools:layout="@layout/fragment_feed_detail" />
+
+    <fragment
+        android:id="@+id/nav_explore"
+        android:name="com.grobo.notifications.clubs.ClubsFragment"
+        android:label="Explore"
+        tools:layout="@layout/fragment_clubs">
+        <action
+            android:id="@+id/action_nav_explore_to_nav_club_detail"
+            app:destination="@id/nav_club_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_club_detail"
+        android:name="com.grobo.notifications.clubs.ClubDetailsFragment"
+        android:label="Explore"
+        tools:layout="@layout/fragment_club_details" />
+
+    <fragment
+        android:id="@+id/nav_club_event"
+        android:name="com.grobo.notifications.admin.clubevents.ClubEventFragment"
+        android:label="Events"
+        tools:layout="@layout/fragment_club_event" />
+
+    <fragment
+        android:id="@+id/nav_calender"
+        android:name="com.grobo.notifications.main.CalenderFragment"
+        android:label="Calender"
+        tools:layout="@layout/fragment_calender" />
+
+    <fragment
+        android:id="@+id/nav_links"
+        android:name="com.grobo.notifications.main.LinksFragment"
+        android:label="Quick Links"
+        tools:layout="@layout/fragment_links" />
+
+    <fragment
+        android:id="@+id/nav_services"
+        android:name="com.grobo.notifications.services.ServicesFragment"
+        android:label="Services"
+        tools:layout="@layout/fragment_services" />
+
+</navigation>

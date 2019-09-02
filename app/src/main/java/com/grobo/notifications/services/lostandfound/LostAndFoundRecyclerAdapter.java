@@ -75,7 +75,7 @@ public class LostAndFoundRecyclerAdapter extends RecyclerView.Adapter<LostAndFou
 
             holder.image.setOnClickListener(v -> {
                 if (current.getImage() != null && !current.getImage().equals(""))
-                    callback.onLostFoundSelected(current.getImage());
+                    callback.onLostFoundSelected(current.getImage(), v);
             });
 
         } else {
@@ -124,6 +124,6 @@ public class LostAndFoundRecyclerAdapter extends RecyclerView.Adapter<LostAndFou
     }
 
     public interface OnLostFoundSelectedListener {
-        void onLostFoundSelected(String id);
+        void onLostFoundSelected(String id, View view);
     }
 }

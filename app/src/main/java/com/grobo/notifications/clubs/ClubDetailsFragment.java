@@ -19,14 +19,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.TransitionInflater;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
-import com.grobo.notifications.admin.clubevents.ClubEventFragment;
 import com.grobo.notifications.network.OtherRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.utils.ImageViewerActivity;
@@ -63,7 +64,10 @@ public class ClubDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         clubViewModel = ViewModelProviders.of(this).get(ClubViewModel.class);
-    }
+        setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
+        setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
+        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.default_transition));
+        setSharedElementReturnTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.default_transition));}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -80,9 +84,11 @@ public class ClubDetailsFragment extends Fragment {
 
         Bundle b = getArguments();
         if (b != null) {
-            String transitionName = b.getString("transitionName");
-            cover.setTransitionName(transitionName);
-            String id = b.getString("clubId");
+            int transitionPosition = b.getInt("transition_position");
+            cover.setTransitionName("transition_image" + transitionPosition);
+            bio.setTransitionName("transition_bio" + transitionPosition);
+            name.setTransitionName("transition_title" + transitionPosition);
+            String id = b.getString("id");
 
             final ClubItem current = clubViewModel.getClubById(id);
 
@@ -110,8 +116,8 @@ public class ClubDetailsFragment extends Fragment {
                 if (current.getDescription() == null) {
                     current.setDescription("No Description");
                 }
-                final Markwon markwon = Markwon.builder(getContext())
-                        .usePlugin(GlideImagesPlugin.create(getContext()))
+                final Markwon markwon = Markwon.builder(requireContext())
+                        .usePlugin(GlideImagesPlugin.create(requireContext()))
                         .usePlugin(HtmlPlugin.create())
                         .build();
                 final Spanned spanned = markwon.toMarkdown(current.getDescription());
@@ -134,10 +140,10 @@ public class ClubDetailsFragment extends Fragment {
                         Intent i = new Intent(getActivity(), ImageViewerActivity.class);
                         i.putExtra("image_url", current.getImage());
 
-                        if (getActivity() != null && transitionName != null) {
+                        if (getActivity() != null) {
                             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                    getActivity(), cover, transitionName);
-                            ActivityCompat.startActivity(getContext(), i, activityOptions.toBundle());
+                                    getActivity(), cover, "transition" + transitionPosition);
+                            ActivityCompat.startActivity(requireContext(), i, activityOptions.toBundle());
                         }
                     });
                 }
@@ -146,15 +152,10 @@ public class ClubDetailsFragment extends Fragment {
                     events.setVisibility(View.VISIBLE);
                     events.setOnClickListener(v -> {
 
-                        Fragment eventsFragment = new ClubEventFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("club_id", current.getId());
-                        eventsFragment.setArguments(bundle);
 
-                        if (getActivity() != null)
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_main, eventsFragment)
-                                    .addToBackStack("later_fragment")
-                                    .commit();
+                        Navigation.findNavController(v).navigate(R.id.nav_club_event, bundle);
                     });
                 }
 
@@ -194,7 +195,7 @@ public class ClubDetailsFragment extends Fragment {
     }
 
     private void getClubPOR(String clubId) {
-        String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
+        String token = PreferenceManager.getDefaultSharedPreferences(requireContext()).getString(USER_TOKEN, "0");
 
         OtherRoutes service = RetrofitClientInstance.getRetrofitInstance().create(OtherRoutes.class);
 
@@ -251,7 +252,6 @@ public class ClubDetailsFragment extends Fragment {
                         }
                     }
 
-//                    Toast.makeText(getActivity(), "PORs updated", Toast.LENGTH_SHORT).show();
                     refreshed = true;
                 } else {
                     Toast.makeText(getContext(), "Failed to get PORs!", Toast.LENGTH_SHORT).show();

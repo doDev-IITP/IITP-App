@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_today"
+        android:icon="@drawable/baseline_home_24"
+        android:title="Today" />
+
+    <item
+        android:id="@+id/navigation_mess"
+        android:icon="@drawable/baseline_restaurant_24"
+        android:title="Mess" />
+
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/baseline_notifications_none_24"
+        android:title="Notification" />
+</menu>

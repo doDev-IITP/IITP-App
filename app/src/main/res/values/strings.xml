@@ -20,6 +20,13 @@
     <string name="default_notification_channel_id">notifications</string>
     <string name="default_notification_channel_description">All the notifications are sent through this channel.</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_header_title">Guest</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="hint_add_feed_description">Enter description (Markdown and basic HTML syntax supported)\nUse &lt;br&gt; tag for line break\nUse &lt;a href=\'link\'&gt;Text&lt;/a&gt; for including links\nUse ![image name](https://image_link) for displaying images.</string>
     <string-array name="maintenance_list_spinner">
         <item>Select-Category</item>
         <item>Carpenter</item>
@@ -35,12 +42,5 @@
         <item>Snacks</item>
         <item>Dinner</item>
     </string-array>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Guest</string>
-    <string name="nav_header_desc">Navigation header</string>
-
-    <string name="hint_add_feed_description">Enter description (Markdown and basic HTML syntax supported)\nUse &lt;br&gt; tag for line break\nUse &lt;a href=\'link\'&gt;Text&lt;/a&gt; for including links\nUse ![image name](https://image_link) for displaying images.</string>
 
 </resources>

@@ -34,8 +34,7 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_feed, parent, false);
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_event, parent, false);
         return new EventViewHolder(view);
     }
 
@@ -49,10 +48,10 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
             Glide.with(context)
                     .load(item.getImageUrl())
                     .placeholder(R.drawable.baseline_dashboard_24)
-                    .into(holder.imageView);
+                    .into(holder.image);
 
-            holder.rootLayout.setOnClickListener(v -> callback.onEventSelected(item.getId()));
-            holder.venue.setText(item.getVenue());
+            holder.root.setOnClickListener(v -> callback.onEventSelected(item.getId()));
+            holder.club.setText(item.getRelatedClub().getName());
 
             Date date = new Date(item.getDate());
             SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
@@ -79,20 +78,18 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
         View availableIndicator;
         TextView title;
         TextView time;
-        TextView venue;
-        LinearLayout rootLayout;
-        LinearLayout sessionLayout;
-        ImageView imageView;
+        TextView club;
+        LinearLayout root;
+        ImageView image;
 
         EventViewHolder(@NonNull View itemView) {
             super(itemView);
-            availableIndicator = itemView.findViewById(R.id.item_available_indicator);
-            time = itemView.findViewById(R.id.item_time_text);
-            title = itemView.findViewById(R.id.item_title_text);
-            venue = itemView.findViewById(R.id.item_room_text);
-            rootLayout = itemView.findViewById(R.id.itemScheduleRootLayout);
-            sessionLayout = itemView.findViewById(R.id.item_session_layout);
-            imageView = itemView.findViewById(R.id.item_speaker_image);
+            availableIndicator = itemView.findViewById(R.id.indicator);
+            time = itemView.findViewById(R.id.time);
+            title = itemView.findViewById(R.id.title);
+            club = itemView.findViewById(R.id.club);
+            root = itemView.findViewById(R.id.root);
+            image = itemView.findViewById(R.id.image);
         }
 
     }

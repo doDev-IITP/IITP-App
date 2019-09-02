@@ -15,6 +15,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
+import androidx.transition.TransitionInflater;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -53,6 +54,11 @@ public class FeedDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         feedViewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
+
+        setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
+        setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
+        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.default_transition));
+        setSharedElementReturnTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.default_transition));
     }
 
     @Override
@@ -73,56 +79,62 @@ public class FeedDetailFragment extends Fragment {
         if (getContext() instanceof MainActivity || getContext() instanceof XPortal) {
 
             if (b != null) {
-                String transitionName = b.getString("transitionName");
-                eventPoster.setTransitionName(transitionName);
+                int transitionPosition = b.getInt("transition_position");
+                eventPoster.setTransitionName("transition_image" + transitionPosition);
+                eventTime.setTransitionName("transition_time" + transitionPosition);
+                eventVenue.setTransitionName("transition_venue" + transitionPosition);
+                eventTitle.setTransitionName("transition_title" + transitionPosition);
                 String id = b.getString("id");
 
                 current = feedViewModel.getFeedById(id);
 
-                Glide.with(this)
-                        .load("")
-                        .thumbnail(Glide.with(this).load(current.getEventImageUrl()))
-                        .centerInside()
-                        .placeholder(R.drawable.baseline_dashboard_24)
-                        .into(eventPoster);
+                if (current != null) {
 
-                eventTitle.setText(current.getEventName());
-                eventVenue.setText(current.getEventVenue());
+                    Glide.with(this)
+                            .load("")
+                            .thumbnail(Glide.with(this).load(current.getEventImageUrl()))
+                            .centerInside()
+                            .placeholder(R.drawable.baseline_dashboard_24)
+                            .into(eventPoster);
 
-                if (current.getEventDescription() == null) {
-                    current.setEventDescription("No Description");
-                }
+                    eventTitle.setText(current.getEventName());
+                    eventVenue.setText(current.getEventVenue());
 
-                final Markwon markwon = Markwon.builder(getContext())
-                        .usePlugin(GlideImagesPlugin.create(getContext()))
-                        .usePlugin(HtmlPlugin.create())
-                        .build();
+                    if (current.getEventDescription() == null) {
+                        current.setEventDescription("No Description");
+                    }
 
-                final Spanned spanned = markwon.toMarkdown(current.getEventDescription());
-                markwon.setParsedMarkdown(eventDescription, spanned);
+                    final Markwon markwon = Markwon.builder(getContext())
+                            .usePlugin(GlideImagesPlugin.create(getContext()))
+                            .usePlugin(HtmlPlugin.create())
+                            .build();
 
-                SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
-                eventTime.setText(format.format(new Date(current.getEventDate())));
+                    final Spanned spanned = markwon.toMarkdown(current.getEventDescription());
+                    markwon.setParsedMarkdown(eventDescription, spanned);
 
-                if (current.isInterested()) {
-                    interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));
-                } else {
-                    interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.dark_gray)));
-                }
+                    SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
+                    eventTime.setText(format.format(new Date(current.getEventDate())));
 
-                interestedFab.setOnClickListener(v -> toggleStar());
+                    if (current.isInterested()) {
+                        interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_blue)));
+                    } else {
+                        interestedFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.dark_gray)));
+                    }
 
-                if (current.getEventImageUrl() != null && !current.getEventImageUrl().isEmpty()) {
-                    eventPoster.setOnClickListener(v -> {
-                        Intent i = new Intent(getActivity(), ImageViewerActivity.class);
-                        i.putExtra("image_url", current.getEventImageUrl());
+                    interestedFab.setOnClickListener(v -> toggleStar());
 
-                        if (getActivity() != null && transitionName != null) {
-                            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                    getActivity(), eventPoster, transitionName);
-                            ActivityCompat.startActivity(getContext(), i, activityOptions.toBundle());
-                        }
-                    });
+                    if (current.getEventImageUrl() != null && !current.getEventImageUrl().isEmpty()) {
+                        eventPoster.setOnClickListener(v -> {
+                            Intent i = new Intent(getActivity(), ImageViewerActivity.class);
+                            i.putExtra("image_url", current.getEventImageUrl());
+
+                            if (getActivity() != null) {
+                                ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                        getActivity(), eventPoster, "transition" + transitionPosition);
+                                ActivityCompat.startActivity(getContext(), i, activityOptions.toBundle());
+                            }
+                        });
+                    }
                 }
             }
 

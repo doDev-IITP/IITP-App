@@ -34,30 +34,35 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
     implementation "androidx.preference:preference:1.1.0-rc01"
+
+    //play store core
     implementation 'com.google.android.play:core:1.6.1'
+
+    //navigation
+    implementation 'androidx.navigation:navigation-fragment:2.0.0'
+    implementation 'androidx.navigation:navigation-ui:2.0.0'
 
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
 
+    //markdown support
     implementation "io.noties.markwon:core:4.1.0"
     implementation "io.noties.markwon:html:4.1.0"
     implementation "io.noties.markwon:image-glide:4.1.0"
 
     //Firebase
-//    implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.firebase:firebase-config:19.0.0'
-    implementation 'com.google.firebase:firebase-core:17.1.0'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
-
+    //retrofit and ok http
     implementation "com.squareup.okhttp3:okhttp:4.0.1"
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
-
 
     // Room components
     implementation 'androidx.room:room-runtime:2.1.0'
@@ -75,9 +80,14 @@ dependencies {
 //    implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
 //    implementation 'org.jsoup:jsoup:1.8.3'
 
-    //goodiebag
+    //otp PinView
     implementation 'com.github.GoodieBag:Pinview:v1.4'
 
+    //PhotoZoom
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    //TODOList
+    implementation 'com.github.yalantis:todolist:v1.0.1'
+
 }
 apply plugin: 'com.google.gms.google-services'
