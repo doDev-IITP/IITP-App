@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +37,6 @@ import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
-import com.grobo.notifications.timetable.NoTimetableActivity;
 import com.grobo.notifications.timetable.TimetableActivity;
 import com.grobo.notifications.utils.KeyboardUtils;
 import com.grobo.notifications.utils.utils;
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             subscribeFcmTopics();
         }
         KeyboardUtils.hideSoftInput( this );
+        Log.e("jsonString", prefs.getString("jsonString", "none"));
     }
 
     @Override

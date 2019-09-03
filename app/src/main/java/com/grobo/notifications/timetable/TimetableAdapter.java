@@ -1,42 +1,42 @@
 package com.grobo.notifications.timetable;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.grobo.notifications.R;
 
-import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
-
 public class TimetableAdapter extends ArrayAdapter<TimetableItem> {
 
-    String branchPre;
+    private Context context;
 
-    public TimetableAdapter(Activity context, int resource, List<TimetableItem> objects) {
-        super( context, resource, objects );
-        branchPre = context.getSharedPreferences( "PREFERENCE", MODE_PRIVATE ).getString( "branchPre", "" );
+    public TimetableAdapter(Context context, int resource) {
+        super(context, resource);
+        this.context = context;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = ((Activity) getContext()).getLayoutInflater().inflate( R.layout.card_timetable, parent, false );
+    public View getView(int position, View view, @NonNull ViewGroup parent) {
+        if (view == null) {
+            view = ((Activity)context).getLayoutInflater().inflate(R.layout.card_timetable, parent, false);
         }
 
-        TextView timeTextView = (TextView) convertView.findViewById( R.id.tt_time_view );
-        TextView subjectTextView = (TextView) convertView.findViewById( R.id.tt_subject_view );
-        LinearLayout linearLayout = (LinearLayout) convertView.findViewById( R.id.timetable_item_ll );
+        TextView timeTextView = view.findViewById(R.id.tt_time_view);
+        TextView subjectTextView = view.findViewById(R.id.tt_subject_view);
 
-        TimetableItem singleTimetable = getItem( position );
+        TimetableItem current = getItem(position);
 
-        timeTextView.setText( singleTimetable.gettime() );
-        subjectTextView.setText( singleTimetable.getsubject() );
+        if (current != null) {
+            timeTextView.setText(current.getTime());
+            subjectTextView.setText(current.getSubject());
+        }
 
-        return convertView;
+        return view;
     }
 }

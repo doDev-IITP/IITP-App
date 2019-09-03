@@ -26,8 +26,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Objects;
 
+import static android.app.Activity.RESULT_OK;
 import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 
@@ -38,13 +38,13 @@ public class QRFragment extends Fragment {
     }
 
     private ImageView imageView;
-    SharedPreferences prefs;
+    private SharedPreferences prefs;
     private FloatingActionButton changeqr;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        prefs = PreferenceManager.getDefaultSharedPreferences( getContext() );
+        prefs = PreferenceManager.getDefaultSharedPreferences( requireContext() );
     }
 
     @Override
@@ -55,37 +55,33 @@ public class QRFragment extends Fragment {
         imageView = view.findViewById( R.id.qr_fragment_qr );
         changeqr = view.findViewById( R.id.changefab );
 
-        Bitmap bitmap = null;
         if (prefs.getBoolean( LOGIN_STATUS, false )) {
-            if (prefs.getBoolean( IS_QR_DOWNLOADED, false )) {
+
+            Bitmap bitmap = null;
+            if (prefs.getBoolean(IS_QR_DOWNLOADED, false)) {
                 bitmap = getQRBitmap();
             } else {
-                downloadAndSave();
+                showDummyImage();
             }
-        }
 
-        if (bitmap != null) {
-            imageView.setImageBitmap( bitmap );
-        } else {
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+                showDummyImage();
+            }
 
-            Glide.with( this ).load( "http://www.sohrabdaver.com/images/upload-qr.jpg" ).centerCrop().into( imageView );
-        }
-        changeqr.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            changeqr.setOnClickListener(view1 -> {
                 Intent intent = new Intent();
-                intent.setType( "image/*" );
-                intent.setAction( Intent.ACTION_GET_CONTENT );
-                startActivityForResult( Intent.createChooser( intent, "Select Picture" ), 1 );
-            }
-        } );
-
-
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+            });
+        }
         return view;
     }
 
     private Bitmap getQRBitmap() {
-        File qrDir = new File( getContext().getFilesDir(), "qr" );
+        File qrDir = new File( requireContext().getFilesDir(), "qr" );
         if (!qrDir.exists()) {
             qrDir.mkdirs();
         }
@@ -97,61 +93,39 @@ public class QRFragment extends Fragment {
             return BitmapFactory.decodeStream( stream );
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            downloadAndSave();
+            showDummyImage();
         }
 
         return null;
     }
 
-    private void downloadAndSave() {
-
-//        utils.ImageDownloader task = new utils.ImageDownloader();
-//
-//        try {
-//            Bitmap bitmap = task.execute("https://api.qrserver.com/v1/create-qr-code/?data=" + PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_MONGO_ID, null) + "&amp;size=100x100").get();
-//            if (bitmap != null) {
-//                boolean ret = utils.saveImage(getContext(), bitmap, "qr", "qr.png");
-//
-//                if (ret) {
-//                    prefs.edit().putBoolean(IS_QR_DOWNLOADED, true).apply();
-//                }
-//            }
-//
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        imageView.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType( "image/*" );
-                intent.setAction( Intent.ACTION_GET_CONTENT );
-                startActivityForResult( Intent.createChooser( intent, "Select Picture" ), 1 );
-                imageView.setClickable( false );
-            }
-        } );
-
-
+    private void showDummyImage() {
+        Glide.with( this ).load( "http://www.sohrabdaver.com/images/upload-qr.jpg" ).centerCrop().into( imageView );
+        imageView.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType( "image/*" );
+            intent.setAction( Intent.ACTION_GET_CONTENT );
+            startActivityForResult( Intent.createChooser( intent, "Select Picture" ), 1 );
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 1) {
-            if (resultCode == getActivity().RESULT_OK) {
+            if (resultCode == RESULT_OK) {
 
                 Uri selectedImage = null;
                 if (data != null) {
                     selectedImage = data.getData();
                 }
                 Glide.with( this ).load( selectedImage ).centerCrop().into( imageView );
+                imageView.setOnClickListener(null);
                 final InputStream imageStream;
                 try {
                     if (selectedImage != null) {
-                        imageStream = Objects.requireNonNull( getActivity() ).getContentResolver().openInputStream( selectedImage );
+                        imageStream = requireActivity().getContentResolver().openInputStream( selectedImage );
                         final Bitmap bmp = BitmapFactory.decodeStream( imageStream );
-                        boolean ret = utils.saveImage( getContext(), bmp, "qr", "qr.png" );
+                        boolean ret = utils.saveImage( requireContext(), bmp, "qr", "qr.png" );
                         if (ret) {
                             prefs.edit().putBoolean( IS_QR_DOWNLOADED, true ).apply();
                         }
@@ -169,7 +143,7 @@ public class QRFragment extends Fragment {
     public void change(boolean check) {
         if (check) {
             changeqr.show();
-            new CountDownTimer( 10000, 1000 ) {
+            new CountDownTimer( 5100, 1000 ) {
                 @Override
                 public void onTick(long l) {
 

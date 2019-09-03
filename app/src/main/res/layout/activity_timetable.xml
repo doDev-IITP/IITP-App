@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,26 +7,54 @@
     android:fitsSystemWindows="true"
     tools:context=".timetable.TimetableActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <RelativeLayout
+        android:id="@+id/tt_rl_yes_timetable"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/tt_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tt_tab_layout"
+            android:layout_marginTop="24dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tt_tab_layout"
+            android:background="@color/colorPrimary"
             style="@style/CategoryTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:layout_alignParentTop="true"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             app:tabMode="scrollable" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </RelativeLayout>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/tt_container"
+    <RelativeLayout
+        android:id="@+id/tt_rl_no_timetable"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="24dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="match_parent">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/no_timetable_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/change_timetable_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentBottom="true"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@drawable/ic_cloud_upload_black_24dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
