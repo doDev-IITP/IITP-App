@@ -3,6 +3,7 @@ package com.grobo.notifications.timetable;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.AsyncTaskLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.R;
+import com.grobo.notifications.main.MainActivity;
 
 import java.util.Objects;
 
@@ -33,6 +35,10 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
+        if (PreferenceManager.getDefaultSharedPreferences( TimetableActivity.this ).getString( "jsonString", "" ).equals( "" )) {
+            startActivity( new Intent( TimetableActivity.this, NoTimetableActivity.class ) );
+            finish();
+        }
         setContentView( R.layout.activity_timetable );
         progressDialog = new ProgressDialog( this );
         progressDialog.setIndeterminate( true );
@@ -52,8 +58,8 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
             mViewPager.setCurrentItem( getIntent().getIntExtra( "day", 2 ) - 2 );
         }
 
-        if(PreferenceManager.getDefaultSharedPreferences( this ).getString( "jsonString" , "").equals( "" )){
-            getLoaderManager().initLoader( 1,null,this );
+        if (PreferenceManager.getDefaultSharedPreferences( this ).getString( "jsonString", "" ).equals( "" )) {
+            getLoaderManager().initLoader( 1, null, this );
         }
     }
 
@@ -70,7 +76,7 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
         int id = item.getItemId();
 
         if (id == R.id.update_timetable) {
-            getLoaderManager().restartLoader(  1, null, this );
+            getLoaderManager().restartLoader( 1, null, this );
             return true;
         }
 
@@ -81,7 +87,7 @@ public class TimetableActivity extends AppCompatActivity implements LoaderManage
     public Loader<String> onCreateLoader(int id, Bundle args) {
         return new AsyncTaskLoader<String>( this ) {
 
-            String mUrl = FirebaseRemoteConfig.getInstance().getString(TIMETABLE_URL) + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_YEAR, "" ) + "/" + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_BRANCH, "" ).toLowerCase() + "/.json/";
+            String mUrl = FirebaseRemoteConfig.getInstance().getString( TIMETABLE_URL ) + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_YEAR, "" ) + "/" + PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( USER_BRANCH, "" ).toLowerCase() + "/.json/";
 
             @Override
             protected void onStartLoading() {

@@ -167,6 +167,6 @@ public class CalenderFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        showEvents(calendarView.getCurrentDate());
+        showEvents(currentDay);
     }
 }

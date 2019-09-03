@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.FragmentNavigator;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,9 +60,13 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
             if (current.isInterested()) {
                 holder.availableIndicator.setBackgroundResource(R.color.red_dark2);
             } else {
-                if (current.getEventDate() < (System.currentTimeMillis() - 3600000))
-                    holder.availableIndicator.setBackgroundResource(R.color.dark_gray);
-                else holder.availableIndicator.setBackgroundResource(R.color.light_green);
+                if (current.getEventDate() < (System.currentTimeMillis() - 3600000)) {
+                    holder.availableIndicator.setBackgroundResource( R.color.dark_gray );
+                    holder.cardView.setAlpha( 0.7f );
+                }
+                else {
+                    holder.availableIndicator.setBackgroundResource( R.color.light_green );
+                }
             }
 
             Date date = new Date(current.getEventDate());
@@ -103,6 +108,7 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
 
     class FeedViewHolder extends RecyclerView.ViewHolder {
 
+        CardView cardView;
         View availableIndicator;
         TextView title;
         TextView time;
@@ -120,6 +126,7 @@ public class FeedRecyclerAdapter extends RecyclerView.Adapter<FeedRecyclerAdapte
             rootLayout = itemView.findViewById(R.id.itemScheduleRootLayout);
             sessionLayout = itemView.findViewById(R.id.item_session_layout);
             imageView = itemView.findViewById(R.id.item_speaker_image);
+            cardView=itemView.findViewById( R.id.card_feed );
         }
     }
 

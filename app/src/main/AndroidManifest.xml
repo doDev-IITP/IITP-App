@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.grobo.notifications">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <application
         android:name=".utils.MyApplication"
         android:icon="@mipmap/ic_launcher"
@@ -16,6 +12,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".timetable.NoTimetableActivity"
+            android:parentActivityName=".main.MainActivity"></activity>
         <activity android:name=".services.complaints.ComplaintsActivity" />
         <activity
             android:name=".utils.ImageViewerActivity"
@@ -107,5 +105,9 @@
                 android:value="@string/default_notification_channel_id" />
         </service>
     </application>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
