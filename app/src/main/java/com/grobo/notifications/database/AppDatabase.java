@@ -59,7 +59,8 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("CREATE TABLE `todo` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                     + " `name` TEXT,"
                     + " `isChecked` INTEGER NOT NULL DEFAULT 0,"
-                    + " `dateAdded` INTEGER NOT NULL DEFAULT 0)");
+                    + " `timestamp` INTEGER NOT NULL DEFAULT 0,"
+                    + " `alarm` INTEGER NOT NULL DEFAULT 0)");
         }
     };
 }

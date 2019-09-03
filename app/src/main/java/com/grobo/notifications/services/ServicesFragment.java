@@ -73,15 +73,15 @@ public class ServicesFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()){
 
             case R.id.sharing_portal_cv:
-                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.cab_sharing_cv:
-                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.maintenance_cv:
-                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(getContext(), "Coming Soon...", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.lost_found_cv:

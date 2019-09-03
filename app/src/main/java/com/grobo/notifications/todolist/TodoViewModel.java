@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.grobo.notifications.database.AppDatabase;
 
@@ -13,22 +14,24 @@ import java.util.List;
 public class TodoViewModel extends AndroidViewModel {
 
     private TodoDao todoDao;
+    private LiveData<List<Goal>> todoItems;
 
     public TodoViewModel(@NonNull Application application) {
         super(application);
 
         AppDatabase db = AppDatabase.getDatabase(application);
         todoDao = db.todoDao();
+        todoItems = todoDao.loadAllTodo();
     }
 
-    public List<Goal> getAllTodo() {
+    public LiveData<List<Goal>> getAllTodo() {
 
-        try {
-            return new getAsyncTask(todoDao).execute().get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+//        try {
+//            return new getAsyncTask(todoDao).execute().get();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        return todoItems;
     }
 
     public void insert(Goal goal) {
@@ -39,18 +42,18 @@ public class TodoViewModel extends AndroidViewModel {
         new deleteAsyncTask(todoDao).execute(id);
     }
 
-    private static class getAsyncTask extends AsyncTask<Void, Void, List<Goal>> {
-
-        private TodoDao mAsyncTaskDao;
-        getAsyncTask(TodoDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected List<Goal> doInBackground(final Void... params) {
-            return mAsyncTaskDao.loadAllTodo();
-        }
-    }
+//    private static class getAsyncTask extends AsyncTask<Void, Void, List<Goal>> {
+//
+//        private TodoDao mAsyncTaskDao;
+//        getAsyncTask(TodoDao dao) {
+//            mAsyncTaskDao = dao;
+//        }
+//
+//        @Override
+//        protected List<Goal> doInBackground(final Void... params) {
+//            return mAsyncTaskDao.loadAllTodo();
+//        }
+//    }
 
     private static class insertAsyncTask extends android.os.AsyncTask<Goal, Void, Void> {
 
