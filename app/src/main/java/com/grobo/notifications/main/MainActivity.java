@@ -36,6 +36,7 @@ import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
+import com.grobo.notifications.timetable.NoTimetableActivity;
 import com.grobo.notifications.timetable.TimetableActivity;
 import com.grobo.notifications.utils.KeyboardUtils;
 import com.grobo.notifications.utils.utils;
@@ -61,63 +62,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_main );
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences( this );
 
-        if (!prefs.getBoolean(LOGIN_STATUS, false)) {
+        if (!prefs.getBoolean( LOGIN_STATUS, false )) {
             finish();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            startActivity( new Intent( MainActivity.this, LoginActivity.class ) );
         } else {
 
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+            Toolbar toolbar = findViewById( R.id.toolbar );
+            setSupportActionBar( toolbar );
 
-            DrawerLayout drawer = findViewById(R.id.drawer_layout);
-            navigationView = findViewById(R.id.nav_view);
+            DrawerLayout drawer = findViewById( R.id.drawer_layout );
+            navigationView = findViewById( R.id.nav_view );
 
             appBarConfiguration = new AppBarConfiguration.Builder(
                     R.id.nav_home, R.id.nav_explore, R.id.nav_calender, R.id.nav_feed,
-                    R.id.navigation_today, R.id.navigation_mess, R.id.navigation_notifications)
-                    .setDrawerLayout(drawer)
+                    R.id.navigation_today, R.id.navigation_mess, R.id.navigation_notifications )
+                    .setDrawerLayout( drawer )
                     .build();
 
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-            NavigationUI.setupWithNavController(navigationView, navController);
+            NavController navController = Navigation.findNavController( this, R.id.nav_host_fragment );
+            NavigationUI.setupActionBarWithNavController( this, navController, appBarConfiguration );
+            NavigationUI.setupWithNavController( navigationView, navController );
 
 //            navigationView.setNavigationItemSelectedListener(this);
 
-            View v = navigationView.getHeaderView(0);
-            ((TextView) v.findViewById(R.id.user_name_nav_header)).setText(prefs.getString(USER_NAME, "Guest"));
-            ((TextView) v.findViewById(R.id.user_email_nav_header)).setText(prefs.getString(ROLL_NUMBER, ""));
-            ImageView profileImage = v.findViewById(R.id.user_image_nav_header);
-            Glide.with(this)
-                    .load(BASE_URL + "img/" + prefs.getString(ROLL_NUMBER, ROLL_NUMBER).toLowerCase() + ".jpg")
+            View v = navigationView.getHeaderView( 0 );
+            ((TextView) v.findViewById( R.id.user_name_nav_header )).setText( prefs.getString( USER_NAME, "Guest" ) );
+            ((TextView) v.findViewById( R.id.user_email_nav_header )).setText( prefs.getString( ROLL_NUMBER, "" ) );
+            ImageView profileImage = v.findViewById( R.id.user_image_nav_header );
+            Glide.with( this )
+                    .load( BASE_URL + "img/" + prefs.getString( ROLL_NUMBER, ROLL_NUMBER ).toLowerCase() + ".jpg" )
                     .centerCrop()
-                    .placeholder(R.drawable.profile_photo)
-                    .into(profileImage);
-            profileImage.setOnClickListener(view -> {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-            });
+                    .placeholder( R.drawable.profile_photo )
+                    .into( profileImage );
+            profileImage.setOnClickListener( view -> {
+                startActivity( new Intent( MainActivity.this, ProfileActivity.class ) );
+            } );
 
             remoteConfig = FirebaseRemoteConfig.getInstance();
 
             subscribeFcmTopics();
         }
-        KeyboardUtils.hideSoftInput(this);
+        KeyboardUtils.hideSoftInput( this );
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!prefs.getBoolean(LOGIN_STATUS, false)) {
+        if (!prefs.getBoolean( LOGIN_STATUS, false )) {
             finish();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            startActivity( new Intent( MainActivity.this, LoginActivity.class ) );
         }
 
-        if (remoteConfig.getBoolean(KEY_UPDATE_REQUIRED)) {
+        if (remoteConfig.getBoolean( KEY_UPDATE_REQUIRED )) {
             updateApp();
         }
 
@@ -125,19 +126,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate( R.menu.main, menu );
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        if (prefs.getBoolean(IS_ADMIN, false)) {
-            MenuItem menuItem = menu.findItem(R.id.action_admin);
-            menuItem.setVisible(true);
+        super.onPrepareOptionsMenu( menu );
+        if (prefs.getBoolean( IS_ADMIN, false )) {
+            MenuItem menuItem = menu.findItem( R.id.action_admin );
+            menuItem.setVisible( true );
         } else {
-            MenuItem menuItem = menu.findItem(R.id.action_profile);
-            menuItem.setVisible(true);
+            MenuItem menuItem = menu.findItem( R.id.action_profile );
+            menuItem.setVisible( true );
         }
         return true;
     }
@@ -146,13 +147,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_admin) {
-            startActivity(new Intent(MainActivity.this, XPortal.class));
+            startActivity( new Intent( MainActivity.this, XPortal.class ) );
             return true;
         } else if (id == R.id.action_profile) {
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            startActivity( new Intent( MainActivity.this, ProfileActivity.class ) );
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected( item );
     }
 
     private void showFragmentWithTransition(Fragment current, Fragment newFragment, View sharedView, String sharedElementName) {
@@ -172,9 +173,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        DrawerLayout drawer = findViewById( R.id.drawer_layout );
+        if (drawer.isDrawerOpen( GravityCompat.START )) {
+            drawer.closeDrawer( GravityCompat.START );
         } else {
             super.onBackPressed();
         }
@@ -185,32 +186,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = menuItem.getItemId();
 
         if (id == R.id.nav_timetable) {
-            new Handler().postDelayed(() -> {
-                startActivity(new Intent(MainActivity.this, TimetableActivity.class));
-            }, 300);
-            navigationView.setCheckedItem(R.id.nav_home);
+            new Handler().postDelayed( () -> {
+                    startActivity( new Intent( MainActivity.this, TimetableActivity.class ) );
+            }, 300 );
+            navigationView.setCheckedItem( R.id.nav_home );
         }
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        DrawerLayout drawer = findViewById( R.id.drawer_layout );
+        drawer.closeDrawer( GravityCompat.START );
         return true;
     }
 
     private void updateApp() {
 
-        String currentVersion = remoteConfig.getString(KEY_CURRENT_VERSION);
-        String appVersion = utils.getAppVersion(this);
+        String currentVersion = remoteConfig.getString( KEY_CURRENT_VERSION );
+        String appVersion = utils.getAppVersion( this );
 
-        if (!TextUtils.equals(currentVersion, appVersion)) {
-            final AlertDialog alertDialog = new AlertDialog.Builder(this)
-                    .setTitle("New version available")
-                    .setMessage("Please, update app to new version to continue using.\nCurrent Version: " + appVersion + "\nNew Version: " + currentVersion)
-                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+        if (!TextUtils.equals( currentVersion, appVersion )) {
+            final AlertDialog alertDialog = new AlertDialog.Builder( this )
+                    .setTitle( "New version available" )
+                    .setMessage( "Please, update app to new version to continue using.\nCurrent Version: " + appVersion + "\nNew Version: " + currentVersion )
+                    .setPositiveButton( "Update", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            utils.openPlayStoreForApp(MainActivity.this);
+                            utils.openPlayStoreForApp( MainActivity.this );
                         }
 
-                    }).setCancelable(false).create();
+                    } ).setCancelable( false ).create();
 
             alertDialog.show();
         }
@@ -257,13 +258,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void subscribeFcmTopics() {
         FirebaseMessaging fcm = FirebaseMessaging.getInstance();
 
-        fcm.subscribeToTopic("all");
-        fcm.subscribeToTopic("dev");
-        if (prefs.getBoolean(LOGIN_STATUS, false)) {
-            fcm.subscribeToTopic(prefs.getString(USER_BRANCH, "junk"));
-            fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk"));
-            fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
-            fcm.subscribeToTopic(prefs.getString(ROLL_NUMBER, "junk"));
+        fcm.subscribeToTopic( "all" );
+        fcm.subscribeToTopic( "dev" );
+        if (prefs.getBoolean( LOGIN_STATUS, false )) {
+            fcm.subscribeToTopic( prefs.getString( USER_BRANCH, "junk" ) );
+            fcm.subscribeToTopic( prefs.getString( USER_YEAR, "junk" ) );
+            fcm.subscribeToTopic( prefs.getString( USER_YEAR, "junk" ) + prefs.getString( USER_BRANCH, "" ) );
+            fcm.subscribeToTopic( prefs.getString( ROLL_NUMBER, "junk" ) );
         }
     }
 
@@ -271,8 +272,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onEventSelected(String eventId) {
         Fragment fragment = new ClubEventDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("clubId", eventId);
-        fragment.setArguments(bundle);
+        bundle.putString( "clubId", eventId );
+        fragment.setArguments( bundle );
 
 //        manager.beginTransaction()
 //                .replace(R.id.frame_layout_main, fragment)
@@ -287,8 +288,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
+        NavController navController = Navigation.findNavController( this, R.id.nav_host_fragment );
+        return NavigationUI.navigateUp( navController, appBarConfiguration )
                 || super.onSupportNavigateUp();
     }
 }
