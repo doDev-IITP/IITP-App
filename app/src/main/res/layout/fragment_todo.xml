@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp"
-    android:background="@drawable/gradient_todo"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <com.yalantis.beamazingtoday.ui.widget.BatRecyclerView
-        android:id="@+id/bat_recycler_view"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_todo"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        app:add_button_color="@drawable/selector_button_add"
-        app:list_background="@color/colorPrimaryDark"
-        app:hint="@string/str_add_goal"
-        app:radio_button_res="@drawable/selector_radio_button" />
+        android:layout_centerHorizontal="true" />
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_todo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_add_black_24dp"
+        android:tint="@color/white" />
+
+</RelativeLayout>

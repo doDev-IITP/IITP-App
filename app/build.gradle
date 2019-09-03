@@ -86,8 +86,6 @@ dependencies {
     //PhotoZoom
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
-    //TODOList
-    implementation 'com.github.yalantis:todolist:v1.0.1'
-
+    implementation 'com.allattentionhere:fabulousfilter:0.0.5'
 }
 apply plugin: 'com.google.gms.google-services'
