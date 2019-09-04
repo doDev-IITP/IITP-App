@@ -100,6 +100,7 @@ public class MessFragment extends Fragment {
             QRFragment frag = new QRFragment();
             FragmentTransaction fragmentManager = requireActivity().getSupportFragmentManager().beginTransaction();
             fragmentManager.replace(R.id.frame_layout_home, frag)
+                    .addToBackStack(frag.getTag())
                     .commit();
             new CountDownTimer(210, 100) {
                 @Override

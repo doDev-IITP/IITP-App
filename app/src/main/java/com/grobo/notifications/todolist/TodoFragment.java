@@ -1,6 +1,7 @@
 package com.grobo.notifications.todolist;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
+import com.grobo.notifications.utils.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,6 +43,9 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+        String a = utils.getDeviceInfo();
+        Log.e(getClass().getSimpleName(), a);
+
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM YYYY", Locale.getDefault());
         requireActivity().setTitle(dateFormat.format(date));
@@ -56,7 +61,6 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
         FloatingActionButton fab = view.findViewById(R.id.fab_add_todo);
         fab.setOnClickListener(v -> {
             DialogFragment dialogFrag = DialogFragment.newInstance();
-            dialogFrag.setParentFab(fab);
             dialogFrag.show(requireActivity().getSupportFragmentManager(), dialogFrag.getTag());
         });
 

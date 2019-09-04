@@ -85,7 +85,5 @@ dependencies {
 
     //PhotoZoom
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-
-    implementation 'com.allattentionhere:fabulousfilter:0.0.5'
 }
 apply plugin: 'com.google.gms.google-services'

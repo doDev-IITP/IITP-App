@@ -33,7 +33,8 @@ import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
 public class ProfileFragment extends Fragment {
 
-    public ProfileFragment() {}
+    public ProfileFragment() {
+    }
 
     private SharedPreferences prefs;
     private OnLogoutCallback callback;
@@ -71,7 +72,7 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void logout(){
+    private void logout() {
 
         FirebaseMessaging fcm = FirebaseMessaging.getInstance();
         fcm.unsubscribeFromTopic(prefs.getString(USER_BRANCH, "junk"));
