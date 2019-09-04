@@ -80,6 +80,12 @@ public class AddFeedFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        date.setText("");
+        super.onStart();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFeedPreviewListener) {
@@ -95,7 +101,6 @@ public class AddFeedFragment extends Fragment {
 
     public interface OnFeedPreviewListener {
         void onFeedPreview(String title, String description, String venue, long eventDate, String image, String fb, String inst, String twitter, String coordinators);
-
     }
 
     private boolean validateFeed() {
