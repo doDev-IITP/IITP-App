@@ -23,24 +23,48 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvTaskReminder"
-        app:cardBackgroundColor="@color/cyan_light"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="0dp"
-        app:contentPaddingBottom="16dp"
-        app:contentPaddingTop="16dp"
-        app:strokeColor="@color/white"
-        app:strokeWidth="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tilTaskTitle"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="32dp">
+        android:layout_marginBottom="32dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/shadow"
+        app:strokeWidth="1dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/task_alarm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@id/remove_alarm"
+                android:layout_toEndOf="@id/ivTaskReminderIcon"
+                android:background="@color/transparent"
+                android:focusableInTouchMode="false"
+                android:hint="Reminder"
+                android:padding="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/shadow"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/remove_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_edit_black_24dp" />
 
             <ImageView
                 android:id="@+id/ivTaskReminderIcon"
@@ -50,32 +74,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/baseline_notifications_none_24" />
-
-            <ImageView
-                android:id="@+id/ivDeleteTaskReminder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_edit_black_24dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/task_alarm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_toStartOf="@id/ivDeleteTaskReminder"
-                android:layout_toEndOf="@id/ivTaskReminderIcon"
-                android:focusableInTouchMode="false"
-                android:hint="Reminder"
-                android:textColor="@color/white"
-                android:textColorHint="@color/shadow"
-                android:textSize="18sp" />
 
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>

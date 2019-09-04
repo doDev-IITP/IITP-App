@@ -39,22 +39,19 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
 
         if (itemList != null) {
 
-            final Goal current = itemList.get(position);
+            Goal current = itemList.get(position);
 
-            holder.checkbox.setChecked(current.isChecked());
+            holder.checkbox.setChecked(current.getChecked() != 0);
             holder.title.setText(current.getName());
 
             if (current.getAlarm() != 0) {
                 holder.alarm.setVisibility(View.VISIBLE);
-                SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm:ss a", Locale.getDefault());
+                SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
                 holder.alarm.setText(format.format(current.getAlarm()));
             } else {
                 holder.alarm.setVisibility(View.GONE);
             }
 
-            holder.checkbox.setOnCheckedChangeListener((compoundButton, b) -> {
-                callback.onTodoChecked(current, b);
-            });
             holder.root.setOnClickListener(v -> callback.onTodoSelected(current));
 
         } else {
@@ -93,8 +90,8 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
 
     public interface OnTodoInteractionListener {
         void onTodoSelected(Goal Goal);
+
         void onTodoDeleted(Goal goal);
-        void onTodoChecked(Goal goal, boolean b);
     }
 
 }

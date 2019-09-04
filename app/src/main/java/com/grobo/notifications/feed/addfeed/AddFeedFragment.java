@@ -60,27 +60,19 @@ public class AddFeedFragment extends Fragment {
         date = view.findViewById(R.id.add_feed_date);
 
         final DatePickerHelper dateHelper = new DatePickerHelper(getContext(), date);
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dateHelper.getDatePickerDialog().show();
-            }
-        });
+        date.setOnClickListener(v -> dateHelper.getDatePickerDialog().show());
 
-        feedPreview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long eventDate = dateHelper.getTimeInMillisFromCalender();
-                if (validateFeed()) {
-                    if (callback != null) {
-                        callback.onFeedPreview(title.getText().toString(), description.getText().toString(),
-                                venue.getText().toString(), eventDate, image.getText().toString(),
-                                fb.getText().toString(), inst.getText().toString(), twitter.getText().toString(),
-                                coordinators.getText().toString());
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Please check the errors", Toast.LENGTH_SHORT).show();
+        feedPreview.setOnClickListener(v -> {
+            long eventDate = dateHelper.getTimeInMillisFromCalender();
+            if (validateFeed()) {
+                if (callback != null) {
+                    callback.onFeedPreview(title.getText().toString(), description.getText().toString(),
+                            venue.getText().toString(), eventDate, image.getText().toString(),
+                            fb.getText().toString(), inst.getText().toString(), twitter.getText().toString(),
+                            coordinators.getText().toString());
                 }
+            } else {
+                Toast.makeText(getContext(), "Please check the errors", Toast.LENGTH_SHORT).show();
             }
         });
 

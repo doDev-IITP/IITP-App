@@ -25,39 +25,40 @@ public class TodoViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Goal>> getAllTodo() {
-
-//        try {
-//            return new getAsyncTask(todoDao).execute().get();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         return todoItems;
+    }
+
+    public void update(Goal goal) {
+        new updateAsyncTask(todoDao).execute(goal);
     }
 
     public void insert(Goal goal) {
         new insertAsyncTask(todoDao).execute(goal);
     }
 
-    public void deleteById (int id) {
+    public void deleteById(int id) {
         new deleteAsyncTask(todoDao).execute(id);
     }
 
-//    private static class getAsyncTask extends AsyncTask<Void, Void, List<Goal>> {
-//
-//        private TodoDao mAsyncTaskDao;
-//        getAsyncTask(TodoDao dao) {
-//            mAsyncTaskDao = dao;
-//        }
-//
-//        @Override
-//        protected List<Goal> doInBackground(final Void... params) {
-//            return mAsyncTaskDao.loadAllTodo();
-//        }
-//    }
+    private static class updateAsyncTask extends AsyncTask<Goal, Void, Void> {
+
+        private TodoDao mAsyncTaskDao;
+
+        updateAsyncTask(TodoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Goal... params) {
+            mAsyncTaskDao.updateTodo(params[0]);
+            return null;
+        }
+    }
 
     private static class insertAsyncTask extends android.os.AsyncTask<Goal, Void, Void> {
 
         private TodoDao mAsyncTaskDao;
+
         insertAsyncTask(TodoDao dao) {
             mAsyncTaskDao = dao;
         }
