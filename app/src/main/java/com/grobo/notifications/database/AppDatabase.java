@@ -58,7 +58,7 @@ public abstract class AppDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE `todo` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                     + " `name` TEXT,"
-                    + " `isChecked` INTEGER NOT NULL DEFAULT 0,"
+                    + " `checked` INTEGER NOT NULL DEFAULT 0,"
                     + " `timestamp` INTEGER NOT NULL DEFAULT 0,"
                     + " `alarm` INTEGER NOT NULL DEFAULT 0)");
         }

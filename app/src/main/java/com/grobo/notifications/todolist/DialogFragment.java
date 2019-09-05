@@ -2,19 +2,24 @@ package com.grobo.notifications.todolist;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.allattentionhere.fabulousfilter.AAH_FabulousFragment;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.grobo.notifications.R;
+import com.grobo.notifications.utils.DatePickerHelper;
 
-public class DialogFragment extends AAH_FabulousFragment {
+public class DialogFragment extends BottomSheetDialogFragment {
 
     private TodoViewModel viewModel;
 
@@ -28,41 +33,61 @@ public class DialogFragment extends AAH_FabulousFragment {
         viewModel = ViewModelProviders.of(this).get(TodoViewModel.class);
     }
 
-    @Override
-    public void setupDialog(Dialog dialog, int style) {
-        View contentView = View.inflate(getContext(), R.layout.dialog_add_todo, null);
-        RelativeLayout main = contentView.findViewById(R.id.root_view_add_todo);
 
-        TextView alarm = contentView.findViewById(R.id.task_alarm);
-        EditText title = contentView.findViewById(R.id.task_title);
+    @Override
+    public int getTheme() {
+        return R.style.BaseBottomSheetDialog;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new BottomSheetDialog(this.requireContext(), this.getTheme());
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_add_todo, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        EditText alarm = view.findViewById(R.id.task_alarm);
+        EditText title = view.findViewById(R.id.task_title);
+        ImageView removeAlarm = view.findViewById(R.id.remove_alarm);
+        removeAlarm.setOnClickListener(view1 -> alarm.setText(""));
 
         Goal goal = new Goal();
 
-        Button button = contentView.findViewById(R.id.button_add);
+        final DatePickerHelper dateHelper = new DatePickerHelper(getContext(), alarm);
+        alarm.setOnClickListener(view1 -> {
+            dateHelper.getDatePickerDialog().show();
+        });
+
+        Button button = view.findViewById(R.id.button_add);
         button.setOnClickListener(v -> {
 
             if (title.getText().toString().isEmpty()) {
                 Toast.makeText(requireContext(), "Please enter name of task !!", Toast.LENGTH_SHORT).show();
                 return;
             }
-            goal.setChecked(false);
+
             goal.setTimestamp(System.currentTimeMillis());
             goal.setName(title.getText().toString());
 
+            if (alarm.getText().toString().isEmpty()) {
+                goal.setAlarm(0);
+            } else
+                goal.setAlarm(dateHelper.getTimeInMillisFromCalender());
+
             viewModel.insert(goal);
 
-            closeFilter("closed");
+            this.dismiss();
+
         });
 
-        setAnimationDuration(500); //optional; default 500ms
-        setPeekHeight(300); // optional; default 400dp
-//        setCallbacks((Callbacks) getActivity()); //optional; to get back result
-//        setAnimationListener((AAH_FabulousFragment.AnimationListener) getActivity()); //optional; to get animation callbacks
-//        setViewgroupStatic(button); // optional; layout to stick at bottom on slide
-//        setViewPager(vp_types); //optional; if you use viewpager that has scrollview
-        setViewMain(main); //necessary; main bottomsheet view
-        setMainContentView(contentView); // necessary; call at end before super
-        super.setupDialog(dialog, style); //call super at last
+        super.onViewCreated(view, savedInstanceState);
     }
-
 }

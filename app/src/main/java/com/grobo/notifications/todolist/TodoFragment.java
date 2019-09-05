@@ -1,6 +1,7 @@
 package com.grobo.notifications.todolist;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
-public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodoInteractionListener { //implements OnOutsideClickedListener, BatListener {
+public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodoInteractionListener {
 
     public TodoFragment() {
     }
@@ -56,7 +59,6 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
         FloatingActionButton fab = view.findViewById(R.id.fab_add_todo);
         fab.setOnClickListener(v -> {
             DialogFragment dialogFrag = DialogFragment.newInstance();
-            dialogFrag.setParentFab(fab);
             dialogFrag.show(requireActivity().getSupportFragmentManager(), dialogFrag.getTag());
         });
 
@@ -65,22 +67,26 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
 
     private void populateRecycler() {
         viewModel.getAllTodo().observe(TodoFragment.this, goals -> {
-            adapter.setItemList(goals);
+
+            List<Goal> modGoals = new ArrayList<>();
+            for (Goal g : goals)
+                if (g.getChecked() == 0)
+                    modGoals.add(g);
+            for (Goal g : goals)
+                if (g.getChecked() != 0)
+                    modGoals.add(g);
+            new Handler().postDelayed(() -> adapter.setItemList(modGoals),200);
         });
     }
 
     @Override
-    public void onTodoSelected(Goal Goal) {
-
+    public void onTodoSelected(Goal goal) {
+        goal.setChecked(goal.getChecked() == 0 ? 1 : 0);
+        viewModel.update(goal);
     }
 
     @Override
     public void onTodoDeleted(Goal goal) {
-
-    }
-
-    @Override
-    public void onTodoChecked(Goal goal, boolean b) {
 
     }
 }

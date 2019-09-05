@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.grobo.notifications.R;
 
@@ -28,6 +29,19 @@ public class utils {
     public static int getRandomColor() {
         Random rnd = new Random();
         return Color.argb(255, rnd.nextInt(256), rnd.nextInt(56), rnd.nextInt(256));
+    }
+
+    public static String getDeviceInfo() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        String version = String.valueOf(Build.VERSION.SDK_INT);
+        String versionRelease = Build.VERSION.RELEASE;
+
+        if (model != null && manufacturer != null) {
+            return "Manufacturer " + manufacturer + ", Model " + model + ", API " + version + ", Android " + versionRelease;
+        }
+
+        return "";
     }
 
     public static void openPlayStoreForApp(Context context) {
@@ -73,7 +87,7 @@ public class utils {
             childDir.mkdirs();
         }
 
-        File file = new File (childDir, fileName);
+        File file = new File(childDir, fileName);
         if (file.exists())
             file.delete();
         try {
@@ -98,7 +112,7 @@ public class utils {
         return vName;
     }
 
-    public static class ImageDownloader extends AsyncTask<String, Void, Bitmap>{
+    public static class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
         @Override
         protected Bitmap doInBackground(String... imgUrls) {

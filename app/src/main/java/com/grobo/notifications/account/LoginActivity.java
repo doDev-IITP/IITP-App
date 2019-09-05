@@ -31,6 +31,7 @@ import com.grobo.notifications.utils.Constants;
 import org.json.JSONObject;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -173,7 +174,19 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 prefsEditor.apply();
 
                 Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                downloadTimetable();
+
+
+                try {
+                    String mUrl = FirebaseRemoteConfig.getInstance().getString(Constants.TIMETABLE_URL) + prefs.getString(USER_YEAR, "") + "/" + prefs.getString(USER_BRANCH, "").toLowerCase() + "/.json/";
+                    String json = downloadTimetable().execute(mUrl).get();
+                    prefs.edit().putString("jsonString", json).apply();
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                progressDialog.dismiss();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
             }
         }
     }
@@ -200,7 +213,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         Call<Person> call = service.register(body);
         call.enqueue(new Callback<Person>() {
             @Override
-            public void onResponse(Call<Person> call, Response<Person> response) {
+            public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
                 if (response.isSuccessful()) {
                     showFragmentWithTransition(new OtpFragment());
                 } else if (response.code() == 403) {
@@ -212,7 +225,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             }
 
             @Override
-            public void onFailure(Call<Person> call, Throwable t) {
+            public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
                 progressDialog.dismiss();
                 Log.e("responseBad", t.toString());
                 Toast.makeText(LoginActivity.this, "SignUp failure, error", Toast.LENGTH_LONG).show();
@@ -285,26 +298,12 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         fragmentTransaction.commit();
     }
 
-    private void downloadTimetable() {
-        final String TIMETABLE_URL = FirebaseRemoteConfig.getInstance().getString(Constants.TIMETABLE_URL);
-        new AsyncTask<String, Void, String>() {
-
+    private static AsyncTask<String, Void, String> downloadTimetable() {
+        return new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... strings) {
-                String mUrl = TIMETABLE_URL + PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).getString(USER_YEAR, "") + "/" + PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(USER_BRANCH, "").toLowerCase() + "/.json/";
-                String jsonResponse = TimetableUtility.doEverything(mUrl);
-
-                return jsonResponse;
+                return TimetableUtility.downloadTimetable(strings[0]);
             }
-
-            @Override
-            protected void onPostExecute(String s) {
-                PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("jsonString", s).apply();
-                progressDialog.dismiss();
-                finish();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-
-            }
-        }.execute();
+        };
     }
 }

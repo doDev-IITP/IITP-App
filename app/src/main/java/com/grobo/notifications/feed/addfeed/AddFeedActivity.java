@@ -3,7 +3,6 @@ package com.grobo.notifications.feed.addfeed;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.transition.TransitionInflater;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.Menu;
@@ -86,7 +85,7 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
         jsonParams.put("eventVenue", venue);
         jsonParams.put("eventName", title);
         jsonParams.put("eventDescription", description);
-        jsonParams.put("eventImageUrl", image);
+        jsonParams.put("eventImageUrl", image.isEmpty() ? "placeholder" : image);
 
         String[] pos = {fb, inst, twitter};
         jsonParams.put("postLinks", pos);
@@ -153,11 +152,6 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
     }
 
     private void showFragmentWithTransition(Fragment newFragment) {
-
-        Fragment current = getSupportFragmentManager().findFragmentById(R.id.frame_layout_add_feed);
-        current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
-        newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_right));
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout_add_feed, newFragment);
         fragmentTransaction.addToBackStack("later_fragment");

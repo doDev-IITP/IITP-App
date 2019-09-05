@@ -1,55 +1,54 @@
 package com.grobo.notifications.timetable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class TimetableItem {
 
+    @Expose
+    @SerializedName("time")
     private String time;
+    @Expose
+    @SerializedName("subject")
     private String subject;
+    @Expose
+    @SerializedName("room")
     private String room;
+    @Expose
+    @SerializedName("subjectName")
     private String subjectName;
 
     public TimetableItem(){}
 
-    public TimetableItem(String time, String subject, String room, String subjectName){
-        this.time = time;
-        this.subject = subject;
-        this.room = room;
-        this.subjectName = subjectName;
-    }
-
-    public TimetableItem(String time, String subject){
-        this.time = time;
-        this.subject = subject;
-    }
-
-    public String getsubject() {
-        return subject;
-    }
-
-    public void setsubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String gettime() {
+    public String getTime() {
         return time;
     }
 
-    public void settime(String time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
-    public String getroom() {
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getRoom() {
         return room;
     }
 
-    public String getsubjectName() {
-        return subjectName;
-    }
-
-    public void setroom(String room) {
+    public void setRoom(String room) {
         this.room = room;
     }
 
-    public void setsubjectName(String subjectName) {
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
     }
 }

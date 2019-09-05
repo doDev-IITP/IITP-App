@@ -1,25 +1,18 @@
 package com.grobo.notifications.todolist;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "todo")
 public class Goal {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int id = 0;
     private String name;
-    private boolean isChecked;
-    private long timestamp;
-    private long alarm;
+    private int checked = 0;
+    private long timestamp = 0;
+    private long alarm = 0;
 
-    public Goal(String name, long timestamp) {
-        this.name = name;
-        this.timestamp = timestamp;
-    }
-
-    @Ignore
     public Goal(){
     }
 
@@ -29,14 +22,6 @@ public class Goal {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
-    }
-
-    public boolean isChecked() {
-        return isChecked;
     }
 
     public String getText() {
@@ -65,5 +50,13 @@ public class Goal {
 
     public void setAlarm(long alarm) {
         this.alarm = alarm;
+    }
+
+    public int getChecked() {
+        return checked;
+    }
+
+    public void setChecked(int checked) {
+        this.checked = checked;
     }
 }

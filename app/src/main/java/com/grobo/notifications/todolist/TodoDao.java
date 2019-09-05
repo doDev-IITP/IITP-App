@@ -9,7 +9,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import static androidx.room.OnConflictStrategy.IGNORE;
+import static androidx.room.OnConflictStrategy.REPLACE;
 
 @Dao
 public interface TodoDao {
@@ -17,7 +17,7 @@ public interface TodoDao {
     @Query("SELECT * FROM todo ORDER BY timestamp DESC")
     LiveData<List<Goal>> loadAllTodo();
 
-    @Insert(onConflict = IGNORE)
+    @Insert(onConflict = REPLACE)
     void insertTodo(Goal goal);
 
     @Update
@@ -29,7 +29,7 @@ public interface TodoDao {
     @Delete
     void deleteTodo(Goal goal);
 
-    @Query("SELECT COUNT(*) FROM todo WHERE isChecked = 0")
+    @Query("SELECT COUNT(*) FROM todo WHERE checked = 0")
     int todoCount();
 
     @Query("SELECT * FROM todo WHERE name LIKE '%' || :text || '%'")

@@ -22,6 +22,7 @@ import com.grobo.notifications.R;
 import static com.grobo.notifications.utils.Constants.BASE_URL;
 import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
+import static com.grobo.notifications.utils.Constants.IS_TT_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.PHONE_NUMBER;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
@@ -32,7 +33,8 @@ import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
 public class ProfileFragment extends Fragment {
 
-    public ProfileFragment() {}
+    public ProfileFragment() {
+    }
 
     private SharedPreferences prefs;
     private OnLogoutCallback callback;
@@ -65,17 +67,12 @@ public class ProfileFragment extends Fragment {
         phone.setText(prefs.getString(PHONE_NUMBER, PHONE_NUMBER));
 
         Button button = view.findViewById(R.id.profile_logout_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
+        button.setOnClickListener(v -> logout());
 
         return view;
     }
 
-    private void logout(){
+    private void logout() {
 
         FirebaseMessaging fcm = FirebaseMessaging.getInstance();
         fcm.unsubscribeFromTopic(prefs.getString(USER_BRANCH, "junk"));
@@ -91,6 +88,7 @@ public class ProfileFragment extends Fragment {
                 .putString(PHONE_NUMBER, "")
                 .putString("jsonString", "")
                 .putBoolean(IS_QR_DOWNLOADED, false)
+                .putBoolean(IS_TT_DOWNLOADED, false)
                 .putBoolean(IS_ADMIN, false)
                 .apply();
 

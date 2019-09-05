@@ -128,6 +128,8 @@ public class FeedFragment extends Fragment {
     private void updateData() {
 
         long latest = feedViewModel.getMaxEventId();
+        if (latest == 0)
+            latest = System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000;
 
         FeedRoutes service = RetrofitClientInstance.getRetrofitInstance().create(FeedRoutes.class);
 
