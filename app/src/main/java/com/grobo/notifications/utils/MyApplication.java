@@ -86,9 +86,8 @@ public class MyApplication extends Application {
         remoteConfigDefaults.put(Constants.KEY_CURRENT_VERSION, utils.getAppVersion(this));
         remoteConfigDefaults.put(Constants.TIMETABLE_URL, "https://timetable-grobo.firebaseio.com/");
         remoteConfigDefaults.put(Constants.MESS_MENU_URL, "https://i.ytimg.com/vi/OjIXzZ25tjA/maxresdefault.jpg");
-        remoteConfigDefaults.put(Constants.MAPS_URL, "https://www.google.com/maps/d/viewer?mid=1NVE_tnItehFaMbEWddjL786SKtuCtq4X");
 
-        firebaseRemoteConfig.setDefaults(remoteConfigDefaults);
+        firebaseRemoteConfig.setDefaultsAsync(remoteConfigDefaults);
         // fetch every minutes
 
         firebaseRemoteConfig.fetch(60).addOnCompleteListener(task -> {

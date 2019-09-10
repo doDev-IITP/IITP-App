@@ -1,6 +1,7 @@
 package com.grobo.notifications.work;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -24,10 +25,23 @@ public class DeleteWorker extends Worker {
     }
 
     private void deleteOldData() {
+        FeedDao feedDao = AppDatabase.getDatabase(getApplicationContext()).feedDao();
 
-        AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-        FeedDao feedDao = db.feedDao();
-        feedDao.deleteOldFeed(System.currentTimeMillis() - (10*24*60*60*1000));
+        deleteAsyncTask task = new deleteAsyncTask(feedDao);
+        task.execute(System.currentTimeMillis() - (10 * 24 * 60 * 60 * 1000));
+    }
 
+    private static class deleteAsyncTask extends AsyncTask<Long, Void, Void> {
+        private FeedDao mAsyncTaskDao;
+
+        deleteAsyncTask(FeedDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Long... params) {
+            mAsyncTaskDao.deleteOldFeed(params[0]);
+            return null;
+        }
     }
 }
