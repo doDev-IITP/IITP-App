@@ -59,7 +59,6 @@ public class FeedFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
         if (getActivity() != null)
             getActivity().setTitle("Feed");

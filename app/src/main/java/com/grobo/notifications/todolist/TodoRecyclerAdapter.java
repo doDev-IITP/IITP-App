@@ -52,6 +52,11 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
                 holder.alarm.setVisibility( View.GONE );
             }
 
+            if (current.getChecked() == 1)
+                holder.root.setAlpha(0.5f);
+            else
+                holder.root.setAlpha(1f);
+
             holder.root.setOnClickListener( v -> callback.onTodoSelected( current ) );
 
         } else {
@@ -90,17 +95,11 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
 
     public interface OnTodoInteractionListener {
         void onTodoSelected(Goal Goal);
-
-        void onTodoDeleted(Goal goal);
     }
 
-    public Goal goal(int position) {
-        return itemList.get( position );
+    public Goal getGoalAtPosition(int position) {
+        if (itemList != null && position >= 0 && position < itemList.size())
+            return itemList.get( position );
+        return null;
     }
-
-    public boolean removeitem(int position) {
-        itemList.remove( position );
-        return true;
-    }
-
 }

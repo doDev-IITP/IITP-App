@@ -1,8 +1,6 @@
 package com.grobo.notifications.todolist;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -14,15 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.grobo.notifications.R;
-import com.grobo.notifications.notifications.Notification;
-import com.grobo.notifications.utils.OnSwipeTouchListener;
 import com.grobo.notifications.utils.OnTodoSwipe;
 
 import java.text.SimpleDateFormat;
@@ -39,13 +35,14 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
     private TodoViewModel viewModel;
     private TodoRecyclerAdapter adapter;
     private RecyclerView recyclerView;
+    private View emptyView;
     private SharedPreferences preferences;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         viewModel = ViewModelProviders.of( this ).get( TodoViewModel.class );
-
+        preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
     }
 
     @Override
@@ -60,20 +57,25 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
         SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE, dd MMM YYYY", Locale.getDefault() );
         requireActivity().setTitle( dateFormat.format( date ) );
 
-        preferences = getActivity().getPreferences( Context.MODE_PRIVATE );
-        recyclerView = view.findViewById( R.id.recycler_todo );
-        recyclerView.setLayoutManager( new LinearLayoutManager( requireContext() ) );
-
-        adapter = new TodoRecyclerAdapter( requireContext(), this );
-        recyclerView.setAdapter( adapter );
-
-        populateRecycler();
+        emptyView = view.findViewById(R.id.feed_empty_view);
 
         FloatingActionButton fab = view.findViewById( R.id.fab_add_todo );
         fab.setOnClickListener( v -> {
             DialogFragment dialogFrag = DialogFragment.newInstance();
             dialogFrag.show( requireActivity().getSupportFragmentManager(), dialogFrag.getTag() );
         } );
+
+        recyclerView = view.findViewById( R.id.recycler_todo );
+        recyclerView.setLayoutManager( new LinearLayoutManager( requireContext() ) );
+
+        adapter = new TodoRecyclerAdapter( requireContext(), this );
+        recyclerView.setAdapter( adapter );
+
+        if (preferences.getBoolean( "first_open_todo", true)) {
+            insertInitialItems();
+        }
+
+        populateRecycler();
         enableSwipeToDeleteAndUndo();
 
         super.onViewCreated( view, savedInstanceState );
@@ -81,7 +83,6 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
 
     private void populateRecycler() {
         viewModel.getAllTodo().observe( TodoFragment.this, goals -> {
-
             List<Goal> modGoals = new ArrayList<>();
             for (Goal g : goals)
                 if (g.getChecked() == 0)
@@ -89,15 +90,44 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
             for (Goal g : goals)
                 if (g.getChecked() != 0)
                     modGoals.add( g );
-            if (preferences.getInt( "first", 0 ) == 0) {
-                Goal goal = new Goal();
-                goal.setName( "Welcome to IITP App" );
-                goal.setChecked( 1 );
-                modGoals.add( goal );
-                preferences.edit().putInt( "first", 1 ).apply();
+            new Handler().postDelayed( () -> adapter.setItemList( modGoals ), 100 );
+
+            if (modGoals.size() == 0) {
+                recyclerView.setVisibility(View.INVISIBLE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.INVISIBLE);
             }
-            new Handler().postDelayed( () -> adapter.setItemList( modGoals ), 200 );
         } );
+    }
+
+    private void insertInitialItems() {
+        long time = System.currentTimeMillis();
+
+        Goal g4 = new Goal();
+        g4.setName( "This is a completed todo, swipe this to delete" );
+        g4.setChecked(1);
+        g4.setTimestamp(time);
+
+        Goal g3 = new Goal();
+        g3.setName( "Click this to mark as done !!" );
+        g3.setTimestamp(time + 10);
+
+        Goal g2 = new Goal();
+        g2.setName( "This is a TODO" );
+        g2.setTimestamp(time + 20);
+
+        Goal g1 = new Goal();
+        g1.setName( "Welcome to IITP App" );
+        g1.setTimestamp(time + 30);
+
+        viewModel.insert(g4);
+        viewModel.insert(g3);
+        viewModel.insert(g2);
+        viewModel.insert(g1);
+
+        preferences.edit().putBoolean( "first_open_todo", false).apply();
     }
 
     @Override
@@ -106,53 +136,33 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
         viewModel.update( goal );
     }
 
-    @Override
-    public void onTodoDeleted(Goal goal) {
-
-    }
-
     private void enableSwipeToDeleteAndUndo() {
         OnTodoSwipe swipeToDeleteCallback = new OnTodoSwipe( getActivity() ) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
-
-                final int position = viewHolder.getAdapterPosition();
-                final Goal goal = adapter.goal( position );
-                Toast.makeText( getContext(), goal.getName(), Toast.LENGTH_SHORT ).show();
-
-                adapter.removeitem( position );
-                viewModel.deleteById( goal );
-                // notificationViewModel.delete( item );
-
-
-//                Snackbar snackbar = Snackbar
-//                        .make( layout, "Notification deleted", Snackbar.LENGTH_LONG );
-//                snackbar.setAction( "UNDO", view -> {
-//                    adapter.restoreItem( item, position );
-//                    recyclerView.scrollToPosition( position );
-//                    notificationViewModel.insert( item );
-//                });
-
-//                snackbar.setActionTextColor( Color.YELLOW );
-//                snackbar.show();
-                adapter.notifyDataSetChanged();
-
+                int position = viewHolder.getAdapterPosition();
+                Goal goal = adapter.getGoalAtPosition( position );
+                if (goal != null) {
+                    Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                    viewModel.deleteById(goal);
+                }
             }
 
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-
-//                int pos = viewHolder.getAdapterPosition();
-//                Notification notification = adapter.get( pos );
-//                if (notification.isStarred())
-//                    return 0;
-                return makeMovementFlags( 1, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT );
+                int position = viewHolder.getAdapterPosition();
+                Goal goal = adapter.getGoalAtPosition( position );
+                if (goal != null) {
+                    if (goal.getChecked() == 0)
+                        return 0;
+                    return makeMovementFlags(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                }
+                return 0;
             }
 
             @Override
             public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-                return 2.9f;
+                return 1.7f;
             }
         };
 
