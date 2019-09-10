@@ -5,7 +5,7 @@
     <item
         android:id="@+id/navigation_today"
         android:icon="@drawable/baseline_home_24"
-        android:title="Today" />
+        android:title="Todo" />
 
     <item
         android:id="@+id/navigation_mess"

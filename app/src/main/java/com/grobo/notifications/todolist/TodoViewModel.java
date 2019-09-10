@@ -17,9 +17,9 @@ public class TodoViewModel extends AndroidViewModel {
     private LiveData<List<Goal>> todoItems;
 
     public TodoViewModel(@NonNull Application application) {
-        super(application);
+        super( application );
 
-        AppDatabase db = AppDatabase.getDatabase(application);
+        AppDatabase db = AppDatabase.getDatabase( application );
         todoDao = db.todoDao();
         todoItems = todoDao.loadAllTodo();
     }
@@ -29,15 +29,15 @@ public class TodoViewModel extends AndroidViewModel {
     }
 
     public void update(Goal goal) {
-        new updateAsyncTask(todoDao).execute(goal);
+        new updateAsyncTask( todoDao ).execute( goal );
     }
 
     public void insert(Goal goal) {
-        new insertAsyncTask(todoDao).execute(goal);
+        new insertAsyncTask( todoDao ).execute( goal );
     }
 
-    public void deleteById(int id) {
-        new deleteAsyncTask(todoDao).execute(id);
+    public void deleteById(Goal goal) {
+        new deleteAsyncTask( todoDao ).execute( goal );
     }
 
     private static class updateAsyncTask extends AsyncTask<Goal, Void, Void> {
@@ -50,7 +50,7 @@ public class TodoViewModel extends AndroidViewModel {
 
         @Override
         protected Void doInBackground(Goal... params) {
-            mAsyncTaskDao.updateTodo(params[0]);
+            mAsyncTaskDao.updateTodo( params[0] );
             return null;
         }
     }
@@ -65,12 +65,12 @@ public class TodoViewModel extends AndroidViewModel {
 
         @Override
         protected Void doInBackground(final Goal... params) {
-            mAsyncTaskDao.insertTodo(params[0]);
+            mAsyncTaskDao.insertTodo( params[0] );
             return null;
         }
     }
 
-    private static class deleteAsyncTask extends AsyncTask<Integer, Void, Void> {
+    private static class deleteAsyncTask extends android.os.AsyncTask<Goal, Void, Void> {
 
         private TodoDao mAsyncTaskDao;
 
@@ -79,8 +79,9 @@ public class TodoViewModel extends AndroidViewModel {
         }
 
         @Override
-        protected Void doInBackground(Integer... params) {
-            mAsyncTaskDao.deleteTodoById(params[0]);
+        protected Void doInBackground(Goal... params) {
+            //  mAsyncTaskDao.deleteTodoById(params[0]);
+            mAsyncTaskDao.deleteTodo( params[0] );
             return null;
         }
     }
