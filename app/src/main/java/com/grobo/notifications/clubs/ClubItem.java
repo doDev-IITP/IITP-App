@@ -1,5 +1,6 @@
 package com.grobo.notifications.clubs;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -9,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Keep
 @Entity(tableName = "clubs")
 public class ClubItem {
 
@@ -125,6 +127,7 @@ public class ClubItem {
         this.image = image;
     }
 
+    @Keep
     public class Clubs {
 
         @SerializedName("clubs")

@@ -6,14 +6,28 @@ android {
         applicationId "com.grobo.notifications"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 15
-        versionName "1.2.0"
+        versionCode 16
+        versionName "1.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+
+        }
+        debug {
+        }
+        debugMini {
+            initWith debug
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+            matchingFallbacks = ['debug']
         }
     }
     compileOptions {
@@ -36,7 +50,7 @@ dependencies {
     implementation "androidx.preference:preference:1.1.0"
 
     //play store core
-    implementation 'com.google.android.play:core:1.6.1'
+    implementation 'com.google.android.play:core:1.6.3'
 
     //navigation
     implementation 'androidx.navigation:navigation-fragment:2.1.0'

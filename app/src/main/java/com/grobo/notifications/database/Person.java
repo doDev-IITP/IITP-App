@@ -1,10 +1,13 @@
 package com.grobo.notifications.database;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Keep
 public class Person {
 
     @SerializedName("token")
@@ -31,6 +34,7 @@ public class Person {
     }
 
 
+    @Keep
     public class User {
 
         @SerializedName("pors")

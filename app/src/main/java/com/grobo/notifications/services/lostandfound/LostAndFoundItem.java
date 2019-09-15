@@ -1,13 +1,17 @@
 package com.grobo.notifications.services.lostandfound;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.grobo.notifications.feed.FeedPoster;
 
 import java.util.List;
 
+@Keep
 public class LostAndFoundItem {
 
+    @Keep
     public class LostNFoundSuper {
 
         @SerializedName("lostnfounds")

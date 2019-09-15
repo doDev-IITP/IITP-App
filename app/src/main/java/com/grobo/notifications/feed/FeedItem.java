@@ -1,5 +1,6 @@
 package com.grobo.notifications.feed;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
@@ -10,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Keep
 @Entity(tableName = "feed")
 public class FeedItem {
 
@@ -138,6 +140,7 @@ public class FeedItem {
         return id;
     }
 
+    @Keep
     public class FeedItemSuper1 {
 
         @SerializedName("latestFeeds")

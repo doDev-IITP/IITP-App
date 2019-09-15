@@ -1,9 +1,11 @@
 package com.grobo.notifications.notifications;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+@Keep
 @Entity(tableName = "notification")
 public class Notification {
 

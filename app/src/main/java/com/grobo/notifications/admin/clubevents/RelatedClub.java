@@ -1,8 +1,11 @@
 package com.grobo.notifications.admin.clubevents;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Keep
 public class RelatedClub {
 
     @SerializedName("_id")
