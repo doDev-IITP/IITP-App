@@ -1,5 +1,6 @@
 package com.grobo.notifications.main;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -20,16 +22,26 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
+import androidx.transition.TransitionInflater;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.grobo.notifications.Mess.CancelMealAdapter;
+import com.grobo.notifications.Mess.MessFragment;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
@@ -38,8 +50,15 @@ import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
 import com.grobo.notifications.timetable.TimetableActivity;
+import com.grobo.notifications.utils.Constants;
 import com.grobo.notifications.utils.KeyboardUtils;
 import com.grobo.notifications.utils.utils;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.grobo.notifications.utils.Constants.BASE_URL;
 import static com.grobo.notifications.utils.Constants.IS_ADMIN;
@@ -52,12 +71,13 @@ import static com.grobo.notifications.utils.Constants.USER_NAME;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        PorAdapter.OnPORSelectedListener, ClubEventRecyclerAdapter.OnEventSelectedListener {
+        PorAdapter.OnPORSelectedListener, ClubEventRecyclerAdapter.OnEventSelectedListener, CancelMealAdapter.OnCancelSelectedListener {
 
     private SharedPreferences prefs;
     private NavigationView navigationView;
     AppBarConfiguration appBarConfiguration;
 
+    private ProgressDialog progressDialog;
     private FirebaseRemoteConfig remoteConfig;
 
     @Override
@@ -65,6 +85,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
+        progressDialog = new ProgressDialog( this );
+        progressDialog.setIndeterminate( true );
+        progressDialog.setCanceledOnTouchOutside( false );
+        progressDialog.setCancelable( false );
         prefs = PreferenceManager.getDefaultSharedPreferences( this );
 
         if (!prefs.getBoolean( LOGIN_STATUS, false )) {
@@ -292,5 +316,71 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavController navController = Navigation.findNavController( this, R.id.nav_host_fragment );
         return NavigationUI.navigateUp( navController, appBarConfiguration )
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onCancelSelected(String id) {
+        Toast.makeText( this, "hello", Toast.LENGTH_SHORT ).show();
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        progressDialog.setMessage( "Cancelling your meals" );
+        progressDialog.show();
+        db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( this ).getString( Constants.WEBMAIL, "" ) ).collection("cancel" ).document( id ).get().addOnCompleteListener( new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if(task.isSuccessful())
+                {
+                    DocumentSnapshot documentSnapshot=task.getResult();
+                    List<Timestamp> days=(ArrayList<Timestamp>)documentSnapshot.get( "days" );
+                    Calendar calendar=Calendar.getInstance();
+                    Calendar calendar1 = Calendar.getInstance();
+                    calendar1.clear();
+                    calendar1.set( calendar.get( Calendar.YEAR ), calendar.get( Calendar.MONTH ), calendar.get( Calendar.DATE ) );
+                    if(days.size()==1)
+                    {
+                        db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( Constants.WEBMAIL, "" ) ).collection("cancel" ).document( id ).delete().addOnCompleteListener( new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                progressDialog.dismiss();
+                            }
+                        } );
+                    }
+                    else {
+                        List<Timestamp> update=new ArrayList<>(  );
+                        Map<String, Object> map = new HashMap<>();
+                        map.put( "full", documentSnapshot.get( "full" ) );
+                        map.put( "timestamp", FieldValue.serverTimestamp() );
+                        calendar1.add( Calendar.DATE,3 );
+                        for(int i=0;i<days.size();i++)
+                        {
+                            if(days.get( i ).toDate().compareTo( calendar1.getTime())<0)
+                                update.add( days.get( i ) );
+
+                        }
+                        if(update.size()==0)
+                        {
+                            db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( Constants.WEBMAIL, "" ) ).collection("cancel" ).document( id ).delete().addOnCompleteListener( new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    progressDialog.dismiss();
+                                }
+                            } );
+
+                        }
+                        else {
+                            map.put( "days",update );
+                            db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( Constants.WEBMAIL, "" ) ).collection("cancel" ).document( id ).update( map ).addOnCompleteListener( new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    progressDialog.dismiss();
+                                }
+                            } );
+
+                        }
+                    }
+                }
+            }
+        } );
+
     }
 }
