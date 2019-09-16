@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -60,7 +61,6 @@ public class MessFragment extends Fragment {
     }
 
     private ProgressDialog progressDialog;
-    private Spinner spinner;
     private Spinner mealTypeSpinner;
     private SharedPreferences prefs;
 
@@ -77,7 +77,7 @@ public class MessFragment extends Fragment {
 
         messes.append(1, "BH1 Mess 1");
         messes.append(2, "BH1 Mess 2");
-        messes.append(3, "BH2 Mess");
+        messes.append(3, "New hostel Mess");
         messes.append(4, "GH Mess");
 
         prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
@@ -94,11 +94,9 @@ public class MessFragment extends Fragment {
             getActivity().setTitle( "Mess" );
 
         if (prefs.getInt( "mess_choice", 0 ) == 0) {
-            getMessData();
+            new Handler().postDelayed(this::getMessData, 200);
         } else {
-            view.findViewById(R.id.ll_mess_choice).setVisibility(View.VISIBLE);
-            TextView messChoice = view.findViewById(R.id.tv_selected_mess);
-            messChoice.setText(messes.get(prefs.getInt("mess_choice", 0), "Not available"));
+            setCurrentMess(prefs.getInt("mess_choice", 0));
         }
 
         ImageView messMenu = view.findViewById( R.id.mess_menu );
@@ -121,7 +119,6 @@ public class MessFragment extends Fragment {
         Button cancelMealButton = view.findViewById( R.id.cancel_meal_ok_button );
         cancelMealButton.setOnClickListener(v -> showUnsavedChangesDialog());
 
-        spinner = view.findViewById( R.id.cancel_meal_spinner );
         mealTypeSpinner = view.findViewById( R.id.type_meal_spinner );
         mealTypeSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
             @Override
@@ -158,8 +155,8 @@ public class MessFragment extends Fragment {
 
         Fragment current = manager.findFragmentById( R.id.frame_layout_home );
         if (current != null) {
-            current.setExitTransition( TransitionInflater.from( requireContext() ).inflateTransition( android.R.transition.fade ) );
-            frag.setEnterTransition( TransitionInflater.from( requireContext() ).inflateTransition( android.R.transition.fade ) );
+            current.setExitTransition( TransitionInflater.from( requireContext() ).inflateTransition( android.R.transition.explode ) );
+            frag.setEnterTransition( TransitionInflater.from( requireContext() ).inflateTransition( android.R.transition.explode) );
         }
 
         FragmentTransaction transaction = manager.beginTransaction();
@@ -183,12 +180,12 @@ public class MessFragment extends Fragment {
                 if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getMess() != null && response.body().getMess().getMessChoice() != null) {
+
                         int m = response.body().getMess().getMessChoice();
                         prefs.edit().putInt("mess_choice", m).apply();
+
                         if (getView() != null) {
-                            getView().findViewById(R.id.ll_mess_choice).setVisibility(View.VISIBLE);
-                            TextView messChoice = getView().findViewById(R.id.tv_selected_mess);
-                            messChoice.setText(messes.get(m, "Not available"));
+                            setCurrentMess(m);
                         }
                     }
                 } else if (response.code() == 404) {
@@ -210,7 +207,7 @@ public class MessFragment extends Fragment {
 
     private void showMessSelectionPrompt(){
         LayoutInflater li = LayoutInflater.from( requireContext() );
-        View promptsView = li.inflate( R.layout.prompt, null );
+        View promptsView = li.inflate( R.layout.dialog_mess_selection, null );
         RadioGroup radioGroup = promptsView.findViewById( R.id.radio_group1 );
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(requireContext() );
@@ -264,18 +261,21 @@ public class MessFragment extends Fragment {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
+
                 if (response.isSuccessful()) {
                     Toast.makeText(requireContext(), "Mess selected", Toast.LENGTH_SHORT).show();
                     prefs.edit().putInt("mess_choice", mess).apply();
+                    setCurrentMess(mess);
                 } else {
-                    Toast.makeText(requireContext(), "Mess selection failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Mess selection failed, error " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
-                Toast.makeText(requireContext(), "faileddd", Toast.LENGTH_SHORT).show();
+                if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
+                Toast.makeText(requireContext(), "Mess selection failed.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -291,6 +291,8 @@ public class MessFragment extends Fragment {
         calendar1.clear();
         calendar1.set( calendar.get( Calendar.YEAR ), calendar.get( Calendar.MONTH ), calendar.get( Calendar.DATE ) );
         calendar1.add( Calendar.DATE, 1 );
+
+        Spinner spinner = requireView().findViewById( R.id.cancel_meal_spinner );
 
         MessRoutes service = RetrofitClientInstance.getRetrofitInstance().create( MessRoutes.class );
 
@@ -358,6 +360,14 @@ public class MessFragment extends Fragment {
                 .setPositiveButton("OK", (dialog, which) -> {
                     if (dialog != null) dialog.dismiss();
                 }).show();
+    }
+
+    private void setCurrentMess(int data) {
+        if (getView() != null) {
+            getView().findViewById(R.id.ll_mess_choice).setVisibility(View.VISIBLE);
+            TextView messChoice = getView().findViewById(R.id.tv_selected_mess);
+            messChoice.setText(messes.get(data, "Not available"));
+        }
     }
 }
 

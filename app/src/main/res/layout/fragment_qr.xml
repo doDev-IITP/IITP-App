@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
-    tools:context=".Mess.MessFragment$QRFragment">
+    tools:context=".Mess.QRFragment">
 
     <ImageView
         android:id="@+id/qr_fragment_qr"
         android:layout_width="match_parent"
+        android:transitionName="mess_qr"
         android:layout_height="match_parent"
         android:contentDescription="Mess QR Code" />
 

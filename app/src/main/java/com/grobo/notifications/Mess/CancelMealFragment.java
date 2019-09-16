@@ -73,8 +73,8 @@ public class CancelMealFragment extends Fragment {
 
         Fragment current = manager.findFragmentById( R.id.frame_layout_home );
         if (current != null) {
-            current.setExitTransition( TransitionInflater.from( requireContext() ).inflateTransition( android.R.transition.fade ) );
-            frag.setEnterTransition( TransitionInflater.from( requireContext() ).inflateTransition( android.R.transition.fade ) );
+            current.setExitTransition( TransitionInflater.from( requireContext() ).inflateTransition( android.R.transition.explode ) );
+            frag.setEnterTransition( TransitionInflater.from( requireContext() ).inflateTransition( R.transition.default_transition ) );
         }
 
         FragmentTransaction transaction = manager.beginTransaction();

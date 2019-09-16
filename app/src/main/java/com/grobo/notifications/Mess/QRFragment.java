@@ -20,13 +20,12 @@ import com.grobo.notifications.utils.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.concurrent.ExecutionException;
 
 import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 
-public class QRFragment extends Fragment {
+public class QRFragment extends Fragment implements utils.ImageDownloaderListener {
 
     public QRFragment() {
     }
@@ -82,21 +81,20 @@ public class QRFragment extends Fragment {
     }
 
     private void downloadQR() {
-
         String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + prefs.getString(USER_MONGO_ID, null) + "&amp;size=1000x1000";
-        utils.ImageDownloader imageDownloader = new utils.ImageDownloader();
+        utils.ImageDownloader imageDownloader = new utils.ImageDownloader(this);
 
-        try {
-            Bitmap image = imageDownloader.execute(qrUrl).get();
-            if (image != null) {
-                boolean ret = utils.saveImage(requireContext(), image, "qr", "qr.png");
-                if (ret) {
-                    prefs.edit().putBoolean(IS_QR_DOWNLOADED, true).apply();
-                }
-                imageView.setImageBitmap(image);
+        imageDownloader.execute(qrUrl);
+    }
+
+    @Override
+    public void onImageDownloaded(Bitmap bitmap) {
+        if (bitmap != null) {
+            boolean ret = utils.saveImage(requireContext(), bitmap, "qr", "qr.png");
+            if (ret) {
+                prefs.edit().putBoolean(IS_QR_DOWNLOADED, true).apply();
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            imageView.setImageBitmap(bitmap);
         }
     }
 }

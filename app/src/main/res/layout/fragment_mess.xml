@@ -10,24 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="Mess QR"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp" />
-
         <fragment
             android:id="@+id/mess_fr_qr"
             android:name="com.grobo.notifications.Mess.QRFragment"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_below="@id/title"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="16dp" />
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"/>
 
         <TextView
             android:id="@+id/title1"
@@ -37,7 +28,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Mess Menu"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorAccent"
             android:textSize="20sp" />
 
         <ImageView
@@ -53,12 +44,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/mess_menu"
             android:layout_marginTop="16dp"
+            android:visibility="gone"
             android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Selected Mess :"
+                android:text="Current Mess :"
                 android:layout_marginEnd="16dp"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"/>
@@ -68,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/dark_gray"
-                android:text="Mess 2"
+                tools:text="Mess 2"
                 android:textSize="18sp"/>
 
 

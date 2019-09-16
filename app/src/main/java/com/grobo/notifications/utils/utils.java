@@ -114,27 +114,38 @@ public class utils {
 
     public static class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
+        private ImageDownloaderListener listener;
+
+        public ImageDownloader(ImageDownloaderListener listener){
+            this.listener = listener;
+        }
+
         @Override
         protected Bitmap doInBackground(String... imgUrls) {
-
-            URL url;
-            HttpURLConnection connection;
-
             try {
-                url = new URL(imgUrls[0]);
+                URL url = new URL(imgUrls[0]);
 
-                connection = (HttpURLConnection) url.openConnection();
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 
                 InputStream stream = connection.getInputStream();
 
                 return BitmapFactory.decodeStream(stream);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            listener.onImageDownloaded(bitmap);
+            super.onPostExecute(bitmap);
+        }
+    }
+
+    public interface ImageDownloaderListener {
+        void onImageDownloaded(Bitmap bitmap);
     }
 }
 

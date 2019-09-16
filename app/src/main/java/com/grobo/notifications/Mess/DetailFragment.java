@@ -73,13 +73,14 @@ public class DetailFragment extends Fragment {
     }
 
     private void populateData() {
-        MessRoutes service = RetrofitClientInstance.getRetrofitInstance().create(MessRoutes.class);
+
+        progressDialog.setMessage("Fetching data...");
+        progressDialog.show();
 
         String userId = PreferenceManager.getDefaultSharedPreferences(requireContext()).getString(USER_MONGO_ID, "");
 
+        MessRoutes service = RetrofitClientInstance.getRetrofitInstance().create(MessRoutes.class);
         Call<MessModel> call = service.getMessData(userId);
-        progressDialog.setMessage("Fetching data...");
-        progressDialog.show();
 
         call.enqueue(new Callback<MessModel>() {
             @Override
