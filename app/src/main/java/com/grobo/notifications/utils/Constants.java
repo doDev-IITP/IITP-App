@@ -37,6 +37,7 @@ public class Constants {
 
     public static final String KEY_UPDATE_REQUIRED = "force_update_required";
     public static final String KEY_CURRENT_VERSION = "force_update_current_version";
+    public static final String KEY_UPDATE_TYPE = "update_type";
 
     public static final int ITEM_LOST = 1;
     public static final int ITEM_FOUND = 2;

@@ -28,6 +28,8 @@ import static com.grobo.notifications.utils.Constants.PHONE_NUMBER;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
+import static com.grobo.notifications.utils.Constants.USER_POR;
+import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
@@ -42,7 +44,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
     }
 
     @Override
@@ -80,9 +82,9 @@ public class ProfileFragment extends Fragment {
         fcm.unsubscribeFromTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
         fcm.unsubscribeFromTopic(prefs.getString(ROLL_NUMBER, "junk"));
 
-        PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
-                .putString(WEBMAIL, "")
+        prefs.edit().putString(WEBMAIL, "")
                 .putString(ROLL_NUMBER, "")
+                .putString(USER_TOKEN, "")
                 .putBoolean(LOGIN_STATUS, false)
                 .putString(USER_NAME, "")
                 .putString(PHONE_NUMBER, "")
@@ -90,6 +92,8 @@ public class ProfileFragment extends Fragment {
                 .putBoolean(IS_QR_DOWNLOADED, false)
                 .putBoolean(IS_TT_DOWNLOADED, false)
                 .putBoolean(IS_ADMIN, false)
+                .putString(USER_POR, "")
+                .putInt("mess_choice", 0)
                 .apply();
 
         callback.onLogout();
@@ -100,7 +104,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnLogoutCallback) {
             callback = (OnLogoutCallback) context;

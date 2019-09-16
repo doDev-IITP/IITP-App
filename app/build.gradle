@@ -6,8 +6,8 @@ android {
         applicationId "com.grobo.notifications"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 16
-        versionName "1.2.1"
+        versionCode 17
+        versionName "1.2.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -15,7 +15,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro'
 
         }
@@ -85,7 +85,7 @@ dependencies {
 
     // Lifecycle components
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.1.0'
+    annotationProcessor 'androidx.lifecycle:lifecycle-common-java8:2.1.0'
 
     //WorkManager
     implementation "androidx.work:work-runtime:2.2.0"

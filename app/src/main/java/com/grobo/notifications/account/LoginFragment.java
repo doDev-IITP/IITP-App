@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -21,7 +22,6 @@ public class LoginFragment extends Fragment {
 
     private OnSignInInteractionListener callback;
 
-    private Button loginButton;
     private EditText emailInput;
     private EditText passwordInput;
 
@@ -37,17 +37,20 @@ public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        return inflater.inflate(R.layout.fragment_login, container, false);
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         emailInput = view.findViewById(R.id.login_input_webmail);
         passwordInput = view.findViewById(R.id.login_input_password);
 
-        loginButton = view.findViewById(R.id.login_login_button);
+        Button loginButton = view.findViewById(R.id.login_login_button);
         loginButton.setOnClickListener(v -> {
             if (!validateInput()) {
                 Toast.makeText(getContext(), "Please check input fields!", Toast.LENGTH_LONG).show();
             } else {
-                callback.onLoginSelected(email, password);
+                callback.onLoginSelected(email.trim(), password.trim());
             }
         });
 
@@ -56,7 +59,8 @@ public class LoginFragment extends Fragment {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://timetable-grobo.firebaseapp.com/privacy_policy.html"));
             startActivity(browserIntent);
         });
-        return view;
+
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private boolean validateInput() {
@@ -82,7 +86,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnSignInInteractionListener) {
             callback = (OnSignInInteractionListener) context;

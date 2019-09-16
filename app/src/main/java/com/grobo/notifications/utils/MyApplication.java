@@ -15,7 +15,6 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.R;
 import com.grobo.notifications.work.DeleteWorker;
@@ -24,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.grobo.notifications.utils.Constants.KEY_CURRENT_VERSION;
-
 public class MyApplication extends Application {
 
     SharedPreferences prefs;
@@ -33,8 +30,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -82,19 +77,16 @@ public class MyApplication extends Application {
         final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
         Map<String, Object> remoteConfigDefaults = new HashMap<>();
-        remoteConfigDefaults.put(Constants.KEY_UPDATE_REQUIRED, false);
-        remoteConfigDefaults.put(Constants.KEY_CURRENT_VERSION, utils.getAppVersion(this));
         remoteConfigDefaults.put(Constants.TIMETABLE_URL, "https://timetable-grobo.firebaseio.com/");
         remoteConfigDefaults.put(Constants.MESS_MENU_URL, "https://i.ytimg.com/vi/OjIXzZ25tjA/maxresdefault.jpg");
+        remoteConfigDefaults.put(Constants.KEY_UPDATE_TYPE, 0);
 
         firebaseRemoteConfig.setDefaultsAsync(remoteConfigDefaults);
-        // fetch every minutes
 
         firebaseRemoteConfig.fetch(60).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.e("Application", "remote config is fetched.");
-                firebaseRemoteConfig.activateFetched();
-                Log.e("Application", firebaseRemoteConfig.getString(KEY_CURRENT_VERSION));
+                    firebaseRemoteConfig.activate();
             } else {
                 Log.e("Application", "remote config fetch failed.");
             }
