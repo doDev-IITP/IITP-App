@@ -30,6 +30,8 @@ import java.io.InputStream;
 import static android.app.Activity.RESULT_OK;
 import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
+import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
+import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
 public class QRFragment extends Fragment {
 
@@ -39,7 +41,7 @@ public class QRFragment extends Fragment {
 
     private ImageView imageView;
     private SharedPreferences prefs;
-    private FloatingActionButton changeqr;
+    //  private FloatingActionButton changeqr;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,29 +55,30 @@ public class QRFragment extends Fragment {
         View view = inflater.inflate( R.layout.fragment_qr, container, false );
 
         imageView = view.findViewById( R.id.qr_fragment_qr );
-        changeqr = view.findViewById( R.id.changefab );
+        //changeqr = view.findViewById( R.id.changefab );
 
         if (prefs.getBoolean( LOGIN_STATUS, false )) {
 
-            Bitmap bitmap = null;
-            if (prefs.getBoolean(IS_QR_DOWNLOADED, false)) {
-                bitmap = getQRBitmap();
-            } else {
-                showDummyImage();
-            }
-
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                showDummyImage();
-            }
-
-            changeqr.setOnClickListener(view1 -> {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
-            });
+//            Bitmap bitmap = null;
+//            if (prefs.getBoolean(IS_QR_DOWNLOADED, false)) {
+//                bitmap = getQRBitmap();
+//            } else {
+//                showDummyImage();
+//            }
+//
+//            if (bitmap != null) {
+//                imageView.setImageBitmap(bitmap);
+//            } else {
+//                showDummyImage();
+//            }
+//
+//            changeqr.setOnClickListener(view1 -> {
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+//            });
+            Glide.with( this ).load( "https://api.qrserver.com/v1/create-qr-code/?data=" + PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( USER_MONGO_ID, null ) + "&amp;size=100x100" ).into( imageView );
         }
         return view;
     }
@@ -101,12 +104,12 @@ public class QRFragment extends Fragment {
 
     private void showDummyImage() {
         Glide.with( this ).load( "http://www.sohrabdaver.com/images/upload-qr.jpg" ).centerCrop().into( imageView );
-        imageView.setOnClickListener(v -> {
+        imageView.setOnClickListener( v -> {
             Intent intent = new Intent();
             intent.setType( "image/*" );
             intent.setAction( Intent.ACTION_GET_CONTENT );
             startActivityForResult( Intent.createChooser( intent, "Select Picture" ), 1 );
-        });
+        } );
     }
 
     @Override
@@ -119,7 +122,7 @@ public class QRFragment extends Fragment {
                     selectedImage = data.getData();
                 }
                 Glide.with( this ).load( selectedImage ).centerCrop().into( imageView );
-                imageView.setOnClickListener(null);
+                imageView.setOnClickListener( null );
                 final InputStream imageStream;
                 try {
                     if (selectedImage != null) {
@@ -138,23 +141,6 @@ public class QRFragment extends Fragment {
             }
         }
         super.onActivityResult( requestCode, resultCode, data );
-    }
-
-    public void change(boolean check) {
-        if (check) {
-            changeqr.show();
-            new CountDownTimer( 5100, 1000 ) {
-                @Override
-                public void onTick(long l) {
-
-                }
-
-                @Override
-                public void onFinish() {
-                    changeqr.hide();
-                }
-            }.start();
-        }
     }
 
 }

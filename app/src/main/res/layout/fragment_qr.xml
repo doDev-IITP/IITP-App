@@ -12,16 +12,5 @@
         android:layout_height="match_parent"
         android:contentDescription="Mess QR Code" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/changefab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="8dp"
-        android:visibility="gone"
-        android:backgroundTint="@color/colorPrimary"
-        android:src="@drawable/ic_edit_black_24dp" />
-
 
 </RelativeLayout>
