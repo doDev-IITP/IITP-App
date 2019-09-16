@@ -103,14 +103,15 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         progressDialog.show();
 
         Map<String, Object> jsonParams = new ArrayMap<>();
-        jsonParams.put("email", email);
-        jsonParams.put("password", password);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+        jsonParams.put("email", email.trim());
+        jsonParams.put("password", password.trim());
+        RequestBody body = RequestBody.create((new JSONObject(jsonParams)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
 
         Call<Person> call = service.login(body);
         call.enqueue(new Callback<Person>() {
             @Override
             public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
+
                 if (response.code() == 200 && response.body() != null) {
 
                     Person person = response.body();
@@ -119,11 +120,21 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                     else
                         Toast.makeText(LoginActivity.this, "User account error, please contact administrator.", Toast.LENGTH_SHORT).show();
 
-                } else if (response.code() == 500) {
+                } else if (response.code() == 404) {
 
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "User not registered", Toast.LENGTH_LONG).show();
-                    showFragmentWithTransition(new SignUpFragment());
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("email", email);
+                    Fragment fragment = new SignUpFragment();
+                    fragment.setArguments(bundle);
+                    showFragmentWithTransition(fragment);
+
+                } else if (response.code() == 415) {
+
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Wrong password", Toast.LENGTH_LONG).show();
 
                 } else {
                     progressDialog.dismiss();
@@ -152,11 +163,11 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
             if (person.getUser().getStudentMongoId() != null) {
                 SharedPreferences.Editor prefsEditor = prefs.edit();
 
-                prefsEditor.putString(USER_YEAR, person.getUser().getBatch())
-                        .putString(USER_BRANCH, person.getUser().getBranch())
+                prefsEditor.putString(USER_YEAR, person.getUser().getBatch().trim())
+                        .putString(USER_BRANCH, person.getUser().getBranch().trim())
                         .putString(USER_NAME, person.getUser().getName())
-                        .putString(WEBMAIL, person.getUser().getEmail())
-                        .putString(ROLL_NUMBER, person.getUser().getInstituteId())
+                        .putString(WEBMAIL, person.getUser().getEmail().trim())
+                        .putString(ROLL_NUMBER, person.getUser().getInstituteId().trim())
                         .putString(PHONE_NUMBER, person.getUser().getPhone())
                         .putString(USER_TOKEN, person.getToken())
                         .putString(USER_MONGO_ID, person.getUser().getStudentMongoId());
@@ -208,7 +219,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         progressDialog.setMessage("Signing Up...");
         progressDialog.show();
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+        RequestBody body = RequestBody.create((new JSONObject(jsonParams)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
 
         Call<Person> call = service.register(body);
         call.enqueue(new Callback<Person>() {
@@ -243,7 +254,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         jsonParams.put("email", email);
         jsonParams.put("code", otp);
 
-        RequestBody bodyOtp = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), (new JSONObject(jsonParams)).toString());
+        RequestBody bodyOtp = RequestBody.create((new JSONObject(jsonParams)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
 
         Call<Person> call1 = service.verifyOtp(bodyOtp);
         call1.enqueue(new Callback<Person>() {

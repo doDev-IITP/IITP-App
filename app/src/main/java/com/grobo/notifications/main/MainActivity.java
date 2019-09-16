@@ -1,12 +1,10 @@
 package com.grobo.notifications.main;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -42,6 +39,18 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.Mess.CancelMealAdapter;
 import com.grobo.notifications.Mess.MessFragment;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.grobo.notifications.BuildConfig;
+
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
@@ -49,10 +58,8 @@ import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
-import com.grobo.notifications.timetable.TimetableActivity;
-import com.grobo.notifications.utils.Constants;
+
 import com.grobo.notifications.utils.KeyboardUtils;
-import com.grobo.notifications.utils.utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,10 +67,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE;
+import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
 import static com.grobo.notifications.utils.Constants.BASE_URL;
 import static com.grobo.notifications.utils.Constants.IS_ADMIN;
-import static com.grobo.notifications.utils.Constants.KEY_CURRENT_VERSION;
-import static com.grobo.notifications.utils.Constants.KEY_UPDATE_REQUIRED;
+import static com.grobo.notifications.utils.Constants.KEY_FORCE_UPDATE;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
@@ -74,16 +82,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         PorAdapter.OnPORSelectedListener, ClubEventRecyclerAdapter.OnEventSelectedListener, CancelMealAdapter.OnCancelSelectedListener {
 
     private SharedPreferences prefs;
-    private NavigationView navigationView;
-    AppBarConfiguration appBarConfiguration;
+    private AppBarConfiguration appBarConfiguration;
 
     private ProgressDialog progressDialog;
     private FirebaseRemoteConfig remoteConfig;
+    private AppUpdateManager appUpdateManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         progressDialog = new ProgressDialog( this );
         progressDialog.setIndeterminate( true );
@@ -91,79 +99,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         progressDialog.setCancelable( false );
         prefs = PreferenceManager.getDefaultSharedPreferences( this );
 
-        if (!prefs.getBoolean( LOGIN_STATUS, false )) {
+        if (!prefs.getBoolean(LOGIN_STATUS, false)) {
             finish();
-            startActivity( new Intent( MainActivity.this, LoginActivity.class ) );
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         } else {
 
-            Toolbar toolbar = findViewById( R.id.toolbar );
-            setSupportActionBar( toolbar );
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-            DrawerLayout drawer = findViewById( R.id.drawer_layout );
-            navigationView = findViewById( R.id.nav_view );
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            NavigationView navigationView = findViewById(R.id.nav_view);
 
             appBarConfiguration = new AppBarConfiguration.Builder(
                     R.id.nav_home, R.id.nav_explore, R.id.nav_calender, R.id.nav_feed,
-                    R.id.navigation_today, R.id.navigation_mess, R.id.navigation_notifications )
-                    .setDrawerLayout( drawer )
+                    R.id.navigation_today, R.id.navigation_mess, R.id.navigation_notifications)
+                    .setDrawerLayout(drawer)
                     .build();
 
-            NavController navController = Navigation.findNavController( this, R.id.nav_host_fragment );
-            NavigationUI.setupActionBarWithNavController( this, navController, appBarConfiguration );
-            NavigationUI.setupWithNavController( navigationView, navController );
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(navigationView, navController);
 
-//            navigationView.setNavigationItemSelectedListener(this);
-
-            View v = navigationView.getHeaderView( 0 );
-            ((TextView) v.findViewById( R.id.user_name_nav_header )).setText( prefs.getString( USER_NAME, "Guest" ) );
-            ((TextView) v.findViewById( R.id.user_email_nav_header )).setText( prefs.getString( ROLL_NUMBER, "" ) );
-            ImageView profileImage = v.findViewById( R.id.user_image_nav_header );
-            Glide.with( this )
-                    .load( BASE_URL + "img/" + prefs.getString( ROLL_NUMBER, ROLL_NUMBER ).toLowerCase() + ".jpg" )
+            View v = navigationView.getHeaderView(0);
+            ((TextView) v.findViewById(R.id.user_name_nav_header)).setText(prefs.getString(USER_NAME, "Guest"));
+            ((TextView) v.findViewById(R.id.user_email_nav_header)).setText(prefs.getString(ROLL_NUMBER, ""));
+            ImageView profileImage = v.findViewById(R.id.user_image_nav_header);
+            Glide.with(this)
+                    .load(BASE_URL + "img/" + prefs.getString(ROLL_NUMBER, ROLL_NUMBER).toLowerCase() + ".jpg")
                     .centerCrop()
-                    .placeholder( R.drawable.profile_photo )
-                    .into( profileImage );
-            profileImage.setOnClickListener( view -> {
-                startActivity( new Intent( MainActivity.this, ProfileActivity.class ) );
-            } );
+                    .placeholder(R.drawable.profile_photo)
+                    .into(profileImage);
+            profileImage.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
 
             remoteConfig = FirebaseRemoteConfig.getInstance();
 
             subscribeFcmTopics();
         }
-        KeyboardUtils.hideSoftInput( this );
+        KeyboardUtils.hideSoftInput(this);
         Log.e("jsonString", prefs.getString("jsonString", "none"));
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (!prefs.getBoolean( LOGIN_STATUS, false )) {
-            finish();
-            startActivity( new Intent( MainActivity.this, LoginActivity.class ) );
-        }
-
-        if (remoteConfig.getBoolean( KEY_UPDATE_REQUIRED )) {
-            updateApp();
-        }
-
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate( R.menu.main, menu );
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu( menu );
-        if (prefs.getBoolean( IS_ADMIN, false )) {
-            MenuItem menuItem = menu.findItem( R.id.action_admin );
-            menuItem.setVisible( true );
+        super.onPrepareOptionsMenu(menu);
+        if (prefs.getBoolean(IS_ADMIN, false)) {
+            MenuItem menuItem = menu.findItem(R.id.action_admin);
+            menuItem.setVisible(true);
         } else {
-            MenuItem menuItem = menu.findItem( R.id.action_profile );
-            menuItem.setVisible( true );
+            MenuItem menuItem = menu.findItem(R.id.action_profile);
+            menuItem.setVisible(true);
         }
         return true;
     }
@@ -172,124 +162,108 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_admin) {
-            startActivity( new Intent( MainActivity.this, XPortal.class ) );
+            startActivity(new Intent(MainActivity.this, XPortal.class));
             return true;
         } else if (id == R.id.action_profile) {
-            startActivity( new Intent( MainActivity.this, ProfileActivity.class ) );
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             return true;
         }
-        return super.onOptionsItemSelected( item );
-    }
-
-    private void showFragmentWithTransition(Fragment current, Fragment newFragment, View sharedView, String sharedElementName) {
-
-//        current.setSharedElementReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
-//        current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
-//
-//        newFragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
-//        newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.slide_bottom));
-//
-//        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-//        fragmentTransaction.replace(R.id.frame_layout_main, newFragment);
-//        fragmentTransaction.addToBackStack("later_fragment");
-//        fragmentTransaction.addSharedElement(sharedView, sharedElementName);
-//        fragmentTransaction.commit();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById( R.id.drawer_layout );
-        if (drawer.isDrawerOpen( GravityCompat.START )) {
-            drawer.closeDrawer( GravityCompat.START );
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        int id = menuItem.getItemId();
-
-        if (id == R.id.nav_timetable) {
-            new Handler().postDelayed( () -> {
-                    startActivity( new Intent( MainActivity.this, TimetableActivity.class ) );
-            }, 300 );
-            navigationView.setCheckedItem( R.id.nav_home );
+    protected void onResume() {
+        super.onResume();
+        if (!prefs.getBoolean(LOGIN_STATUS, false)) {
+            finish();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
-        DrawerLayout drawer = findViewById( R.id.drawer_layout );
-        drawer.closeDrawer( GravityCompat.START );
-        return true;
+
+        updateApp();
     }
 
     private void updateApp() {
 
-        String currentVersion = remoteConfig.getString( KEY_CURRENT_VERSION );
-        String appVersion = utils.getAppVersion( this );
+        Log.e(getClass().getSimpleName(), String.valueOf(BuildConfig.VERSION_CODE));
 
-        if (!TextUtils.equals( currentVersion, appVersion )) {
-            final AlertDialog alertDialog = new AlertDialog.Builder( this )
-                    .setTitle( "New version available" )
-                    .setMessage( "Please, update app to new version to continue using.\nCurrent Version: " + appVersion + "\nNew Version: " + currentVersion )
-                    .setPositiveButton( "Update", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            utils.openPlayStoreForApp( MainActivity.this );
-                        }
+        appUpdateManager = AppUpdateManagerFactory.create(this);
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
 
-                    } ).setCancelable( false ).create();
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
 
-            alertDialog.show();
-        }
+            int updateType = 2;
+            if (appUpdateInfo.availableVersionCode() > BuildConfig.VERSION_CODE + 3 || remoteConfig.getBoolean(KEY_FORCE_UPDATE))
+                updateType = 1;
 
-//        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(this);
-//        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
-//
-//        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
-//            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-//                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
-//
-//                try {
-//                    appUpdateManager.startUpdateFlowForResult(
-//                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
-//                            appUpdateInfo,
-//                            // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
-//                            AppUpdateType.IMMEDIATE,
-//                            // The current activity making the update request.
-//                            this,
-//                            // Include a request code to later monitor this update request.
-//                            10101);
-//                } catch (IntentSender.SendIntentException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        });
+            if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate();
+            } else if (updateType == 1 && appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                try {
+                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, IMMEDIATE, this, 10101);
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+            } else if (updateType == 1 && appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(IMMEDIATE)) {
+                try {
+                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, IMMEDIATE, this, 10101);
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+            } else if (updateType == 2 && appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(FLEXIBLE)) {
+
+                if (prefs.getLong("last_update_prompt_time", 0) < (System.currentTimeMillis() - 24 * 60 * 60 * 1000)) {
+
+                    appUpdateManager.registerListener(updatedListener);
+                    try {
+                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, FLEXIBLE, this, 10101);
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
+
+                    prefs.edit().putLong("last_update_prompt_time", System.currentTimeMillis()).apply();
+                }
+            }
+
+        });
 
     }
 
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == 10101) {
-//            if (resultCode != RESULT_OK) {
-//                Log.e("log","Update flow failed! Result code: " + resultCode);
-//                // If the update is cancelled or fails,
-//                // you can request to start the update again.
-//            }
-//        }
-//    }
+    private InstallStateUpdatedListener updatedListener = installState -> {
+        if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+            popupSnackbarForCompleteUpdate();
+        }
+    };
 
+    private void popupSnackbarForCompleteUpdate() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+                "An update has just been downloaded.", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("RESTART", view -> {
+            appUpdateManager.unregisterListener(updatedListener);
+            appUpdateManager.completeUpdate();
+        });
+        snackbar.setActionTextColor(Color.BLUE);
+        snackbar.show();
+    }
 
     private void subscribeFcmTopics() {
         FirebaseMessaging fcm = FirebaseMessaging.getInstance();
 
-        fcm.subscribeToTopic( "all" );
-        fcm.subscribeToTopic( "dev" );
-        if (prefs.getBoolean( LOGIN_STATUS, false )) {
-            fcm.subscribeToTopic( prefs.getString( USER_BRANCH, "junk" ) );
-            fcm.subscribeToTopic( prefs.getString( USER_YEAR, "junk" ) );
-            fcm.subscribeToTopic( prefs.getString( USER_YEAR, "junk" ) + prefs.getString( USER_BRANCH, "" ) );
-            fcm.subscribeToTopic( prefs.getString( ROLL_NUMBER, "junk" ) );
+        fcm.subscribeToTopic("all");
+        if (prefs.getBoolean(LOGIN_STATUS, false)) {
+            fcm.subscribeToTopic(prefs.getString(USER_BRANCH, "junk"));
+            fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk"));
+            fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
+            fcm.subscribeToTopic(prefs.getString(ROLL_NUMBER, "junk"));
         }
     }
 
@@ -297,13 +271,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onEventSelected(String eventId) {
         Fragment fragment = new ClubEventDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putString( "clubId", eventId );
-        fragment.setArguments( bundle );
-
-//        manager.beginTransaction()
-//                .replace(R.id.frame_layout_main, fragment)
-//                .addToBackStack("later_fragment")
-//                .commit();
+        bundle.putString("clubId", eventId);
+        fragment.setArguments(bundle);
     }
 
     @Override
@@ -313,8 +282,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController( this, R.id.nav_host_fragment );
-        return NavigationUI.navigateUp( navController, appBarConfiguration )
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
 

@@ -1,8 +1,10 @@
 package com.grobo.notifications.todolist;
 
+import androidx.annotation.Keep;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+@Keep
 @Entity(tableName = "todo")
 public class Goal {
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,11 +17,12 @@ import com.grobo.notifications.R;
 
 public class SignUpFragment extends Fragment {
 
-//    private static final int SELECT_PICTURE = 2233;
+    //    private static final int SELECT_PICTURE = 2233;
     private OnSignUpInteractionListener callback;
 //    private ImageView profileImage;
 
-    public SignUpFragment() {}
+    public SignUpFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,13 +30,21 @@ public class SignUpFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_sign_up, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         final EditText name = view.findViewById(R.id.signup_input_name);
         final EditText roll = view.findViewById(R.id.signup_input_roll);
         final EditText phone = view.findViewById(R.id.signup_input_phone);
+
+        if (getArguments() != null && getArguments().getString("email") != null) {
+            final TextView email = view.findViewById(R.id.signup_display_email);
+            email.setText(requireArguments().getString("email"));
+        }
 
 //        CardView signUpImageCard = view.findViewById(R.id.signup_image_cv);
 //        signUpImageCard.setOnClickListener(new View.OnClickListener() {
@@ -46,26 +56,24 @@ public class SignUpFragment extends Fragment {
 //        });
 
         Button finish = view.findViewById(R.id.signup_finish_button);
-        finish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (name.getText().toString().equals("")) {
-                    name.setError("Enter a valid name");
-                } else if (roll.getText().toString().equals("")) {
-                    roll.setError("Enter a valid roll");
-                } else if (phone.getText().toString().equals("") || (phone.getText().toString().length() != 10 && phone.getText().toString().length() != 13)) {
-                    phone.setError("Enter a valid phone number");
-                } else {
+        finish.setOnClickListener(v -> {
+            if (name.getText().toString().equals("")) {
+                name.setError("Enter a valid name");
+            } else if (roll.getText().toString().equals("")) {
+                roll.setError("Enter a valid roll");
+            } else if (phone.getText().toString().equals("") || (phone.getText().toString().length() != 10 && phone.getText().toString().length() != 13)) {
+                phone.setError("Enter a valid phone number");
+            } else {
 
-                    callback.onRegisterSelected(name.getText().toString(), roll.getText().toString(), phone.getText().toString());
-                }
+                callback.onRegisterSelected(name.getText().toString(), roll.getText().toString(), phone.getText().toString());
             }
         });
 
-        return view;
+
+        super.onViewCreated(view, savedInstanceState);
     }
 
-//    @Override
+    //    @Override
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
 //
@@ -86,7 +94,7 @@ public class SignUpFragment extends Fragment {
 //    }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnSignUpInteractionListener) {
             callback = (OnSignUpInteractionListener) context;

@@ -1,5 +1,8 @@
 package com.grobo.notifications.clubs;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class PorItem {
     private String image;
     private String name;

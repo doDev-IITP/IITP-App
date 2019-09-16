@@ -1,5 +1,8 @@
 package com.grobo.notifications.internship;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class InternshipItem {
 
     private String companyName;

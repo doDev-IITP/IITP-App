@@ -1,5 +1,6 @@
 package com.grobo.notifications.admin.clubevents;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
@@ -10,9 +11,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Keep
 @Entity(tableName = "events")
 public class ClubEventItem {
 
+    @Keep
     public class ClubEventSuper {
 
         @SerializedName("events")
