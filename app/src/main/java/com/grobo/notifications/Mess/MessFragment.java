@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,8 +53,10 @@ import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.utils.Constants;
 import com.grobo.notifications.utils.ImageViewerActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -63,8 +68,12 @@ import java.util.Map;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.grobo.notifications.utils.Constants.MESS_MENU_URL;
+import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
+import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 public class MessFragment extends Fragment {
 
@@ -78,7 +87,7 @@ public class MessFragment extends Fragment {
     private ImageView messMenu;
     private FirebaseRemoteConfig remoteConfig;
     private List<MessModel> messCancelList;
-    private int full;
+    private int full, c = -1, mess;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,41 +119,76 @@ public class MessFragment extends Fragment {
         messCancelList = new ArrayList<>();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         //mAuth.signOut();
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            progressDialog.setMessage( "Configuring..." );
-            progressDialog.show();
-            mAuth.signInWithEmailAndPassword( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ), PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.USER_MONGO_ID, "" ) ).addOnCompleteListener( new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-
-                    if (!task.isSuccessful()) {
-                        try {
-
-                            throw task.getException();
-                        } catch (FirebaseAuthInvalidUserException e) {
 
 
-                            Log.e( "hello", task.getException().toString() );
-                            mAuth.createUserWithEmailAndPassword( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ), PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.USER_MONGO_ID, "" ) ).addOnCompleteListener( new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful())
-                                        progressDialog.dismiss();
-                                    else
-                                        Log.e( "hello", task.getException().toString() );
+        if (PreferenceManager.getDefaultSharedPreferences( requireContext() ).getInt( "mess_choice", 0 ) == 0) {
+            LayoutInflater li = LayoutInflater.from( requireContext() );
+            View promptsView = li.inflate( R.layout.prompt, null );
+            RadioGroup radioGroup = promptsView.findViewById( R.id.radio_group1 );
+
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    requireContext() );
+            alertDialogBuilder.setView( promptsView );
+            alertDialogBuilder
+                    .setCancelable( false )
+                    .setPositiveButton( "Submit",
+                            (dialog, id) -> {
+                                // get user input and set it to result
+                                // edit text
+
+                                c = radioGroup.getCheckedRadioButtonId();
+                                mess = c % 4;
+                                if (mess == 0)
+                                    mess = 4;
+                                // Toast.makeText( requireContext(), "a"+m, Toast.LENGTH_SHORT ).show();
+                                if (c == -1) {
+                                    ((ViewGroup) promptsView.getParent()).removeView( promptsView );
+                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                    alertDialog.show();
                                 }
-                            } );
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
 
-                        progressDialog.dismiss();
+
+                            } );
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+
+            PreferenceManager.getDefaultSharedPreferences( requireContext() ).edit().putInt( "mess_choice", mess ).apply();
+
+
+            MessRoutes service = RetrofitClientInstance.getRetrofitInstance().create( MessRoutes.class );
+
+            String userId = PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( USER_MONGO_ID, "" );
+            String token = PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( USER_TOKEN, "" );
+
+            Map<String, Object> jsonParams = new HashMap<>();
+            jsonParams.put( "messChoice", mess );
+            jsonParams.put( "student", userId );
+            RequestBody body = RequestBody.create( (new JSONObject( jsonParams )).toString(), okhttp3.MediaType.parse( "application/json; charset=utf-8" ) );
+
+            Call<ResponseBody> call = service.selectMess( token, body );
+
+            call.enqueue( new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText( requireContext(), "mess selected", Toast.LENGTH_SHORT ).show();
                     }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    Toast.makeText( requireContext(), "faileddd", Toast.LENGTH_SHORT ).show();
                 }
             } );
 
+
         }
+
+
         spinner = rootView.findViewById( R.id.cancel_meal_spinner );
         mealTypeSpinner = rootView.findViewById( R.id.type_meal_spinner );
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource( requireContext(), R.array.spinner_items, android.R.layout.simple_spinner_item );
@@ -331,262 +375,80 @@ public class MessFragment extends Fragment {
 
         progressDialog.setMessage( "Cancelling Meal..." );
         progressDialog.show();
-//        String meal = null;
-//        switch (spinner.getSelectedItemPosition()) {
-//            case 0:
-//                meal = "1";
-//                break;
-//            case 1:
-//                meal = "2";
-//                break;
-//            case 2:
-//                meal = "3";
-//                break;
-//            case 3:
-//                meal = "4";
-//                break;
-//        }
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Calendar calendar = Calendar.getInstance();
-        String q = "cancel";
-        Map<String, Object> map = new HashMap<>();
 
+        Calendar calendar = Calendar.getInstance();
         Calendar calendar1 = Calendar.getInstance();
         calendar1.clear();
         calendar1.set( calendar.get( Calendar.YEAR ), calendar.get( Calendar.MONTH ), calendar.get( Calendar.DATE ) );
-
         calendar1.add( Calendar.DATE, 1 );
-        Date today = calendar1.getTime();
-        calendar1.set( calendar.get( Calendar.YEAR ), calendar.get( Calendar.MONTH ), calendar.get( Calendar.DATE ) );
 
-        Log.e( getClass().getSimpleName(), calendar1.getTime().toString() + String.valueOf( calendar1.getTime().getTime() ) );
-        List<Integer> arr = new ArrayList<>();
-        List<Date> dates = new ArrayList<>();
-        Log.e( "date", today.toString() );
-        if (full == 4) {
-            db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ) ).collection( q ).whereArrayContains( "days", today ).whereEqualTo( "full", false ).get().addOnCompleteListener( new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+        MessRoutes service = RetrofitClientInstance.getRetrofitInstance().create( MessRoutes.class );
 
-                    if (task.isSuccessful()) {
-                        QuerySnapshot queryDocumentSnapshots = task.getResult();
-                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
-                            List<DocumentSnapshot> documentSnapshots = queryDocumentSnapshots.getDocuments();
-                            db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ) ).collection( q ).document( documentSnapshots.get( 0 ).getId() ).delete().addOnCompleteListener( new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
+        String userId = PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( USER_MONGO_ID, "" );
+        String token = PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( USER_TOKEN, "" );
 
-                                }
-                            } );
-                        }
-                    }
-                }
-            } );
+        Map<String, Object> jsonParams = new HashMap<>();
 
-
-            db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ) ).collection( q ).whereArrayContains( "days", today ).whereEqualTo( "full", true ).get().addOnCompleteListener( task -> {
-                if (task.isSuccessful()) {
-                    map.put( "full", true );
-                    QuerySnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot != null && documentSnapshot.getDocuments().size() > 0) {
-                        progressDialog.dismiss();
-                        AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
-                        builder.setTitle( "Alert!!!" );
-                        builder.setMessage( "Meal has already been cancelled for one of the selected dates..." );
-                        builder.setPositiveButton( "OK", (dialog, which) -> {
-                            if (dialog != null) {
-                                dialog.dismiss();
-                            }
-                        } );
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-
-                    } else {
-                        List<Timestamp> dates1 = new ArrayList<>();
-
-                        for (int j = 1; j <= Integer.parseInt( spinner.getSelectedItem().toString() ); j++) {
-                            calendar1.add( Calendar.DATE, 1 );
-                            dates1.add( new Timestamp( calendar1.getTime() ) );
-
-                        }
-                        map.put( "days", dates1 );
-                        map.put( "timestamp", FieldValue.serverTimestamp() );
-                        db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ) ).collection( q ).add( map ).addOnCompleteListener( task12 -> {
-
-                            progressDialog.dismiss();
-                            if (task.isSuccessful()) {
-
-                                AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
-                                builder.setTitle( "Alert!!!" );
-                                builder.setMessage( "Your meal has been cancelled for next " + spinner.getSelectedItem().toString() + " days.." );
-                                builder.setPositiveButton( "OK", (dialog, which) -> {
-                                    if (dialog != null) {
-                                        dialog.dismiss();
-                                    }
-                                } );
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-                            } else
-                                Toast.makeText( getContext(), "faileeeeed", Toast.LENGTH_SHORT ).show();
-
-                        } );
-
-                    }
-
-
-                }
-            } );
-
-
+        if (mealTypeSpinner.getSelectedItemPosition() != 4) {
+            List<Long> a = new ArrayList<>();
+            a.add( calendar1.getTimeInMillis() );
+            jsonParams.put( mealTypeSpinner.getSelectedItem().toString().toLowerCase(), a );
         } else {
-            Log.e( "time", today.toString() );
-            db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ) ).collection( q ).whereArrayContains( "days", today ).get().addOnCompleteListener( task -> {
-                if (task.isSuccessful()) {
+            List<Long> a = new ArrayList<>();
 
-                    QuerySnapshot queryDocumentSnapshots = task.getResult();
-                    DocumentSnapshot documentSnapshot = null;
-                    Log.e( "query", String.valueOf( queryDocumentSnapshots.size() ) );
-                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
-                        int z = 0;
-                        List<DocumentSnapshot> documentSnapshots = queryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot d : documentSnapshots) {
-                            if (d.get( "full" ).equals( true )) {
-                                //Cannot be cancelled
-                                z = 1;
-                            } else
-                                documentSnapshot = d;
-                        }
-                        if (z == 0 && documentSnapshot != null) {
+            for (int j = 0; j < spinner.getSelectedItemPosition() + 2; j++) {
+                a.add( calendar1.getTimeInMillis() );
+                calendar1.add( Calendar.DATE, 1 );
+            }
 
-                            List<Long> add = (ArrayList<Long>) documentSnapshot.get( "meals" );
-                            if (add == null)
-                                add = new ArrayList<>();
-                            int k = 0;
-                            for (int j = 0; j < add.size(); j++) {
-                                if (add.get( j ) == (full + 1))
-                                    k = 1;
-                            }
-                            if (k == 0) {
-                                // Toast.makeText( getContext(), "yippeee", Toast.LENGTH_SHORT ).show();
-                                add.add( (long) (full + 1) );
-                                map.put( "meals", add );
-                                map.put( "timestamp", FieldValue.serverTimestamp() );
-                                List<Date> day = new ArrayList<>();
-                                day.add( today );
-                                map.put( "days", day );
-                                map.put( "full", false );
-                                db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ) ).collection( q ).document( documentSnapshot.getId() ).update( map ).addOnCompleteListener( task1 -> {
-                                    if (task1.isSuccessful()) {
-                                        progressDialog.dismiss();
-                                        AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
-                                        builder.setTitle( "Alert!!!" );
-                                        builder.setMessage( "Your tomorrow's "+ mealTypeSpinner.getSelectedItem().toString() + "is successfully cancelled..." );
-                                        builder.setPositiveButton( "OK", (dialog, which) -> {
-                                            if (dialog != null) {
-                                                dialog.dismiss();
-                                            }
-                                        } );
-                                        AlertDialog alertDialog = builder.create();
-                                        alertDialog.show();
-                                    }
-
-                                } );
-                            } else {
-                                if (progressDialog != null)
-                                    progressDialog.dismiss();
-                                //  Toast.makeText( getContext(), "This meal had already been cancelled", Toast.LENGTH_SHORT ).show();
-
-                                AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
-                                builder.setTitle( "Alert!!!" );
-                                builder.setMessage( "This meal had already been cancelled..." );
-                                builder.setPositiveButton( "OK", (dialog, which) -> {
-                                    if (dialog != null) {
-                                        dialog.dismiss();
-                                    }
-                                } );
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-                            }
-
-                        } else {
-                            if (progressDialog != null)
-                                progressDialog.dismiss();
-                            //cancelled already
-                            AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
-                            builder.setTitle( "Alert!!!" );
-                            builder.setMessage( "This meal had already been cancelled..." );
-                            builder.setPositiveButton( "OK", (dialog, which) -> {
-                                if (dialog != null) {
-                                    dialog.dismiss();
-                                }
-                            } );
-                            AlertDialog alertDialog = builder.create();
-                            alertDialog.show();
-                            //Toast.makeText( getContext(), "cancelleed already", Toast.LENGTH_SHORT ).show();
-
-                        }
-                    } else {
-                        List<Long> add = new ArrayList<>();
-                        add.add( (long) full + 1 );
-                        map.put( "meals", add );
-                        map.put( "timestamp", FieldValue.serverTimestamp() );
-                        List<Date> day = new ArrayList<>();
-                        day.add( today );
-                        map.put( "days", day );
-                        map.put( "full", false );
-                        db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ) ).collection( q ).add( map ).addOnCompleteListener( new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                if (task.isSuccessful()) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
-                                    builder.setTitle( "Alert!!!" );
-                                    builder.setMessage( "Your tomorrow's "+mealTypeSpinner.getSelectedItem().toString()+" is successfully cancelled..." );
-                                    builder.setPositiveButton( "OK", (dialog, which) -> {
-                                        if (dialog != null) {
-                                            dialog.dismiss();
-                                        }
-                                    } );
-                                    AlertDialog alertDialog = builder.create();
-                                    alertDialog.show();
-
-                                }
-
-                                if (progressDialog != null)
-                                    progressDialog.dismiss();
-
-                            }
-                        } );
-                    }
-
-
-//
-//                        List<Long> add = (ArrayList<Long>) task.getResult().get( "meals" );
-//                        if (add == null)
-//                            add = new ArrayList<>();
-//
-//                        map.put( "date", calendar.get( Calendar.DATE ) + 1 );
-//                        int k = 0;
-//                        if (add != null) {
-//                            for (int j = 0; j < add.size(); j++) {
-//                                if (add.get( j ) == (full + 1))
-//                                    k = 1;
-//                            }
-//
-//
-//                        }
-//                        if (k == 0) {
-//                            add.add( (long) (full + 1) );
-//
-//                            map.put( "meals", add );
-//                            map.put( "timestamp", FieldValue.serverTimestamp() );
-//                            map.put( "fullday", false );
-//                            db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ) ).collection( q ).document( String.valueOf( calendar.get( Calendar.DATE ) + 1 ) ).set( map ).addOnCompleteListener( task1 -> progressDialog.dismiss() );
-//                        }
-                }
-            } );
-
-
+            jsonParams.put( "fullday", a );
         }
+
+        RequestBody body = RequestBody.create( (new JSONObject( jsonParams )).toString(), okhttp3.MediaType.parse( "application/json; charset=utf-8" ) );
+
+        Call<ResponseBody> call = service.cancelMeal( token, userId, body );
+
+        call.enqueue( new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+
+                progressDialog.dismiss();
+                if (response.isSuccessful()) {
+                    alert( "Your meal is successfully cancelled" );
+                    progressDialog.dismiss();
+
+                } else if (response.code() == 401) {
+                    Toast.makeText( getContext(), "Unauthorised request", Toast.LENGTH_SHORT ).show();
+                } else if (response.code() == 415) {
+                    alert( "This meal had already been cancelled..." );
+                }
+
+                Log.e( "mess", String.valueOf( response.code() ) );
+
+                try {
+                    if (response.body() != null)
+                        Log.e( "mess", response.body().string() );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (response.errorBody() != null) {
+                    try {
+                        Log.e( "mess", response.errorBody().string() );
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Toast.makeText( requireContext(), "faileddd", Toast.LENGTH_SHORT ).show();
+                progressDialog.dismiss();
+
+            }
+        } );
 
 
     }
@@ -611,5 +473,18 @@ public class MessFragment extends Fragment {
 //            }
 //        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 //    }
+
+    private void alert(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
+        builder.setTitle( "Alert!!!" );
+        builder.setMessage( msg );
+        builder.setPositiveButton( "OK", (dialog, which) -> {
+            if (dialog != null) {
+                dialog.dismiss();
+            }
+        } );
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 }
 

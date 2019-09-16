@@ -30,6 +30,7 @@ import java.io.InputStream;
 import static android.app.Activity.RESULT_OK;
 import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
+import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
 public class QRFragment extends Fragment {
@@ -77,7 +78,7 @@ public class QRFragment extends Fragment {
 //                intent.setAction(Intent.ACTION_GET_CONTENT);
 //                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
 //            });
-            Glide.with( this ).load( "https://api.qrserver.com/v1/create-qr-code/?data=" + PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( WEBMAIL, null ) + "&amp;size=100x100" ).into( imageView );
+            Glide.with( this ).load( "https://api.qrserver.com/v1/create-qr-code/?data=" + PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( USER_MONGO_ID, null ) + "&amp;size=100x100" ).into( imageView );
         }
         return view;
     }

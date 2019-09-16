@@ -5,10 +5,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.TransitionInflater;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +28,23 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.grobo.notifications.R;
+import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
+import com.grobo.notifications.network.MessRoutes;
+import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.services.lostandfound.LostAndFoundRecyclerAdapter;
 import com.grobo.notifications.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+
+import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
+import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,46 +68,73 @@ public class CancelMealFragment extends Fragment {
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set( calendar.get( Calendar.YEAR ), calendar.get( Calendar.MONTH ), calendar.get( Calendar.DATE ) );
 
-        RecyclerView recyclerView = view.findViewById( R.id.recycler_cancel );
-        recyclerView.setLayoutManager( new LinearLayoutManager( getContext() ) );
-        CancelMealAdapter cancelMealAdapter = new CancelMealAdapter( getContext(), (CancelMealAdapter.OnCancelSelectedListener) getActivity() );
-        recyclerView.setAdapter( cancelMealAdapter );
-        calendar1.add( Calendar.DATE, 1 );
-        db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( requireContext() ).getString( Constants.WEBMAIL, "" ) ).collection( "cancel" ).orderBy( "timestamp", Query.Direction.DESCENDING ).addSnapshotListener( (queryDocumentSnapshots, e) -> {
+        CardView breakfast = view.findViewById( R.id.breakfast_cv );
+        CardView lunch = view.findViewById( R.id.lunch_cv );
+        CardView snacks = view.findViewById( R.id.snacks_cv );
+        CardView dinner = view.findViewById( R.id.dinner_cv );
+        CardView full = view.findViewById( R.id.full_cv );
 
-            if (e == null) {
-                messModels.clear();
-                if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
-                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                    List<MessModel> documentSnapshots = queryDocumentSnapshots.toObjects( MessModel.class );
-                    for (int i = 0; i < documentSnapshots.size(); i++) {
-                        MessModel documentSnapshot = documentSnapshots.get( i );
-                        DocumentSnapshot snapshot = documents.get( i );
-                        if (documentSnapshot != null && documentSnapshot.getDays() != null)
-                            for (int j = documentSnapshot.getDays().size() - 1; j >= 0; j--) {
-                                Timestamp timestamp = documentSnapshot.getDays().get( j );
-                                MessModel messModel = new MessModel();
-                                messModel.setFull( documentSnapshot.isFull() );
-                                List<Timestamp> day = new ArrayList<>();
-                                day.add( timestamp );
-                                messModel.setDocumentId( snapshot.getId() );
-                                messModel.setMeals( documentSnapshot.getMeals() );
-                                messModel.setTimestamp( documentSnapshot.getTimestamp() );
-                                messModel.setDays( day );
-                                messModels.add( messModel );
-                            }
-
-                    }
+        Fragment fragment = new DetailFragment();
+        Bundle bundle = new Bundle();
 
 
-                }
-                cancelMealAdapter.ItemList( messModels );
+        breakfast.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putInt( "meal", 1 );
+                fragment.setArguments( bundle );
+                transactFragment( fragment );
             }
-
         } );
 
-
+        lunch.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putInt( "meal", 2 );
+                fragment.setArguments( bundle );
+                transactFragment( fragment );
+            }
+        } );
+        snacks.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putInt( "meal", 3 );
+                fragment.setArguments( bundle );
+                transactFragment( fragment );
+            }
+        } );
+        dinner.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putInt( "meal", 4 );
+                fragment.setArguments( bundle );
+                transactFragment( fragment );
+            }
+        } );
+        full.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putInt( "meal", 5 );
+                fragment.setArguments( bundle );
+                transactFragment( fragment );
+            }
+        } );
         return view;
+    }
+
+    private void transactFragment(Fragment frag) {
+
+
+        Fragment current = getFragmentManager().findFragmentById( R.id.frame_layout_home );
+//        if (current != null) {
+//            current.setExitTransition( TransitionInflater.from( requireContext() ).inflateTransition( android.R.transition.fade ) );
+//            frag.setEnterTransition( TransitionInflater.from( requireContext() ).inflateTransition( android.R.transition.fade ) );
+//        }
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace( R.id.frame_layout_home, frag )
+                .addToBackStack( null )
+                .commit();
     }
 
 

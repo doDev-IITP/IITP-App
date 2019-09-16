@@ -1,56 +1,169 @@
 package com.grobo.notifications.Mess;
 
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.IgnoreExtraProperties;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.List;
 
-@IgnoreExtraProperties
 public class MessModel {
 
-    private boolean full;
-    private List<Integer> meals;
-    private List<Timestamp> days;
-    private Timestamp timestamp;
-    private String documentId;
+    @SerializedName("mess")
+    @Expose
+    private Mess mess;
 
-    public void setFull(boolean full) {
-        this.full = full;
+    public Mess getMess() {
+        return mess;
     }
 
-    public boolean isFull() {
-        return full;
+    public void setMess(Mess mess) {
+        this.mess = mess;
     }
 
-    public List<Timestamp> getDays() {
-        return days;
-    }
+    public class Mess implements Serializable {
+        @SerializedName("fullday")
+        @Expose
+        private List<Long> fullday = null;
+        @SerializedName("breakfast")
+        @Expose
+        private List<Long> breakfast = null;
+        @SerializedName("lunch")
+        @Expose
+        private List<Long> lunch = null;
+        @SerializedName("snacks")
+        @Expose
+        private List<Long> snacks = null;
+        @SerializedName("dinner")
+        @Expose
+        private List<Long> dinner = null;
+        @SerializedName("_id")
+        @Expose
+        private String id;
+        @SerializedName("student")
+        @Expose
+        private Student student;
+        @SerializedName("messChoice")
+        @Expose
+        private Integer messChoice;
+        @SerializedName("__v")
+        @Expose
+        private Integer v;
 
-    public List<Integer> getMeals() {
-        return meals;
-    }
+        public List<Long> getBreakfast() {
+            return breakfast;
+        }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
+        public List<Long> getDinner() {
+            return dinner;
+        }
 
-    public void setDays(List<Timestamp> days) {
-        this.days = days;
-    }
+        public Integer getMessChoice() {
+            return messChoice;
+        }
 
-    public void setMeals(List<Integer> meals) {
-        this.meals = meals;
-    }
+        public List<Long> getFullday() {
+            return fullday;
+        }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
+        public List<Long> getLunch() {
+            return lunch;
+        }
 
-    public String getDocumentId() {
-        return documentId;
-    }
+        public List<Long> getSnacks() {
+            return snacks;
+        }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
+        @NonNull
+        public String getId() {
+            return id;
+        }
+
+        public Student getStudent() {
+            return student;
+        }
+
+        public Integer getV() {
+            return v;
+        }
+
+        public void setBreakfast(List<Long> breakfast) {
+            this.breakfast = breakfast;
+        }
+
+        public void setDinner(List<Long> dinner) {
+            this.dinner = dinner;
+        }
+
+        public void setFullday(List<Long> fullday) {
+            this.fullday = fullday;
+        }
+
+        public void setId(@NonNull String id) {
+            this.id = id;
+        }
+
+        public void setLunch(List<Long> lunch) {
+            this.lunch = lunch;
+        }
+
+        public void setMessChoice(Integer messChoice) {
+            this.messChoice = messChoice;
+        }
+
+        public void setSnacks(List<Long> snacks) {
+            this.snacks = snacks;
+        }
+
+        public void setV(Integer v) {
+            this.v = v;
+        }
+
+        public void setStudent(Student student) {
+            this.student = student;
+        }
+
+        public class Student {
+
+            @SerializedName("_id")
+            @Expose
+            private String id;
+            @SerializedName("name")
+            @Expose
+            private String name;
+            @SerializedName("instituteId")
+            @Expose
+            private String instituteId;
+
+            public void setId(@NonNull String id) {
+                this.id = id;
+            }
+
+            @NonNull
+            public String getId() {
+                return id;
+            }
+
+            public String getInstituteId() {
+                return instituteId;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setInstituteId(String instituteId) {
+                this.instituteId = instituteId;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+        }
+
     }
 }
