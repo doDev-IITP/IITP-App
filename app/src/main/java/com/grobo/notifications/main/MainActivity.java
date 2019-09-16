@@ -36,6 +36,7 @@ import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.grobo.notifications.BuildConfig;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
@@ -49,7 +50,7 @@ import static com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE;
 import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
 import static com.grobo.notifications.utils.Constants.BASE_URL;
 import static com.grobo.notifications.utils.Constants.IS_ADMIN;
-import static com.grobo.notifications.utils.Constants.KEY_UPDATE_TYPE;
+import static com.grobo.notifications.utils.Constants.KEY_FORCE_UPDATE;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
@@ -162,29 +163,25 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
 
-        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(this);
-        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
-
-        });
-
-        long updateType = remoteConfig.getLong(KEY_UPDATE_TYPE);
-        if (updateType != 0) {
-            updateApp(updateType);
-        }
-
+        updateApp();
     }
 
-    private void updateApp(long updateType) {
+    private void updateApp() {
+
+        Log.e(getClass().getSimpleName(), String.valueOf(BuildConfig.VERSION_CODE));
 
         appUpdateManager = AppUpdateManagerFactory.create(this);
         Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
 
         appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
 
+            int updateType = 2;
+            if (appUpdateInfo.availableVersionCode() > BuildConfig.VERSION_CODE + 3 || remoteConfig.getBoolean(KEY_FORCE_UPDATE))
+                updateType = 1;
 
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
-            } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+            } else if (updateType == 1 && appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
                 try {
                     appUpdateManager.startUpdateFlowForResult(appUpdateInfo, IMMEDIATE, this, 10101);
                 } catch (IntentSender.SendIntentException e) {
@@ -197,17 +194,17 @@ public class MainActivity extends AppCompatActivity implements
                     e.printStackTrace();
                 }
             } else if (updateType == 2 && appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(FLEXIBLE)) {
-                try {
-                    InstallStateUpdatedListener listener = installState -> {
-                        if (installState.installStatus() == InstallStatus.DOWNLOADED) {
-                            popupSnackbarForCompleteUpdate();
-                        }
-                    };
-                    appUpdateManager.registerListener(listener);
 
-                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, FLEXIBLE, this, 10101);
-                } catch (IntentSender.SendIntentException e) {
-                    e.printStackTrace();
+                if (prefs.getLong("last_update_prompt_time", 0) < (System.currentTimeMillis() - 24 * 60 * 60 * 1000)) {
+
+                    appUpdateManager.registerListener(updatedListener);
+                    try {
+                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, FLEXIBLE, this, 10101);
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
+
+                    prefs.edit().putLong("last_update_prompt_time", System.currentTimeMillis()).apply();
                 }
             }
 
@@ -215,10 +212,19 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    private InstallStateUpdatedListener updatedListener = installState -> {
+        if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+            popupSnackbarForCompleteUpdate();
+        }
+    };
+
     private void popupSnackbarForCompleteUpdate() {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
                 "An update has just been downloaded.", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RESTART", view -> appUpdateManager.completeUpdate());
+        snackbar.setAction("RESTART", view -> {
+            appUpdateManager.unregisterListener(updatedListener);
+            appUpdateManager.completeUpdate();
+        });
         snackbar.setActionTextColor(Color.BLUE);
         snackbar.show();
     }
@@ -241,11 +247,6 @@ public class MainActivity extends AppCompatActivity implements
         Bundle bundle = new Bundle();
         bundle.putString("clubId", eventId);
         fragment.setArguments(bundle);
-
-//        manager.beginTransaction()
-//                .replace(R.id.frame_layout_main, fragment)
-//                .addToBackStack("later_fragment")
-//                .commit();
     }
 
     @Override

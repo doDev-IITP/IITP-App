@@ -79,7 +79,7 @@ public class MyApplication extends Application {
         Map<String, Object> remoteConfigDefaults = new HashMap<>();
         remoteConfigDefaults.put(Constants.TIMETABLE_URL, "https://timetable-grobo.firebaseio.com/");
         remoteConfigDefaults.put(Constants.MESS_MENU_URL, "https://i.ytimg.com/vi/OjIXzZ25tjA/maxresdefault.jpg");
-        remoteConfigDefaults.put(Constants.KEY_UPDATE_TYPE, 0);
+        remoteConfigDefaults.put(Constants.KEY_FORCE_UPDATE, false);
 
         firebaseRemoteConfig.setDefaultsAsync(remoteConfigDefaults);
 

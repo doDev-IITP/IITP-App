@@ -6,8 +6,8 @@ android {
         applicationId "com.grobo.notifications"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 17
-        versionName "1.2.2"
+        versionCode 20
+        versionName "1.2.3.final"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

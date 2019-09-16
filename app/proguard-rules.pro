@@ -22,3 +22,5 @@
 
 -keepattributes *Annotation*, Signature, Exception
 -keep class com.firebase.** { *; }
+
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
