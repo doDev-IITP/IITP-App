@@ -11,38 +11,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
-import androidx.transition.TransitionInflater;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.grobo.notifications.Mess.CancelMealAdapter;
-import com.grobo.notifications.Mess.MessFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
 import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
@@ -50,7 +39,6 @@ import com.google.android.play.core.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.BuildConfig;
-
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
@@ -58,14 +46,7 @@ import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
-
 import com.grobo.notifications.utils.KeyboardUtils;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE;
 import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
@@ -78,13 +59,12 @@ import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        PorAdapter.OnPORSelectedListener, ClubEventRecyclerAdapter.OnEventSelectedListener, CancelMealAdapter.OnCancelSelectedListener {
+public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORSelectedListener,
+        ClubEventRecyclerAdapter.OnEventSelectedListener {
 
     private SharedPreferences prefs;
     private AppBarConfiguration appBarConfiguration;
 
-    private ProgressDialog progressDialog;
     private FirebaseRemoteConfig remoteConfig;
     private AppUpdateManager appUpdateManager;
 
@@ -93,11 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        progressDialog = new ProgressDialog( this );
-        progressDialog.setIndeterminate( true );
-        progressDialog.setCanceledOnTouchOutside( false );
-        progressDialog.setCancelable( false );
-        prefs = PreferenceManager.getDefaultSharedPreferences( this );
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!prefs.getBoolean(LOGIN_STATUS, false)) {
             finish();
@@ -136,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             subscribeFcmTopics();
         }
         KeyboardUtils.hideSoftInput(this);
-        Log.e("jsonString", prefs.getString("jsonString", "none"));
     }
 
     @Override
@@ -193,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void updateApp() {
-
         Log.e(getClass().getSimpleName(), String.valueOf(BuildConfig.VERSION_CODE));
 
         appUpdateManager = AppUpdateManagerFactory.create(this);
@@ -202,20 +176,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
 
             int updateType = 2;
-            if (appUpdateInfo.availableVersionCode() > BuildConfig.VERSION_CODE + 3 || remoteConfig.getBoolean(KEY_FORCE_UPDATE))
-                updateType = 1;
+            if (appUpdateInfo.availableVersionCode() > BuildConfig.VERSION_CODE + 3
+                    || remoteConfig.getBoolean(KEY_FORCE_UPDATE)) updateType = 1;
 
             if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
             } else if (updateType == 1 && appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
                 try {
-                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, IMMEDIATE, this, 10101);
+                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, IMMEDIATE, this, 1011);
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
                 }
             } else if (updateType == 1 && appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(IMMEDIATE)) {
                 try {
-                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, IMMEDIATE, this, 10101);
+                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, IMMEDIATE, this, 1011);
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
                 }
@@ -225,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     appUpdateManager.registerListener(updatedListener);
                     try {
-                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, FLEXIBLE, this, 10101);
+                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, FLEXIBLE, this, 1011);
                     } catch (IntentSender.SendIntentException e) {
                         e.printStackTrace();
                     }
@@ -233,26 +207,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     prefs.edit().putLong("last_update_prompt_time", System.currentTimeMillis()).apply();
                 }
             }
-
         });
-
     }
 
-    private InstallStateUpdatedListener updatedListener = installState -> {
-        if (installState.installStatus() == InstallStatus.DOWNLOADED) {
-            popupSnackbarForCompleteUpdate();
+    private InstallStateUpdatedListener updatedListener = new InstallStateUpdatedListener() {
+        @Override
+        public void onStateUpdate(InstallState installState) {
+            if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate();
+            } else if (installState.installStatus() == InstallStatus.INSTALLED) {
+                if (appUpdateManager != null) {
+                    appUpdateManager.unregisterListener(updatedListener);
+                }
+            } else {
+                Log.i(getClass().getSimpleName(), "InstallStateUpdatedListener: state: " + installState.installStatus());
+            }
         }
     };
 
     private void popupSnackbarForCompleteUpdate() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
-                "An update has just been downloaded.", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("RESTART", view -> {
-            appUpdateManager.unregisterListener(updatedListener);
-            appUpdateManager.completeUpdate();
-        });
-        snackbar.setActionTextColor(Color.BLUE);
-        snackbar.show();
+        if (findViewById(R.id.drawer_layout) != null) {
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+                    "An update has just been downloaded.", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("INSTALL", view -> {
+                if (appUpdateManager != null)
+                    appUpdateManager.completeUpdate();
+            });
+            snackbar.setActionTextColor(Color.CYAN);
+            snackbar.show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1011) {
+            if (resultCode != RESULT_OK) {
+                Log.e(getClass().getSimpleName(), "onActivityResult: app download failed");
+            }
+        }
     }
 
     private void subscribeFcmTopics() {
@@ -285,71 +279,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-    @Override
-    public void onCancelSelected(String id) {
-        Toast.makeText( this, "hello", Toast.LENGTH_SHORT ).show();
-        FirebaseFirestore db=FirebaseFirestore.getInstance();
-        progressDialog.setMessage( "Cancelling your meals" );
-        progressDialog.show();
-        db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( this ).getString( Constants.WEBMAIL, "" ) ).collection("cancel" ).document( id ).get().addOnCompleteListener( new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if(task.isSuccessful())
-                {
-                    DocumentSnapshot documentSnapshot=task.getResult();
-                    List<Timestamp> days=(ArrayList<Timestamp>)documentSnapshot.get( "days" );
-                    Calendar calendar=Calendar.getInstance();
-                    Calendar calendar1 = Calendar.getInstance();
-                    calendar1.clear();
-                    calendar1.set( calendar.get( Calendar.YEAR ), calendar.get( Calendar.MONTH ), calendar.get( Calendar.DATE ) );
-                    if(days.size()==1)
-                    {
-                        db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( Constants.WEBMAIL, "" ) ).collection("cancel" ).document( id ).delete().addOnCompleteListener( new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                progressDialog.dismiss();
-                            }
-                        } );
-                    }
-                    else {
-                        List<Timestamp> update=new ArrayList<>(  );
-                        Map<String, Object> map = new HashMap<>();
-                        map.put( "full", documentSnapshot.get( "full" ) );
-                        map.put( "timestamp", FieldValue.serverTimestamp() );
-                        calendar1.add( Calendar.DATE,3 );
-                        for(int i=0;i<days.size();i++)
-                        {
-                            if(days.get( i ).toDate().compareTo( calendar1.getTime())<0)
-                                update.add( days.get( i ) );
-
-                        }
-                        if(update.size()==0)
-                        {
-                            db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( Constants.WEBMAIL, "" ) ).collection("cancel" ).document( id ).delete().addOnCompleteListener( new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    progressDialog.dismiss();
-                                }
-                            } );
-
-                        }
-                        else {
-                            map.put( "days",update );
-                            db.collection( "mess" ).document( PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( Constants.WEBMAIL, "" ) ).collection("cancel" ).document( id ).update( map ).addOnCompleteListener( new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    progressDialog.dismiss();
-                                }
-                            } );
-
-                        }
-                    }
-                }
-            }
-        } );
-
     }
 }

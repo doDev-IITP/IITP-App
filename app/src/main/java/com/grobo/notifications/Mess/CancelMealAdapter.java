@@ -14,16 +14,13 @@ import com.grobo.notifications.R;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class CancelMealAdapter extends RecyclerView.Adapter<CancelMealAdapter.ViewHolder> {
 
-    private Context context;
     private List<Long> itemList;
-    final private CancelMealAdapter.OnCancelSelectedListener callback;
 
-    public CancelMealAdapter(Context context, OnCancelSelectedListener listener) {
-        this.context = context;
-        callback = listener;
+    public CancelMealAdapter(Context context) {
     }
 
     @NonNull
@@ -38,15 +35,11 @@ public class CancelMealAdapter extends RecyclerView.Adapter<CancelMealAdapter.Vi
     public void onBindViewHolder(@NonNull final CancelMealAdapter.ViewHolder holder, int position) {
         long mess = itemList.get( position );
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE, MMM d, ''yy" );
+        SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE, MMM d, ''yy", Locale.getDefault());
         String s = dateFormat.format( mess );
         holder.date_cancelled.setText( s );
 
 
-    }
-
-    public interface OnCancelSelectedListener {
-        void onCancelSelected(String id);
     }
 
     @Override
