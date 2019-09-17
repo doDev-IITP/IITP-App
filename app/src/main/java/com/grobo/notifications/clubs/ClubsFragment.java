@@ -109,15 +109,18 @@ public class ClubsFragment extends Fragment {
                         }
 
                     }
-                    Toast.makeText(getContext(), "Clubs updated.", Toast.LENGTH_SHORT).show();
-                    prefs.edit().putLong("last_club_update_time", System.currentTimeMillis()).apply();
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Clubs updated.", Toast.LENGTH_SHORT).show();
+                        prefs.edit().putLong("last_club_update_time", System.currentTimeMillis()).apply();
+                    }
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(@NonNull Call<ClubItem.Clubs> call, @NonNull Throwable t) {
-                Log.e("failure", t.getMessage());
+                if (t.getMessage() != null)
+                    Log.e("failure", t.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(getContext(), "Update failed!!", Toast.LENGTH_SHORT).show();
             }

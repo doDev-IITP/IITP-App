@@ -13,7 +13,7 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         android:layout_marginBottom="10dp"
-        android:text="Select the mess in which you are enrolled  ">
+        android:text="Select the mess in which you are enrolled\nPlease choose correct mess. You need to contact administrator to change your mess selection.">
 
     </TextView>
     <RadioGroup
@@ -22,33 +22,37 @@
         android:layout_height="wrap_content">
 
     <RadioButton
+        android:id="@+id/radio_button_mess_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mess 1">
+        android:text="BH1 Mess 1">
 
 
     </RadioButton>
 
     <RadioButton
+        android:id="@+id/radio_button_mess_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mess 2">
+        android:text="BH1 Mess 2">
 
 
     </RadioButton>
 
     <RadioButton
+        android:id="@+id/radio_button_mess_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mess 3">
+        android:text="New Hostel Mess">
 
 
     </RadioButton>
 
     <RadioButton
+        android:id="@+id/radio_button_mess_4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mess 4">
+        android:text="Girls' hostel Mess">
 
 
     </RadioButton>

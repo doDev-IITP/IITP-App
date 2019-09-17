@@ -5,12 +5,17 @@
     <item
         android:id="@+id/navigation_today"
         android:icon="@drawable/baseline_home_24"
-        android:title="Todo" />
+        android:title="Home" />
 
     <item
         android:id="@+id/navigation_mess"
         android:icon="@drawable/baseline_restaurant_24"
         android:title="Mess" />
+
+    <item
+        android:id="@+id/navigation_timetable"
+        android:icon="@drawable/baseline_schedule_24"
+        android:title="Timetable" />
 
     <item
         android:id="@+id/navigation_notifications"
