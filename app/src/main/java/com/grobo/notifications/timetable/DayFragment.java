@@ -65,7 +65,7 @@ public class DayFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_timetable, container, false);
+        return inflater.inflate(R.layout.fragment_timetable_day, container, false);
     }
 
     @Override
@@ -95,7 +95,6 @@ public class DayFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
     }
-
 
     private void showDialogueBox(String message) {
         new AlertDialog.Builder(requireContext())

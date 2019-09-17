@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,6 +66,9 @@ public class DetailFragment extends Fragment {
             cancelMealAdapter = new CancelMealAdapter(requireContext());
             recyclerView.setAdapter(cancelMealAdapter);
 
+            DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+            recyclerView.addItemDecoration(decoration);
+
             empty = view.findViewById(R.id.meal_empty_view);
 
             populateData();
@@ -104,7 +108,7 @@ public class DetailFragment extends Fragment {
                         } else {
                             empty.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
-                            cancelMealAdapter.ItemList(time);
+                            cancelMealAdapter.setItemList(time);
                         }
                     }
                 } else

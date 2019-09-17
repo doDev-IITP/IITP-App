@@ -86,7 +86,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".timetable.EditTimetableActivity" />
 
         <service
             android:name=".notifications.FcmService"

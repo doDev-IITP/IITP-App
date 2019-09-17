@@ -10,6 +10,10 @@
         android:name="com.grobo.notifications.timetable.TimetableActivity"
         android:label="Timetable"
         tools:layout="@layout/activity_timetable" />
+    <activity
+        android:id="@+id/nav_virtual"
+        app:action="android.intent.action.VIEW"
+        app:data="https://www.google.com/maps/d/viewer?mid=1NVE_tnItehFaMbEWddjL786SKtuCtq4X" />
     <fragment
         android:id="@+id/nav_about"
         android:name="com.grobo.notifications.setting.AboutAppFragment"
@@ -35,6 +39,7 @@
             app:popEnterAnim="@anim/left_in"
             app:popExitAnim="@anim/right_out" />
     </fragment>
+
     <fragment
         android:id="@+id/nav_contribute"
         android:name="com.grobo.notifications.utils.MistakeFragment"
@@ -101,10 +106,5 @@
         android:name="com.grobo.notifications.services.ServicesFragment"
         android:label="Services"
         tools:layout="@layout/fragment_services" />
-
-    <activity
-        android:id="@+id/nav_virtual"
-        app:action="android.intent.action.VIEW"
-        app:data="https://www.google.com/maps/d/viewer?mid=1NVE_tnItehFaMbEWddjL786SKtuCtq4X"/>
 
 </navigation>

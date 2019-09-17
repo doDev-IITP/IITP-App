@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,7 +26,6 @@ public class CancelMealAdapter extends RecyclerView.Adapter<CancelMealAdapter.Vi
     @Override
     public CancelMealAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.card_cancel_meal, parent, false );
-
         return new CancelMealAdapter.ViewHolder( view );
     }
 
@@ -38,8 +36,6 @@ public class CancelMealAdapter extends RecyclerView.Adapter<CancelMealAdapter.Vi
         SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE, MMM d, ''yy", Locale.getDefault());
         String s = dateFormat.format( mess );
         holder.date_cancelled.setText( s );
-
-
     }
 
     @Override
@@ -52,19 +48,14 @@ public class CancelMealAdapter extends RecyclerView.Adapter<CancelMealAdapter.Vi
     class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView date_cancelled;
-        TextView type_of_meal;
-        ImageView cancel;
-
 
         ViewHolder(@NonNull View itemView) {
-            super( itemView );
-            date_cancelled = itemView.findViewById( R.id.date_cancelled );
-            type_of_meal = itemView.findViewById( R.id.type );
-            cancel = itemView.findViewById( R.id.cancel );
+            super(itemView);
+            date_cancelled = itemView.findViewById(R.id.date_cancelled);
         }
     }
 
-    public void ItemList(List<Long> feeds) {
+    public void setItemList(List<Long> feeds) {
         itemList = feeds;
         notifyDataSetChanged();
     }
