@@ -25,7 +25,7 @@ public class Constants {
     public static final String LOGIN_FAILED = "Login failed";
     public static final String USER_NOT_REGISTERED = "User not registered";
 
-    public static final String IS_QR_DOWNLOADED = "is_qr_downloaded";
+    public static final String IS_QR_DOWNLOADED = "is_qr_code_downloaded";
     public static final String IS_TT_DOWNLOADED = "is_tt_downloaded";
 
     public static final String SUB_COORDINATOR = "sco";
