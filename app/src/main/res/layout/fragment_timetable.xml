@@ -24,6 +24,11 @@
             android:paddingTop="16dp"
             android:paddingEnd="24dp" />
 
+        <include
+            android:id="@+id/empty_view"
+            android:visibility="invisible"
+            layout="@layout/item_empty_view" />
+
     </RelativeLayout>
 
     <RelativeLayout

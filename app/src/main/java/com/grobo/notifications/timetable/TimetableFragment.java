@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
+import static android.view.View.VISIBLE;
 import static com.grobo.notifications.utils.Constants.IS_TT_DOWNLOADED;
 
 public class TimetableFragment extends Fragment {
@@ -64,7 +65,7 @@ public class TimetableFragment extends Fragment {
         if (prefs.getString("jsonString", "").equals("")) {
 
             timetableAvailable.setVisibility(View.GONE);
-            timetableNotAvailable.setVisibility(View.VISIBLE);
+            timetableNotAvailable.setVisibility(VISIBLE);
 
             noTimetableImage = view.findViewById(R.id.no_timetable_image);
             FloatingActionButton button = view.findViewById(R.id.change_timetable_fab);
@@ -89,7 +90,7 @@ public class TimetableFragment extends Fragment {
 
         } else {
 
-            timetableAvailable.setVisibility(View.VISIBLE);
+            timetableAvailable.setVisibility(VISIBLE);
             timetableNotAvailable.setVisibility(View.GONE);
 
             ListView ttListView = view.findViewById(R.id.tt_list_view);
@@ -106,6 +107,9 @@ public class TimetableFragment extends Fragment {
                 ttAdapter.clear();
                 ttAdapter.addAll(timetableItems);
                 ttAdapter.notifyDataSetChanged();
+            } else {
+                ttListView.setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.empty_view).setVisibility(VISIBLE);
             }
         }
 

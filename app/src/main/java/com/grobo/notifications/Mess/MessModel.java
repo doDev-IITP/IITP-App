@@ -1,8 +1,7 @@
 package com.grobo.notifications.Mess;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+@Keep
 public class MessModel {
 
     @SerializedName("mess")
@@ -24,6 +24,7 @@ public class MessModel {
         this.mess = mess;
     }
 
+    @Keep
     public class Mess implements Serializable {
         @SerializedName("fullday")
         @Expose
@@ -49,9 +50,6 @@ public class MessModel {
         @SerializedName("messChoice")
         @Expose
         private Integer messChoice;
-        @SerializedName("__v")
-        @Expose
-        private Integer v;
 
         public List<Long> getBreakfast() {
             return breakfast;
@@ -86,10 +84,6 @@ public class MessModel {
             return student;
         }
 
-        public Integer getV() {
-            return v;
-        }
-
         public void setBreakfast(List<Long> breakfast) {
             this.breakfast = breakfast;
         }
@@ -118,14 +112,11 @@ public class MessModel {
             this.snacks = snacks;
         }
 
-        public void setV(Integer v) {
-            this.v = v;
-        }
-
         public void setStudent(Student student) {
             this.student = student;
         }
 
+        @Keep
         public class Student {
 
             @SerializedName("_id")
