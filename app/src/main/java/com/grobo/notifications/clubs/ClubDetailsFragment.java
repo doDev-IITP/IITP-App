@@ -19,7 +19,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +31,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.network.OtherRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.utils.ImageViewerActivity;
+import com.grobo.notifications.utils.utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -84,10 +85,12 @@ public class ClubDetailsFragment extends Fragment {
 
         Bundle b = getArguments();
         if (b != null) {
-            int transitionPosition = b.getInt("transition_position");
-            cover.setTransitionName("transition_image" + transitionPosition);
-            bio.setTransitionName("transition_bio" + transitionPosition);
-            name.setTransitionName("transition_title" + transitionPosition);
+            if (b.containsKey("transition_position")) {
+                int transitionPosition = b.getInt("transition_position");
+                cover.setTransitionName("transition_image" + transitionPosition);
+                bio.setTransitionName("transition_bio" + transitionPosition);
+                name.setTransitionName("transition_title" + transitionPosition);
+            }
             String id = b.getString("id");
 
             final ClubItem current = clubViewModel.getClubById(id);
@@ -142,7 +145,7 @@ public class ClubDetailsFragment extends Fragment {
 
                         if (getActivity() != null) {
                             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                    getActivity(), cover, "transition" + transitionPosition);
+                                    getActivity(), cover, "transition");
                             ActivityCompat.startActivity(requireContext(), i, activityOptions.toBundle());
                         }
                     });
@@ -155,7 +158,7 @@ public class ClubDetailsFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putString("club_id", current.getId());
 
-                        Navigation.findNavController(v).navigate(R.id.nav_club_event, bundle);
+                        NavHostFragment.findNavController(this).navigate(R.id.nav_club_event, bundle);
                     });
                 }
 
@@ -177,6 +180,10 @@ public class ClubDetailsFragment extends Fragment {
                     }
                 }
 
+            } else {
+                utils.showSimpleAlertDialog(getContext(), "Alert!!!", "Club not found.");
+                NavHostFragment.findNavController(this).navigateUp();
+                NavHostFragment.findNavController(this).navigate(R.id.nav_explore);
             }
         }
 

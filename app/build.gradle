@@ -66,9 +66,11 @@ dependencies {
     implementation "io.noties.markwon:image-glide:4.1.0"
 
     //Firebase
-    implementation 'com.google.firebase:firebase-config:19.0.1'
+    implementation 'com.google.firebase:firebase-config:19.0.2'
     implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation 'com.google.firebase:firebase-invites:17.0.0'
+    implementation 'com.google.firebase:firebase-appindexing:19.0.0'
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -79,6 +81,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+
+//    implementation 'com.sun.mail:javax.mail:1.6.2'
 
     // Room components
     implementation 'androidx.room:room-runtime:2.1.0'

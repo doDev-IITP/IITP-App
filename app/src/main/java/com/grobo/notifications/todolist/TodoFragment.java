@@ -92,6 +92,33 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
                     modGoals.add( g );
             new Handler().postDelayed( () -> adapter.setItemList( modGoals ), 100 );
 
+//            void onNewDataArrived(List<News> news) {
+//                List<News> oldNews = myAdapter.getItems();
+//                DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+//                    @Override
+//                    public int getOldListSize() {
+//                        return 0;
+//                    }
+//
+//                    @Override
+//                    public int getNewListSize() {
+//                        return 0;
+//                    }
+//
+//                    @Override
+//                    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+//                        return false;
+//                    }
+//                });
+//                myAdapter.setNews(news);
+//                result.dispatchUpdatesTo(myAdapter);
+//            }
+
             if (modGoals.size() == 0) {
                 recyclerView.setVisibility(View.INVISIBLE);
                 emptyView.setVisibility(View.VISIBLE);

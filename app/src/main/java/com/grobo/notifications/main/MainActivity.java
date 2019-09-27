@@ -5,6 +5,7 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +47,7 @@ import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
+import com.grobo.notifications.mail.EmailActivity;
 import com.grobo.notifications.utils.KeyboardUtils;
 
 import static com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE;
@@ -62,11 +64,14 @@ import static com.grobo.notifications.utils.Constants.USER_YEAR;
 public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORSelectedListener,
         ClubEventRecyclerAdapter.OnEventSelectedListener {
 
+    private final String LOG_TAG = getClass().getSimpleName();
+
     private SharedPreferences prefs;
     private AppBarConfiguration appBarConfiguration;
 
     private FirebaseRemoteConfig remoteConfig;
     private AppUpdateManager appUpdateManager;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +97,82 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
                     .setDrawerLayout(drawer)
                     .build();
 
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            navController = Navigation.findNavController(this, R.id.nav_host_fragment);
             NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
             NavigationUI.setupWithNavController(navigationView, navController);
 
             View v = navigationView.getHeaderView(0);
+            new Handler().postDelayed(() -> populateHeaderView(v), 200);
+
+            remoteConfig = FirebaseRemoteConfig.getInstance();
+
+            new Handler().postDelayed(this::subscribeFcmTopics, 1000);
+
+            handleIntent(getIntent());
+        }
+        KeyboardUtils.hideSoftInput(this);
+
+//        gmailFunctions();
+    }
+
+//    private void gmailFunctions() {
+//
+//        String mailFrom = "amangrobo@gmail.com";
+//
+//        String mailTo = "1801ee03@iitp.ac.in";
+//
+//        String senderPassword = "Iamironman!1055";
+//
+//        String senderUserName = "1801ee03@iitp.ac.in";
+//
+//        String mailSubject = "Testing Mail";
+//
+//        String mailText = "Have an Nice Day ...........!!!";
+//
+//        GmailClient newGmailClient = new GmailClient(this);
+//
+//        newGmailClient.setAccountDetails(senderUserName, senderPassword);
+//
+//        new AsyncTask<Void, Void, Void>() {
+//
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//
+////                newGmailClient.sendGmail(mailFrom, mailTo, mailSubject, mailText);
+//
+//                newGmailClient.readGmail();
+//                return null;
+//            }
+//
+//        }.execute();
+//
+//    }
+
+    private void handleIntent(Intent appLinkIntent) {
+        String appLinkAction = appLinkIntent.getAction();
+        String appLinkData = appLinkIntent.getDataString();
+
+        if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
+
+            if (appLinkData.contains("/feed/")) {
+                String feedId = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("id", feedId);
+                navController.navigate(R.id.nav_feed_detail, bundle);
+            } else if (appLinkData.contains("/club/")) {
+                String id = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("id", id);
+                navController.navigate(R.id.nav_club_detail, bundle);
+            }
+
+        }
+    }
+
+    private void populateHeaderView(View v) {
+        if (v != null) {
             ((TextView) v.findViewById(R.id.user_name_nav_header)).setText(prefs.getString(USER_NAME, "Guest"));
             ((TextView) v.findViewById(R.id.user_email_nav_header)).setText(prefs.getString(ROLL_NUMBER, ""));
             ImageView profileImage = v.findViewById(R.id.user_image_nav_header);
@@ -106,12 +182,7 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
                     .placeholder(R.drawable.profile_photo)
                     .into(profileImage);
             profileImage.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
-
-            remoteConfig = FirebaseRemoteConfig.getInstance();
-
-            subscribeFcmTopics();
         }
-        KeyboardUtils.hideSoftInput(this);
     }
 
     @Override
@@ -122,7 +193,6 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
         if (prefs.getBoolean(IS_ADMIN, false)) {
             MenuItem menuItem = menu.findItem(R.id.action_admin);
             menuItem.setVisible(true);
@@ -130,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             MenuItem menuItem = menu.findItem(R.id.action_profile);
             menuItem.setVisible(true);
         }
-        return true;
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -141,6 +211,9 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             return true;
         } else if (id == R.id.action_profile) {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            return true;
+        } else if (id == R.id.action_mail) {
+            startActivity(new Intent(MainActivity.this, EmailActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -164,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
 
-        updateApp();
+        new Handler().postDelayed(this::updateApp, 1000);
     }
 
     private void updateApp() {
@@ -253,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
         FirebaseMessaging fcm = FirebaseMessaging.getInstance();
 
         fcm.subscribeToTopic("all");
-        if (prefs.getBoolean(LOGIN_STATUS, false)) {
+        if (prefs != null && prefs.getBoolean(LOGIN_STATUS, false)) {
             fcm.subscribeToTopic(prefs.getString(USER_BRANCH, "junk"));
             fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk"));
             fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));

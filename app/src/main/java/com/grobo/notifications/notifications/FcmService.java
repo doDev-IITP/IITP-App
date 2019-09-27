@@ -18,6 +18,8 @@ import com.grobo.notifications.main.MainActivity;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import static com.grobo.notifications.utils.utils.createNotificationChannel;
+
 public class FcmService extends FirebaseMessagingService {
 
     private static final String LOG_TAG = FcmService.class.getName();
@@ -78,6 +80,8 @@ public class FcmService extends FirebaseMessagingService {
         notificationDao.insertNotification(notification);
     }
     private void sendNotification(String title, String body, Bitmap image) {
+
+        createNotificationChannel(getApplicationContext());
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
