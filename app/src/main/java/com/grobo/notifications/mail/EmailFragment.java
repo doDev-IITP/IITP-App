@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +16,11 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grobo.notifications.R;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.mail.Folder;
@@ -31,7 +32,7 @@ import javax.mail.Store;
 public class EmailFragment extends Fragment {
 
     private EmailRecyclerAdapter adapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar progressbar;
     private SharedPreferences preferences;
 
     public EmailFragment() {
@@ -52,8 +53,7 @@ public class EmailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         RecyclerView recyclerView = view.findViewById(R.id.rv_email);
-        swipeRefreshLayout = view.findViewById(R.id.sr_email);
-        swipeRefreshLayout.setOnRefreshListener(this::updateData);
+        progressbar = view.findViewById(R.id.progressbar);
 
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -61,13 +61,16 @@ public class EmailFragment extends Fragment {
         adapter = new EmailRecyclerAdapter();
         recyclerView.setAdapter(adapter);
 
-        swipeRefreshLayout.setRefreshing(true);
         updateData();
 
         super.onViewCreated(view, savedInstanceState);
     }
 
     private void updateData() {
+
+        progressbar.setIndeterminate(true);
+        progressbar.setVisibility(View.VISIBLE);
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -77,7 +80,7 @@ public class EmailFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                swipeRefreshLayout.setRefreshing(false);
+                progressbar.setVisibility(View.GONE);
             }
         }.execute();
     }
@@ -100,8 +103,14 @@ public class EmailFragment extends Fragment {
             folder.open(Folder.READ_ONLY);
 
             int count = folder.getMessageCount();
-            Message[] messages = folder.getMessages(count - 50, count);
+            Message[] messages = folder.getMessages(count - 49, count);
             Log.e("maillen", "message length  " + messages.length);
+
+            if (getActivity() != null)
+                getActivity().runOnUiThread(() -> {
+                    progressbar.setIndeterminate(false);
+                    adapter.setEmailValues(new ArrayList<>());
+                });
 
             for (int i = messages.length - 1; i >= 0; i--) {
                 try {
@@ -111,11 +120,13 @@ public class EmailFragment extends Fragment {
                     email.setContent(message.getSubject());
                     email.setDetails(message.getContent().toString());
 
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
+                        int finalI = 2 * (messages.length - i);
                         getActivity().runOnUiThread(() -> {
                             adapter.addEmail(email);
+                            progressbar.setProgress(finalI);
                         });
-                    else break;
+                    } else break;
 
                 } catch (MessagingException | IOException e) {
                     e.printStackTrace();
@@ -128,6 +139,10 @@ public class EmailFragment extends Fragment {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    public void updateHandle() {
+        updateData();
     }
 
 }

@@ -75,7 +75,7 @@ public class MailSyncWorker extends Worker {
             store.connect(receivingHost, userName, password);
 
             Folder folder = store.getFolder("INBOX");
-            folder.open(Folder.READ_WRITE);
+            folder.open(Folder.READ_ONLY);
 
             if (folder.hasNewMessages()) {
                 Log.e("mailssss", "new mail " + folder.getNewMessageCount());
@@ -83,7 +83,7 @@ public class MailSyncWorker extends Worker {
 
             int count = folder.getMessageCount();
 
-            Message[] messages = folder.getMessages(count - 50, count);
+            Message[] messages = folder.getMessages(count - folder.getNewMessageCount() -9, count);
 
             Log.e("maillen", "message length  " + messages.length);
 
@@ -91,19 +91,14 @@ public class MailSyncWorker extends Worker {
                 try {
                     Message message = messages[i];
 
-                    if (message.getReceivedDate().getTime() > preferences.getLong("mail_last_receive_time", System.currentTimeMillis()- 2*24*60*60*1000)) {
-
                         if (!message.getFlags().contains(seen)) {
                             sendNotification(context, message.getSubject(), ((Multipart) message.getContent()).getBodyPart(0).getContent().toString());
                         }
 
-                    } else break;
                 } catch (MessagingException | IOException e) {
                     e.printStackTrace();
                 }
             }
-
-            preferences.edit().putLong("mail_last_receive_time", messages[messages.length - 1].getReceivedDate().getTime()).apply();
 
             folder.close(true);
             store.close();
@@ -123,8 +118,8 @@ public class MailSyncWorker extends Worker {
                 .setSmallIcon(R.drawable.baseline_dashboard_24)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(false)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setCategory(NotificationCompat.CATEGORY_EVENT)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body));

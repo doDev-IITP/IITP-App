@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/sr_email"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".mail.EmailFragment"
+    android:id="@+id/sr_email"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".mail.EmailFragment">
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:indeterminate="true"
+        android:progressDrawable="@drawable/custom_progress" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_email"
@@ -14,4 +23,4 @@
         android:layout_marginRight="16dp"
         tools:listitem="@layout/card_email_item" />
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

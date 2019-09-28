@@ -1,6 +1,5 @@
 package com.grobo.notifications.mail;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +66,6 @@ public class EmailRecyclerAdapter extends RecyclerView.Adapter<EmailRecyclerAdap
         if (mValues == null)
             mValues = new ArrayList<>();
         int l = mValues.size();
-        Log.e("size", l + " ");
         mValues.add(l, email);
 
         notifyItemInserted(l);
