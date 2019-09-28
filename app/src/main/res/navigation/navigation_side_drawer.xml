@@ -49,6 +49,7 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.grobo.notifications.main.HomeFragment"
+        android:label="Home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
@@ -106,5 +107,11 @@
         android:name="com.grobo.notifications.services.ServicesFragment"
         android:label="Services"
         tools:layout="@layout/fragment_services" />
+
+    <fragment
+        android:id="@+id/nav_notification"
+        android:name="com.grobo.notifications.notifications.NotificationsFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
 
 </navigation>

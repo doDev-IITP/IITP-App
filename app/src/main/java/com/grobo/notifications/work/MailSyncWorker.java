@@ -91,7 +91,7 @@ public class MailSyncWorker extends Worker {
                 try {
                     Message message = messages[i];
 
-                        if (!message.getFlags().contains(seen)) {
+                        if (!message.getFlags().contains(seen) && message.getReceivedDate().getTime() > System.currentTimeMillis() - 31 * 60 *1000) {
                             sendNotification(context, message.getSubject(), ((Multipart) message.getContent()).getBodyPart(0).getContent().toString());
                         }
 

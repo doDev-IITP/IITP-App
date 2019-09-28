@@ -2,6 +2,8 @@
     <string name="app_name">IITP App</string>
     <string name="title_activity_timetable">Timetable</string>
 
+    <string name="iitp_web">http://iitpapp.herokuapp.com/</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

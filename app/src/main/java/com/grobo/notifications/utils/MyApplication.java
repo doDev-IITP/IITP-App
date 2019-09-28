@@ -46,7 +46,7 @@ public class MyApplication extends Application {
         PeriodicWorkRequest syncRequest = new PeriodicWorkRequest.Builder(MailSyncWorker.class, 15, TimeUnit.MINUTES)
                 .build();
 
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork("sync_mail", ExistingPeriodicWorkPolicy.REPLACE, syncRequest);
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("sync_mail", ExistingPeriodicWorkPolicy.KEEP, syncRequest);
 
     }
 

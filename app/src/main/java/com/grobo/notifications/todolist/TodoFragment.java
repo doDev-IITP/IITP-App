@@ -65,6 +65,10 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
             dialogFrag.show( requireActivity().getSupportFragmentManager(), dialogFrag.getTag() );
         } );
 
+        new Handler().postDelayed(() -> {
+            fab.animate().scaleX(1).scaleY(1).setDuration(200).start();
+        }, 1000);
+
         recyclerView = view.findViewById( R.id.recycler_todo );
         recyclerView.setLayoutManager( new LinearLayoutManager( requireContext() ) );
 

@@ -92,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             NavigationView navigationView = findViewById(R.id.nav_view);
 
             appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home, R.id.nav_explore, R.id.nav_calender, R.id.nav_feed,
-                    R.id.navigation_today, R.id.navigation_mess, R.id.navigation_notifications)
+                    R.id.nav_home, R.id.nav_explore, R.id.nav_calender, R.id.nav_feed, R.id.nav_notification,
+                    R.id.nav_timetable, R.id.nav_links, R.id.nav_services, R.id.nav_setting)
                     .setDrawerLayout(drawer)
                     .build();
 
@@ -111,42 +111,7 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             handleIntent(getIntent());
         }
         KeyboardUtils.hideSoftInput(this);
-
-//        gmailFunctions();
     }
-
-//    private void gmailFunctions() {
-//
-//        String mailFrom = "amangrobo@gmail.com";
-//
-//        String mailTo = "1801ee03@iitp.ac.in";
-//
-//        String senderPassword = "Iamironman!1055";
-//
-//        String senderUserName = "1801ee03@iitp.ac.in";
-//
-//        String mailSubject = "Testing Mail";
-//
-//        String mailText = "Have an Nice Day ...........!!!";
-//
-//        GmailClient newGmailClient = new GmailClient(this);
-//
-//        newGmailClient.setAccountDetails(senderUserName, senderPassword);
-//
-//        new AsyncTask<Void, Void, Void>() {
-//
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//
-////                newGmailClient.sendGmail(mailFrom, mailTo, mailSubject, mailText);
-//
-//                newGmailClient.readGmail();
-//                return null;
-//            }
-//
-//        }.execute();
-//
-//    }
 
     private void handleIntent(Intent appLinkIntent) {
         String appLinkAction = appLinkIntent.getAction();
@@ -166,8 +131,15 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
                 Bundle bundle = new Bundle();
                 bundle.putString("id", id);
                 navController.navigate(R.id.nav_club_detail, bundle);
-            }
+            } else if (appLinkData.contains("/notification/")) {
+                String time = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
 
+                Bundle bundle = new Bundle();
+                bundle.putString("time", time);
+
+                navController.navigate(R.id.nav_notification, bundle);
+
+            }
         }
     }
 
