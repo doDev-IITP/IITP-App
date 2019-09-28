@@ -21,7 +21,7 @@ import com.grobo.notifications.notifications.NotificationDao;
 import com.grobo.notifications.todolist.Goal;
 import com.grobo.notifications.todolist.TodoDao;
 
-@Database(entities = {Notification.class, FeedItem.class, ClubItem.class, ClubEventItem.class, Goal.class}, version = 3, exportSchema = false)
+@Database(entities = {Notification.class, FeedItem.class, ClubItem.class, ClubEventItem.class, Goal.class}, version = 4, exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -43,7 +43,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "app_database")
-                            .addMigrations(MIGRATION_2_3)
+                            .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                             .allowMainThreadQueries()
                             .fallbackToDestructiveMigrationFrom(1)
                             .build();
@@ -61,6 +61,14 @@ public abstract class AppDatabase extends RoomDatabase {
                     + " `checked` INTEGER NOT NULL DEFAULT 0,"
                     + " `timestamp` INTEGER NOT NULL DEFAULT 0,"
                     + " `alarm` INTEGER NOT NULL DEFAULT 0)");
+        }
+    };
+
+    private static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE notification"
+                    + " ADD COLUMN link TEXT");
         }
     };
 }

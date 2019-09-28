@@ -19,6 +19,9 @@ public interface NotificationDao {
     @Query("select * from notification where id = :id")
     Notification loadNotificationById(int id);
 
+    @Query("select * from notification where timeStamp = :time")
+    Notification loadNotificationByTimestamp(long time);
+
     @Insert(onConflict = REPLACE)
     void insertNotification(Notification notification);
 
@@ -26,7 +29,7 @@ public interface NotificationDao {
     void insertOrReplaceNotification(Notification... notifications);
 
     @Query("delete from notification where id like :id")
-    int deleteNotificationById(int id);
+    void deleteNotificationById(int id);
 
     @Query("DELETE FROM notification")
     void deleteAll();

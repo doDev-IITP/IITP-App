@@ -1,5 +1,7 @@
 package com.grobo.notifications.utils;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +14,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.grobo.notifications.R;
 
@@ -146,6 +150,35 @@ public class utils {
 
     public interface ImageDownloaderListener {
         void onImageDownloaded(Bitmap bitmap);
+    }
+
+
+    public static void createNotificationChannel(Context context) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Notifications";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(context.getString(R.string.default_notification_channel_id), name, importance);
+            channel.enableLights(true);
+            channel.setLightColor(Color.BLUE);
+            channel.setDescription(context.getString(R.string.default_notification_channel_description));
+            channel.enableVibration(true);
+            channel.setShowBadge(true);
+
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+    }
+
+    public static void showSimpleAlertDialog(Context context, String title, String message) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    if (dialog != null) dialog.dismiss();
+                }).show();
     }
 }
 

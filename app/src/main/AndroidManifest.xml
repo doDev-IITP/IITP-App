@@ -12,6 +12,20 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".mail.EmailActivity"
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/WebViewStyle">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".main.MainActivity" /></activity>
+        <activity
+            android:name=".main.WebActivity"
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/WebViewStyle">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".main.MainActivity" />
+        </activity>
         <activity android:name=".services.complaints.ComplaintsActivity" />
         <activity
             android:name=".utils.ImageViewerActivity"
@@ -77,13 +91,33 @@
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="iitpapp.herokuapp.com"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="iitpapplication.web.app"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -102,7 +136,6 @@
                 android:value="@string/default_notification_channel_id" />
         </service>
     </application>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission android:name="android.permission.INTERNET" />

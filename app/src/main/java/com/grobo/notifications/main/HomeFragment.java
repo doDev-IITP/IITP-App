@@ -1,5 +1,6 @@
 package com.grobo.notifications.main;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,12 +29,14 @@ public class HomeFragment extends Fragment {
 
     private FragmentManager manager;
     private SharedPreferences preferences;
+    private Context context;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = requireContext();
         manager = requireActivity().getSupportFragmentManager();
-        preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -75,8 +78,8 @@ public class HomeFragment extends Fragment {
     private void transactFragment(Fragment frag) {
         Fragment current = manager.findFragmentById(R.id.frame_layout_home);
         if (current != null) {
-            current.setExitTransition(TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.fade));
-            frag.setEnterTransition(TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.fade));
+            current.setExitTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
+            frag.setEnterTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
         }
 
         FragmentTransaction transaction = manager.beginTransaction();

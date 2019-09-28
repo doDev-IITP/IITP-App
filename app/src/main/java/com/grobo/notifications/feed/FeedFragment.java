@@ -1,5 +1,6 @@
 package com.grobo.notifications.feed;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -48,13 +49,14 @@ public class FeedFragment extends Fragment {
     private View emptyView;
     private FloatingActionButton addFab;
     private SharedPreferences prefs;
+    private Context context;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = requireContext();
         feedViewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
-        if (getContext() != null)
-            prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -81,18 +83,18 @@ public class FeedFragment extends Fragment {
 
         emptyView = view.findViewById(R.id.feed_empty_view);
         recyclerView = view.findViewById(R.id.rv_feed_fragment);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         ViewTreeObserver observer = recyclerView.getViewTreeObserver();
         postponeEnterTransition();
         observer.addOnGlobalLayoutListener(this::startPostponedEnterTransition);
 
-        adapter = new FeedRecyclerAdapter(getContext());
+        adapter = new FeedRecyclerAdapter(context);
         recyclerView.setAdapter(adapter);
 
         RadioGroup radioGroup = view.findViewById(R.id.radio_group_feed);
 
-        if (getContext() instanceof MainActivity) {
+        if (context instanceof MainActivity) {
 
             addFab.hide();
 
@@ -115,7 +117,7 @@ public class FeedFragment extends Fragment {
             radioGroup.check(R.id.feed_radio_all);
 
             addFab.setOnClickListener(v -> {
-                Intent intent = new Intent(getContext(), AddFeedActivity.class);
+                Intent intent = new Intent(context, AddFeedActivity.class);
                 startActivity(intent);
             });
 
@@ -146,8 +148,8 @@ public class FeedFragment extends Fragment {
                             feedViewModel.insert(newItem);
                         }
                     }
-                    if (getContext() != null) {
-                        Toast.makeText(getContext(), "Feeds updated.", Toast.LENGTH_SHORT).show();
+                    if (context != null) {
+                        Toast.makeText(context, "Feeds updated.", Toast.LENGTH_SHORT).show();
                         prefs.edit().putLong("last_feed_update_time", System.currentTimeMillis()).apply();
                     }
                 }
@@ -159,7 +161,7 @@ public class FeedFragment extends Fragment {
                 if (t.getMessage() != null)
                     Log.e("failure", t.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getContext(), "Update failed!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Update failed!!", Toast.LENGTH_SHORT).show();
             }
         });
 

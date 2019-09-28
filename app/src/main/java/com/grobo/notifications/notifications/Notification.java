@@ -20,6 +20,7 @@ public class Notification {
     private boolean starred = false;
     private long timeStamp;
     private long reference;
+    private String link;
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
@@ -84,5 +85,13 @@ public class Notification {
 
     public void setReference(long reference) {
         this.reference = reference;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }

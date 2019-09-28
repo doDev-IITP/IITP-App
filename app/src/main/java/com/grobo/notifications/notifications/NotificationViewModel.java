@@ -29,4 +29,7 @@ public class NotificationViewModel extends AndroidViewModel {
     public void delete (Notification notification) {
         notificationsRepository.delete(notification);
     }
+    public Notification getNotificationByTimestamp (Long time) {
+        return notificationsRepository.getNotificationByTimestamp(time);
+    }
 }

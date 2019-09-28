@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_mail"
+        android:icon="@drawable/baseline_email_24"
+        android:title="Webmail"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_profile"
         android:icon="@drawable/baseline_account_circle_24"
         android:title="Profile"

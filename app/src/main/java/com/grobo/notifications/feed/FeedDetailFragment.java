@@ -1,5 +1,6 @@
 package com.grobo.notifications.feed;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 import androidx.transition.TransitionInflater;
 
@@ -24,6 +26,7 @@ import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.utils.ImageViewerActivity;
+import com.grobo.notifications.utils.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,16 +52,19 @@ public class FeedDetailFragment extends Fragment {
 
     private FeedViewModel feedViewModel;
     private FloatingActionButton interestedFab;
+    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         feedViewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
 
-        setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
-        setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
-        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.default_transition));
-        setSharedElementReturnTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.default_transition));
+        context = requireContext();
+
+        setEnterTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.slide_bottom));
+        setExitTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.slide_bottom));
+        setSharedElementEnterTransition(TransitionInflater.from(context).inflateTransition(R.transition.default_transition));
+        setSharedElementReturnTransition(TransitionInflater.from(context).inflateTransition(R.transition.default_transition));
     }
 
     @Override
@@ -76,14 +82,16 @@ public class FeedDetailFragment extends Fragment {
 
         Bundle b = getArguments();
 
-        if (getContext() instanceof MainActivity || getContext() instanceof XPortal) {
+        if (context instanceof MainActivity || context instanceof XPortal) {
 
             if (b != null) {
-                int transitionPosition = b.getInt("transition_position");
-                eventPoster.setTransitionName("transition_image" + transitionPosition);
-                eventTime.setTransitionName("transition_time" + transitionPosition);
-                eventVenue.setTransitionName("transition_venue" + transitionPosition);
-                eventTitle.setTransitionName("transition_title" + transitionPosition);
+                if (b.containsKey("transition_position")) {
+                    int transitionPosition = b.getInt("transition_position");
+                    eventPoster.setTransitionName("transition_image" + transitionPosition);
+                    eventTime.setTransitionName("transition_time" + transitionPosition);
+                    eventVenue.setTransitionName("transition_venue" + transitionPosition);
+                    eventTitle.setTransitionName("transition_title" + transitionPosition);
+                }
                 String id = b.getString("id");
 
                 current = feedViewModel.getFeedById(id);
@@ -104,8 +112,8 @@ public class FeedDetailFragment extends Fragment {
                         current.setEventDescription("No Description");
                     }
 
-                    final Markwon markwon = Markwon.builder(getContext())
-                            .usePlugin(GlideImagesPlugin.create(getContext()))
+                    final Markwon markwon = Markwon.builder(context)
+                            .usePlugin(GlideImagesPlugin.create(context))
                             .usePlugin(HtmlPlugin.create())
                             .build();
 
@@ -125,20 +133,24 @@ public class FeedDetailFragment extends Fragment {
 
                     if (current.getEventImageUrl() != null && !current.getEventImageUrl().isEmpty()) {
                         eventPoster.setOnClickListener(v -> {
-                            Intent i = new Intent(getActivity(), ImageViewerActivity.class);
+                            Intent i = new Intent(context, ImageViewerActivity.class);
                             i.putExtra("image_url", current.getEventImageUrl());
 
                             if (getActivity() != null) {
                                 ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                        getActivity(), eventPoster, "transition" + transitionPosition);
-                                ActivityCompat.startActivity(getContext(), i, activityOptions.toBundle());
+                                        getActivity(), eventPoster, "transition");
+                                ActivityCompat.startActivity(context, i, activityOptions.toBundle());
                             }
                         });
                     }
+                } else {
+                    utils.showSimpleAlertDialog(context, "Alert!!!", "Feed not found.");
+                    NavHostFragment.findNavController(this).navigateUp();
+                    NavHostFragment.findNavController(this).navigate(R.id.nav_feed);
                 }
             }
 
-        } else if (getContext() instanceof AddFeedActivity) {
+        } else if (context instanceof AddFeedActivity) {
 
             interestedFab.hide();
             if (b != null) {
@@ -152,8 +164,8 @@ public class FeedDetailFragment extends Fragment {
                 eventTitle.setText(b.getString("title"));
                 eventVenue.setText(b.getString("venue"));
 
-                final Markwon markwon = Markwon.builder(getContext())
-                        .usePlugin(GlideImagesPlugin.create(getContext()))
+                final Markwon markwon = Markwon.builder(context)
+                        .usePlugin(GlideImagesPlugin.create(context))
                         .usePlugin(HtmlPlugin.create())
                         .build();
 
@@ -165,10 +177,10 @@ public class FeedDetailFragment extends Fragment {
             }
         }
 
-        if (getContext() instanceof XPortal) {
+        if (context instanceof XPortal) {
 
             List<String> itemsList = Converters.arrayFromString(PreferenceManager
-                    .getDefaultSharedPreferences(getContext()).getString(USER_POR, ""));
+                    .getDefaultSharedPreferences(context).getString(USER_POR, ""));
 
             if (itemsList.size() != 0)
 
