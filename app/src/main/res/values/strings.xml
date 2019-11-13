@@ -16,7 +16,6 @@
     <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
     <string name="app_market_link">"market://details?id="</string>
 
-    <string name="FCM_authorization">key=AAAAHlsC9sw:APA91bEeRILLYmitqLt0DOYGKj6o0Xy9FW_nenzEwkBn4QIi5uMZt3LQqOLA4TsYT2WVcd_Ufn7eyFbeSSw5GPUXWHAjRg3IWYRPAYDn6jVoCKuiIZUlan5F-2SEX2YkMBNdsIBFSDQI</string>
     <string name="default_notification_channel_id">notifications</string>
     <string name="default_notification_channel_description">All the notifications are sent through this channel.</string>
 
