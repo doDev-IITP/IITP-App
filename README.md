@@ -31,3 +31,5 @@ Its main motive is to organise all the resources needed frequently at one place 
 * Follow standard **issue** and **PR** guidelines
 
 To create Firebase project, visit https://console.firebase.google.com/
+
+>Test Account: apptest@iitp.ac.in<br>Password: test
