@@ -6,6 +6,7 @@
         android:id="@+id/action_mail"
         android:icon="@drawable/baseline_email_24"
         android:title="Webmail"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 
     <item
