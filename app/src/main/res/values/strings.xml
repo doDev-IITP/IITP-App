@@ -22,6 +22,8 @@
     <string name="nav_header_title">Guest</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="hint_add_feed_description">Enter description (Markdown and basic HTML syntax supported)\nUse &lt;br&gt; tag for line break\nUse &lt;a href=\'link\'&gt;Text&lt;/a&gt; for including links\nUse ![image name](https://image_link) for displaying images.</string>
+    <string name="FCM_authorization">Enter FCM Server Token Here</string>
+    <string name="forgot_password">Forgot password ?</string>
     <string-array name="maintenance_list_spinner">
         <item>Select-Category</item>
         <item>Carpenter</item>
