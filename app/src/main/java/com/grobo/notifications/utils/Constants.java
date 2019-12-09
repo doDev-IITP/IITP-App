@@ -40,4 +40,7 @@ public class Constants {
     public static final int ITEM_LOST = 1;
     public static final int ITEM_FOUND = 2;
     public static final int ITEM_RECOVERED = 3;
+
+    public static final String FCM_COLLECTION = "fcm_tokens";
+    public static final String FCM_TOKEN_KEY = "fcm_token";
 }
