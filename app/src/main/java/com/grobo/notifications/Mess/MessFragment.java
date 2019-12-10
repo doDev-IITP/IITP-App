@@ -112,41 +112,7 @@ public class MessFragment extends Fragment {
         View qrFragment = view.findViewById( R.id.mess_fr_qr );
         qrFragment.setOnClickListener( v -> transactFragment(new QRFragment()));
 
-        LinearLayout linearLayout = view.findViewById( R.id.days );
-        View cancelMeal = view.findViewById( R.id.cancel_meal_card );
-        cancelMeal.setOnClickListener(view1 -> transactFragment( new CancelMealFragment() ));
-
-        Button cancelMealButton = view.findViewById( R.id.cancel_meal_ok_button );
-        cancelMealButton.setOnClickListener(v -> showUnsavedChangesDialog());
-
-        mealTypeSpinner = view.findViewById( R.id.type_meal_spinner );
-        mealTypeSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 4)
-                    linearLayout.setVisibility( View.VISIBLE );
-                else
-                    linearLayout.setVisibility( View.GONE );
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        } );
-
         super.onViewCreated( view, savedInstanceState );
-    }
-
-    private void showUnsavedChangesDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
-        builder.setTitle( "Confirmation Dialog" );
-        builder.setMessage( "Cancelling the meals... Please confirm!!" );
-        builder.setPositiveButton( "Confirm", (dialog, which) -> cancelMealFunction());
-        builder.setNegativeButton( "Cancel", (dialog, id) -> {
-            if (dialog != null) dialog.dismiss();
-        });
-        builder.show();
     }
 
     private void transactFragment(Fragment frag) {
@@ -279,78 +245,6 @@ public class MessFragment extends Fragment {
             }
         });
 
-    }
-
-    private void cancelMealFunction() {
-
-        progressDialog.setMessage( "Cancelling Meal..." );
-        progressDialog.show();
-
-        Calendar calendar = Calendar.getInstance();
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.clear();
-        calendar1.set( calendar.get( Calendar.YEAR ), calendar.get( Calendar.MONTH ), calendar.get( Calendar.DATE ) );
-        calendar1.add( Calendar.DATE, 1 );
-
-        Spinner spinner = requireView().findViewById( R.id.cancel_meal_spinner );
-
-        MessRoutes service = RetrofitClientInstance.getRetrofitInstance().create( MessRoutes.class );
-
-        String userId = prefs.getString( USER_MONGO_ID, "" );
-        String token = prefs.getString( USER_TOKEN, "" );
-
-        Map<String, Object> jsonParams = new HashMap<>();
-
-        if (mealTypeSpinner.getSelectedItemPosition() != 4) {
-            List<Long> a = new ArrayList<>();
-            a.add( calendar1.getTimeInMillis() );
-            jsonParams.put( mealTypeSpinner.getSelectedItem().toString().toLowerCase(), a );
-        } else {
-            List<Long> a = new ArrayList<>();
-
-            for (int j = 0; j < spinner.getSelectedItemPosition() + 2; j++) {
-                a.add( calendar1.getTimeInMillis() );
-                calendar1.add( Calendar.DATE, 1 );
-            }
-
-            jsonParams.put( "fullday", a );
-        }
-
-        RequestBody body = RequestBody.create( (new JSONObject( jsonParams )).toString(), okhttp3.MediaType.parse( "application/json; charset=utf-8" ) );
-
-        Call<ResponseBody> call = service.cancelMeal( token, userId, body );
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-
-                progressDialog.dismiss();
-                if (response.isSuccessful()) {
-                    alert("Your meal is successfully cancelled");
-                } else if (response.code() == 401) {
-                    Toast.makeText(getContext(), "Unauthorised request", Toast.LENGTH_SHORT).show();
-                } else if (response.code() == 415) {
-                    if (response.errorBody() != null) {
-                        try {
-                            JSONObject object = new JSONObject(response.errorBody().string());
-                            if (object.has("message"))
-                                alert(object.getString("message"));
-                            else alert("This meal has already been cancelled !!");
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } else alert("This meal has already been cancelled !!");
-
-                } else alert("Meal cancellation failed, error " + response.code());
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Toast.makeText(requireContext(), "Cancellation failed !!", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-
-            }
-        });
     }
 
     private void alert(String msg) {
