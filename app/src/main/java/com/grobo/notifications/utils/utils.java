@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -14,9 +15,13 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.PreferenceManager;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.grobo.notifications.R;
 
 import java.io.File;
@@ -26,6 +31,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 public class utils {
@@ -179,6 +187,20 @@ public class utils {
                 .setPositiveButton("OK", (dialog, which) -> {
                     if (dialog != null) dialog.dismiss();
                 }).show();
+    }
+
+    public static void storeFCMToken(Context context, String token){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String,Object> fcmToken = new HashMap<>();
+        fcmToken.put(Constants.FCM_TOKEN_KEY, (token == null) ? FirebaseInstanceId.getInstance().getToken() : token);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if(prefs.contains(Constants.USER_MONGO_ID)) {
+            db.collection(Constants.FCM_COLLECTION)
+                    .document(prefs.getString(Constants.USER_MONGO_ID, ""))
+                    .set(fcmToken)
+                    .addOnSuccessListener(aVoid -> Log.d("FCM TOKEN UPDATE", "Success"))
+                    .addOnFailureListener(e -> Log.e("FCM TOKEN UPDATE", Objects.requireNonNull(e.getMessage())));
+        }
     }
 }
 

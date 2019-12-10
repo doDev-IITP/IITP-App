@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -14,6 +15,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.grobo.notifications.R;
 import com.grobo.notifications.database.AppDatabase;
+import com.grobo.notifications.utils.utils;
 
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -65,6 +67,13 @@ public class FcmService extends FirebaseMessagingService {
             }
         }
 
+    }
+
+
+    @Override
+    public void onNewToken(@NonNull String token) {
+        Log.d("FCM", "Refreshed token: " + token);
+        utils.storeFCMToken(this,token);
     }
 
     private void addToDb(String messageTitle, String messageBody, String messageDescription, String imageUri, long time, String link){

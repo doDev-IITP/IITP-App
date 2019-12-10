@@ -27,6 +27,7 @@ import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.network.UserRoutes;
 import com.grobo.notifications.timetable.TimetableUtility;
 import com.grobo.notifications.utils.Constants;
+import com.grobo.notifications.utils.utils;
 
 import org.json.JSONObject;
 
@@ -184,6 +185,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 prefsEditor.putBoolean(LOGIN_STATUS, true);
                 prefsEditor.apply();
 
+                utils.storeFCMToken(this, null);
                 Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
 
 
