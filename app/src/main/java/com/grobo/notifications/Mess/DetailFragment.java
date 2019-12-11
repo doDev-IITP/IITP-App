@@ -33,7 +33,6 @@ public class DetailFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     private View empty;
-    private CancelMealAdapter cancelMealAdapter;
     private RecyclerView recyclerView;
 
     public DetailFragment() {
@@ -62,9 +61,6 @@ public class DetailFragment extends Fragment {
 
             recyclerView = view.findViewById(R.id.recycler_cancel);
             recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-            cancelMealAdapter = new CancelMealAdapter(requireContext());
-            recyclerView.setAdapter(cancelMealAdapter);
 
             DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
             recyclerView.addItemDecoration(decoration);
@@ -108,7 +104,6 @@ public class DetailFragment extends Fragment {
                         } else {
                             empty.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
-                            cancelMealAdapter.setItemList(time);
                         }
                     }
                 } else
