@@ -17,9 +17,6 @@ public interface MessRoutes {
     @GET("/mess/{studentMongoId}")
     Call<MessModel> getMessData(@Path("studentMongoId") String studentMongoId);
 
-    @POST("/mess/cancel/{studentMongoId}")
-    Call<ResponseBody> cancelMeal(@Header("Authorization") String credentials, @Path("studentMongoId") String studentMongoId, @Body RequestBody body);
-
     @POST("/mess/")
     Call<ResponseBody> selectMess(@Header("Authorization") String credentials, @Body RequestBody body);
 
