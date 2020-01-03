@@ -54,6 +54,11 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        TextView forgotPassword = view.findViewById(R.id.forgotPassword);
+        forgotPassword.setOnClickListener(v -> {
+            callback.onForgotPassword();
+        });
+
         TextView privacyPolicy = view.findViewById(R.id.tv_privacy_policy);
         privacyPolicy.setOnClickListener(view1 -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://timetable-grobo.firebaseapp.com/privacy_policy.html"));
@@ -101,5 +106,6 @@ public class LoginFragment extends Fragment {
 
     public interface OnSignInInteractionListener {
         void onLoginSelected(String email, String password);
+        void onForgotPassword();
     }
 }

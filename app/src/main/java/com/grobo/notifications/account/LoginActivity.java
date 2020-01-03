@@ -52,7 +52,7 @@ import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
 public class LoginActivity extends FragmentActivity implements LoginFragment.OnSignInInteractionListener,
-        SignUpFragment.OnSignUpInteractionListener, OtpFragment.OnOtpEnteredListener {
+        SignUpFragment.OnSignUpInteractionListener, OtpFragment.OnOtpEnteredListener, ForgotPasswordFragment.onForgotPasswordInteractionListener {
 
 
     private FragmentManager manager;
@@ -96,6 +96,12 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
         this.email = email;
         this.password = password;
         login(email, password);
+    }
+
+    @Override
+    public void onForgotPassword() {
+        ForgotPasswordFragment forgotPasswordFragment = new ForgotPasswordFragment();
+        manager.beginTransaction().replace(R.id.frame_account,forgotPasswordFragment).commit();
     }
 
     private void login(String email, String password) {
@@ -318,5 +324,11 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                 return TimetableUtility.downloadTimetable(strings[0]);
             }
         };
+    }
+
+    @Override
+    public void onBackToLoginClicked() {
+        LoginFragment firstFragment = new LoginFragment();
+        manager.beginTransaction().replace(R.id.frame_account, firstFragment).commit();
     }
 }
