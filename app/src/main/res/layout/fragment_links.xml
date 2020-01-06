@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="8dp">
 
@@ -31,34 +31,145 @@
                     android:layout_margin="4dp"
                     android:text="General"
                     android:textColor="@color/black"
-                    android:textSize="22sp" />
-
-                <TextView
+                    android:textSize="25sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:id="@+id/tv_webmail"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingEnd="10dp"
+                    tools:ignore="RtlSymmetry,UnusedAttribute">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="9">
+
+                        <ImageView
+                            android:id="@+id/ic_webmail"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="bottom|center"
+                            android:layout_toEndOf="@id/ic_webmail"
+                            android:ellipsize="marquee"
+                            android:text="WebMail"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="WebMail"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="18sp" />
-
-                <TextView
                     android:id="@+id/tv_intranet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="INTRANET"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="18sp" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingEnd="10dp"
+                    tools:ignore="RtlSymmetry,UnusedAttribute">
 
-                <TextView
+                    <RelativeLayout
+
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="9">
+
+                        <ImageView
+                            android:id="@+id/ic_intranet"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="bottom|center"
+                            android:layout_toEndOf="@id/ic_intranet"
+                            android:ellipsize="marquee"
+                            android:text="Intranet"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
+                <LinearLayout
                     android:id="@+id/tv_reg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="Registration and Result"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="18sp" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingEnd="10dp"
+                    tools:ignore="RtlSymmetry,UnusedAttribute">
+
+                    <RelativeLayout
+
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="9">
+
+                        <ImageView
+                            android:id="@+id/ic_reg"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="bottom|center"
+                            android:layout_toEndOf="@id/ic_reg"
+                            android:ellipsize="marquee"
+                            android:text="Registration and Result"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -83,43 +194,193 @@
                     android:layout_margin="4dp"
                     android:text="Library"
                     android:textColor="@color/black"
-                    android:textSize="22sp" />
+                    android:textSize="25sp" />
 
-                <TextView
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:id="@+id/tv_lib_catalogue"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingEnd="10dp"
+                    tools:ignore="RtlSymmetry,UnusedAttribute">
+
+                    <RelativeLayout
+
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="9">
+
+                        <ImageView
+                            android:id="@+id/ic_lib_catalog"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="bottom|center"
+                            android:layout_toEndOf="@id/ic_lib_catalog"
+                            android:ellipsize="marquee"
+                            android:text="Library catalogue"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="Library catalogue"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="18sp" />
-
-                <TextView
+                    android:clickable="true"
                     android:id="@+id/tv_lib_res"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="Library eResources"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="18sp" />
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingEnd="10dp"
+                    tools:ignore="RtlSymmetry,UnusedAttribute">
 
-                <TextView
+                    <RelativeLayout
+
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="9">
+
+                        <ImageView
+                            android:id="@+id/ic_lib_res"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="bottom|center"
+                            android:layout_toEndOf="@id/ic_lib_res"
+                            android:ellipsize="marquee"
+                            android:text="Library e-Resources"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/tv_prev_ques"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="Previous Year Question Papers"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="18sp" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingEnd="10dp"
+                    tools:ignore="RtlSymmetry,UnusedAttribute">
 
-                <TextView
-                    android:id="@+id/tv_late_fee"
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="9">
+
+                        <ImageView
+                            android:id="@+id/ic_prev_ques"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="bottom|center"
+                            android:layout_toEndOf="@id/ic_prev_ques"
+                            android:ellipsize="marquee"
+                            android:text="Previous Year Question Papers"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="Late Fee Payment"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="18sp" />
+                    android:clickable="true"
+                    android:id="@+id/tv_late_fee"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingEnd="10dp"
+                    tools:ignore="RtlSymmetry,UnusedAttribute">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="9">
+
+                        <ImageView
+                            android:id="@+id/ic_late_fee"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="bottom|center"
+                            android:layout_toEndOf="@id/ic_late_fee"
+                            android:ellipsize="marquee"
+                            android:text="Late Fee Payment"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -144,25 +405,99 @@
                     android:layout_margin="4dp"
                     android:text="Miscellaneous"
                     android:textColor="@color/black"
-                    android:textSize="22sp" />
+                    android:textSize="25sp" />
 
-                <TextView
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:id="@+id/tv_institute_repo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="Institutional Repo"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="18sp" />
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingEnd="10dp"
+                    tools:ignore="RtlSymmetry,UnusedAttribute">
 
-                <TextView
-                    android:id="@+id/tv_inter_rel"
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="9">
+
+                        <ImageView
+                            android:id="@+id/ic_institute_repo"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="bottom|center"
+                            android:layout_toEndOf="@id/ic_institute_repo"
+                            android:ellipsize="marquee"
+                            android:text="Institutional Repo"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="International Relations Website"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="18sp" />
+                    android:id="@+id/tv_inter_rel"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingEnd="10dp"
+                    tools:ignore="RtlSymmetry,UnusedAttribute">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="9">
+
+                        <ImageView
+                            android:id="@+id/ic_inter_rel"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="bottom|center"
+                            android:layout_toEndOf="@id/ic_inter_rel"
+                            android:ellipsize="marquee"
+                            android:text="International Relations"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -170,4 +505,4 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</ScrollView>
