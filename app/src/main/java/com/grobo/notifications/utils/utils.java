@@ -128,7 +128,7 @@ public class utils {
 
         private ImageDownloaderListener listener;
 
-        public ImageDownloader(ImageDownloaderListener listener){
+        public ImageDownloader(ImageDownloaderListener listener) {
             this.listener = listener;
         }
 
@@ -153,6 +153,13 @@ public class utils {
         protected void onPostExecute(Bitmap bitmap) {
             listener.onImageDownloaded(bitmap);
             super.onPostExecute(bitmap);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            if (listener != null)
+                listener = null;
         }
     }
 
@@ -189,12 +196,12 @@ public class utils {
                 }).show();
     }
 
-    public static void storeFCMToken(Context context, String token){
+    public static void storeFCMToken(Context context, String token) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String,Object> fcmToken = new HashMap<>();
+        Map<String, Object> fcmToken = new HashMap<>();
         fcmToken.put(Constants.FCM_TOKEN_KEY, (token == null) ? FirebaseInstanceId.getInstance().getToken() : token);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if(prefs.contains(Constants.USER_MONGO_ID)) {
+        if (prefs.contains(Constants.USER_MONGO_ID)) {
             db.collection(Constants.FCM_COLLECTION)
                     .document(prefs.getString(Constants.USER_MONGO_ID, ""))
                     .set(fcmToken)

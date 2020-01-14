@@ -45,7 +45,6 @@ import com.grobo.notifications.BuildConfig;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
-import com.grobo.notifications.admin.XPortal;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
@@ -54,7 +53,6 @@ import com.grobo.notifications.utils.KeyboardUtils;
 import static com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE;
 import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
 import static com.grobo.notifications.utils.Constants.BASE_URL;
-import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.KEY_FORCE_UPDATE;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
@@ -165,24 +163,9 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (prefs.getBoolean(IS_ADMIN, false)) {
-            MenuItem menuItem = menu.findItem(R.id.action_admin);
-            menuItem.setVisible(true);
-        } else {
-            MenuItem menuItem = menu.findItem(R.id.action_profile);
-            menuItem.setVisible(true);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_admin) {
-            startActivity(new Intent(MainActivity.this, XPortal.class));
-            return true;
-        } else if (id == R.id.action_profile) {
+        if (id == R.id.action_profile) {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             return true;
         } else if (id == R.id.action_mail) {
