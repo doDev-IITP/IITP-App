@@ -19,7 +19,7 @@ public class PorAdapter extends RecyclerView.Adapter<PorAdapter.MyHolder> {
 
     private Context context;
     final private OnPORSelectedListener callback;
-    private List<PorItem> porList;
+    private List<ClubPorItem> porList;
 
     PorAdapter(Context context, OnPORSelectedListener listener) {
         callback = listener;
@@ -41,7 +41,7 @@ public class PorAdapter extends RecyclerView.Adapter<PorAdapter.MyHolder> {
     public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
 
         if (porList != null) {
-            PorItem item = porList.get(position);
+            ClubPorItem item = porList.get(position);
             holder.name.setText(item.getName());
             holder.position.setText(item.getPosition());
             Glide.with(context)
@@ -53,7 +53,7 @@ public class PorAdapter extends RecyclerView.Adapter<PorAdapter.MyHolder> {
         }
     }
 
-    void setItemList(List<PorItem> names) {
+    void setItemList(List<ClubPorItem> names) {
         porList = names;
         notifyDataSetChanged();
     }

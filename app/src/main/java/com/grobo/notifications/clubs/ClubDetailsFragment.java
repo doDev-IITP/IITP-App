@@ -212,7 +212,7 @@ public class ClubDetailsFragment extends Fragment {
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
-                        List<PorItem> allPors = new ArrayList<>();
+                        List<ClubPorItem> allPors = new ArrayList<>();
 
                         try {
                             JSONObject object = new JSONObject(response.body().string());
@@ -221,7 +221,7 @@ public class ClubDetailsFragment extends Fragment {
 
                             for (int i = 0; i < array.length(); i++) {
 
-                                PorItem newPor = new PorItem();
+                                ClubPorItem newPor = new ClubPorItem();
                                 JSONObject singlePor = array.getJSONObject(i);
 
                                 if (singlePor.has("_id"))

@@ -89,7 +89,7 @@ public class QRFragment extends Fragment implements utils.ImageDownloaderListene
 
     @Override
     public void onImageDownloaded(Bitmap bitmap) {
-        if (bitmap != null) {
+        if (bitmap != null && getContext() != null) {
             boolean ret = utils.saveImage(requireContext(), bitmap, "qr", "qr.png");
             if (ret) {
                 prefs.edit().putBoolean(IS_QR_DOWNLOADED, true).apply();

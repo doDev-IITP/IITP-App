@@ -3,7 +3,7 @@ package com.grobo.notifications.clubs;
 import androidx.annotation.Keep;
 
 @Keep
-public class PorItem {
+public class ClubPorItem {
     private String image;
     private String name;
     private String position;
@@ -13,9 +13,9 @@ public class PorItem {
     private String porId;
     private int access;
 
-    public PorItem(){}
+    public ClubPorItem(){}
 
-    public PorItem(String name, String image, String position) {
+    public ClubPorItem(String name, String image, String position) {
         this.image = image;
         this.name = name;
         this.position = position;

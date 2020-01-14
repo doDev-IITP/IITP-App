@@ -11,19 +11,31 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
+import com.grobo.notifications.account.PORItem;
 import com.grobo.notifications.admin.AddNotificationFragment;
 import com.grobo.notifications.utils.MistakeFragment;
 
 public class CoordinatorFragment extends Fragment implements View.OnClickListener {
 
-    public CoordinatorFragment() {}
+    public CoordinatorFragment() {
+    }
 
-    private Bundle args;
+    private PORItem currentPOR;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        args = getArguments();
+        if (getArguments() != null && getArguments().containsKey("data")) {
+            currentPOR = getArguments().getParcelable("data");
+            if (currentPOR == null && getActivity() != null) {
+                Toast.makeText(getActivity(), "Invalid POR", Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            }
+        } else {
+            Toast.makeText(getActivity(), "Invalid POR", Toast.LENGTH_LONG).show();
+            if (getActivity() != null)
+                getActivity().finish();
+        }
     }
 
     @Override
@@ -44,8 +56,8 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         Bundle bundle = new Bundle();
-        bundle.putString("club", args.getString("club", ""));
-        bundle.putString("power", args.getString("power", ""));
+//        bundle.putString("club", args.getString("club", ""));
+//        bundle.putString("power", args.getString("power", ""));
         Fragment next;
         switch (v.getId()) {
             case R.id.coordinator_notification_cv:
@@ -67,7 +79,7 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
 
     }
 
-    private void transactFragment(Fragment frag){
+    private void transactFragment(Fragment frag) {
         getActivity().getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
                 .replace(R.id.frame_layout_admin, frag)

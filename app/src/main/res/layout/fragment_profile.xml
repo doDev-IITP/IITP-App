@@ -14,7 +14,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="405dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/profile_cover_ll"
@@ -29,36 +29,36 @@
                     android:layout_height="150dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="45dp"
-                    app:cardElevation="8dp"
-                    app:cardCornerRadius="75dp">
+                    app:cardCornerRadius="75dp"
+                    app:cardElevation="8dp">
 
                     <ImageView
-                        android:contentDescription="@string/logo"
-                        android:layout_width="match_parent"
                         android:id="@+id/iv_profile_dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/profile_photo"/>
+                        android:contentDescription="@string/logo"
+                        android:src="@drawable/profile_photo" />
 
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
+                    android:id="@+id/tv_profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="24dp"
-                    tools:text="@string/welcome"
                     android:textColor="#fff"
-                    android:id="@+id/tv_profile_name"
                     android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="@string/welcome" />
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="400dp"
                 android:layout_height="120dp"
-                android:visibility="gone"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="275dp">
+                android:layout_marginTop="275dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -143,10 +143,10 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_margin="32dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -167,8 +167,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingStart="20dp"
-                    tools:text="amangrobo@gmail.com"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="amangrobo@gmail.com" />
             </LinearLayout>
 
             <LinearLayout
@@ -196,13 +196,42 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_positions_header"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Positions:" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar_pors"
+                android:layout_width="16dp"
+                android:layout_height="16dp" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_pors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/profile_logout_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="35dp"
+            android:layout_margin="16dp"
             android:background="@drawable/button_style"
             android:text="LogOut"
             android:textColor="#fff" />

@@ -1,39 +1,30 @@
 package com.grobo.notifications.account;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.grobo.notifications.R;
+import com.grobo.notifications.admin.XPortal;
 
-public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnLogoutCallback {
+public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnLogoutCallback, PORRecyclerAdapter.OnPORSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        setBaseFragment(savedInstanceState);
+        setBaseFragment();
 
         getWindow().setStatusBarColor(Color.parseColor("#185a9d"));
 
-        ((ImageView)findViewById(R.id.back_button)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ProfileActivity.super.onBackPressed();
-            }
-        });
+        findViewById(R.id.back_button).setOnClickListener(v -> ProfileActivity.super.onBackPressed());
     }
 
-    private void setBaseFragment(Bundle savedInstanceState) {
+    private void setBaseFragment() {
 
         if (findViewById(R.id.fragment_container) != null) {
-
-            if (savedInstanceState != null) {
-                return;
-            }
             ProfileFragment firstFragment = new ProfileFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, firstFragment).commit();
@@ -44,5 +35,12 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
     @Override
     public void onLogout() {
         finish();
+    }
+
+    @Override
+    public void onPORSelected(PORItem porItem) {
+        Intent i = new Intent(ProfileActivity.this, XPortal.class);
+        i.putExtra("data", porItem);
+        startActivity(i);
     }
 }
