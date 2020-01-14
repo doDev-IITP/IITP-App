@@ -1,7 +1,6 @@
 package com.grobo.notifications.account;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
@@ -28,7 +28,8 @@ public class LoginFragment extends Fragment {
     private String email;
     private String password;
 
-    public LoginFragment() {}
+    public LoginFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,8 +62,8 @@ public class LoginFragment extends Fragment {
 
         TextView privacyPolicy = view.findViewById(R.id.tv_privacy_policy);
         privacyPolicy.setOnClickListener(view1 -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://timetable-grobo.firebaseapp.com/privacy_policy.html"));
-            startActivity(browserIntent);
+            new CustomTabsIntent.Builder().enableUrlBarHiding().build()
+                    .launchUrl(requireContext(), Uri.parse("https://timetable-grobo.firebaseapp.com/privacy_policy.html"));
         });
 
         super.onViewCreated(view, savedInstanceState);
@@ -106,6 +107,7 @@ public class LoginFragment extends Fragment {
 
     public interface OnSignInInteractionListener {
         void onLoginSelected(String email, String password);
+
         void onForgotPassword();
     }
 }

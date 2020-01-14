@@ -37,9 +37,9 @@ public class LinksFragment extends Fragment {
 
         map.put(R.id.tv_webmail,"https://mail.iitp.ac.in");
         map.put(R.id.tv_lib_res,"http://library.iitp.ac.in/");
-        map.put(R.id.tv_lib_catalogue,"http://172.16.52.134:8380/opac/");
+        map.put(R.id.tv_lib_catalogue,"http://172.16.52.134:8380/");
         map.put(R.id.tv_reg,"https://172.16.1.230/student/login2.asp");
-        map.put(R.id.tv_prev_ques,"http://172.16.52.180/oldpapers");
+        map.put(R.id.tv_prev_ques,"http://172.16.52.136/oldpapers");
         map.put(R.id.tv_intranet,"http://172.16.1.6/");
         map.put(R.id.tv_late_fee,"https://www.onlinesbi.com/sbicollect/icollecthome.htm");
         map.put(R.id.tv_institute_repo,"http://idr.iitp.ac.in/jspui");

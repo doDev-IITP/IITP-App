@@ -58,8 +58,4 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="SplashTheme" parent="@style/AppTheme.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_theme_background</item>
-    </style>
-
 </resources>

@@ -28,13 +28,12 @@ public class TimetableAdapter extends ArrayAdapter<TimetableItem> {
         }
 
         TextView timeTextView = view.findViewById(R.id.tt_time_view);
-        TextView subjectTextView = view.findViewById(R.id.tt_subject_view);
 
         TimetableItem current = getItem(position);
 
         if (current != null) {
-            timeTextView.setText(current.getTime());
-            subjectTextView.setText(current.getSubject());
+            String data = current.getTime() + "    " + current.getSubject();
+            timeTextView.setText(data);
         }
 
         return view;
