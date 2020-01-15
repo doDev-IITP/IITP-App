@@ -153,7 +153,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="25dp">
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -167,6 +168,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     android:textStyle="bold"
                     tools:text="amangrobo@gmail.com" />
             </LinearLayout>
@@ -176,7 +178,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:orientation="horizontal"
-                android:paddingLeft="25dp">
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -189,7 +192,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     android:text="+917424904721"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -208,15 +212,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="8dp"
-                android:text="Positions:" />
+                android:text="PORs:" />
 
             <ImageView
                 android:id="@+id/iv_add_por"
                 android:layout_width="32dp"
-                android:background="?attr/selectableItemBackground"
-                android:visibility="gone"
                 android:layout_height="32dp"
-                android:src="@drawable/ic_add_black_24dp" />
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_add_black_24dp"
+                android:visibility="gone" />
 
             <ProgressBar
                 android:id="@+id/progress_bar_pors"
