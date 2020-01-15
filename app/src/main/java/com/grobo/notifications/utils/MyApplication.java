@@ -11,7 +11,6 @@ import androidx.work.WorkManager;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.work.DeleteWorker;
-import com.grobo.notifications.work.MailSyncWorker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,12 +41,6 @@ public class MyApplication extends Application {
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork("delete_feed", ExistingPeriodicWorkPolicy.KEEP, deleteRequest);
-
-        PeriodicWorkRequest syncRequest = new PeriodicWorkRequest.Builder(MailSyncWorker.class, 15, TimeUnit.MINUTES)
-                .build();
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork("sync_mail", ExistingPeriodicWorkPolicy.KEEP, syncRequest);
-
     }
 
     private void fetchRemoteConfig() {
