@@ -18,7 +18,8 @@
                 android:id="@+id/sv_club_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+                android:background="@color/colorPrimary"
+                android:theme="@style/club_search_view"
                 android:queryHint="Search for a club" />
 
             <androidx.recyclerview.widget.RecyclerView

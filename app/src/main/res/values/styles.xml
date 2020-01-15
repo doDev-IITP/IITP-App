@@ -58,4 +58,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="club_search_view" parent="Widget.AppCompat.Light.SearchView" >
+<!--        <item name="android:textSize">@dimen/textSizePrimary</item>-->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorHint">#dddddd</item>
+        <item name="android:tint">#dddddd</item>
+    </style>
+
 </resources>

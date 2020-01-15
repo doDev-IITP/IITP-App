@@ -52,7 +52,8 @@ import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
 
 public class LoginActivity extends FragmentActivity implements LoginFragment.OnSignInInteractionListener,
-        SignUpFragment.OnSignUpInteractionListener, OtpFragment.OnOtpEnteredListener, ForgotPasswordFragment.onForgotPasswordInteractionListener {
+        SignUpFragment.OnSignUpInteractionListener, OtpFragment.OnOtpEnteredListener, ForgotPasswordFragment.OnForgotPasswordInteractionListener,
+        ResetPasswordFragment.OnResetPasswordInteractionListener {
 
 
     private FragmentManager manager;
@@ -101,7 +102,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     @Override
     public void onForgotPassword() {
         ForgotPasswordFragment forgotPasswordFragment = new ForgotPasswordFragment();
-        manager.beginTransaction().replace(R.id.frame_account,forgotPasswordFragment).commit();
+        manager.beginTransaction().replace(R.id.frame_account, forgotPasswordFragment).commit();
     }
 
     private void login(String email, String password) {
@@ -330,5 +331,23 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
     public void onBackToLoginClicked() {
         LoginFragment firstFragment = new LoginFragment();
         manager.beginTransaction().replace(R.id.frame_account, firstFragment).commit();
+    }
+
+    @Override
+    public void onCodeSent(String email) {
+
+        Bundle b = new Bundle();
+        b.putString("data", email);
+
+        ResetPasswordFragment newFragment = new ResetPasswordFragment();
+        newFragment.setArguments(b);
+
+        manager.beginTransaction().replace(R.id.frame_account, newFragment).commit();
+    }
+
+    @Override
+    public void onPasswordResetComplete() {
+        LoginFragment fragment = new LoginFragment();
+        LoginActivity.this.recreate();
     }
 }
