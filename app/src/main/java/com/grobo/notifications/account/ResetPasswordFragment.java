@@ -9,11 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
@@ -34,13 +34,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ForgotPasswordFragment extends Fragment {
+public class ResetPasswordFragment extends Fragment {
 
-    private OnForgotPasswordInteractionListener mListener;
+    private OnResetPasswordInteractionListener mListener;
     private ProgressDialog progressDialog;
     private Context context;
+    private String webmail;
 
-    public ForgotPasswordFragment() {
+    public ResetPasswordFragment() {
     }
 
     @Override
@@ -53,44 +54,60 @@ public class ForgotPasswordFragment extends Fragment {
         progressDialog = new ProgressDialog(context);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
+
+        if (getArguments() != null && getArguments().containsKey("data")) {
+            this.webmail = getArguments().getString("data");
+        } else {
+            Toast.makeText(context, "Invalid data !!!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_forgot_password, container, false);
+        return inflater.inflate(R.layout.fragment_reset_password, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView login = view.findViewById(R.id.login);
-        login.setOnClickListener(v -> mListener.onBackToLoginClicked());
+        EditText emailInput = view.findViewById(R.id.input_webmail);
+        emailInput.setText(webmail);
 
-        Button sendHelpButton = view.findViewById(R.id.button_send_help);
-        sendHelpButton.setOnClickListener(v -> {
-            EditText webmailInput = view.findViewById(R.id.fp_input_webmail);
+        Button resetButton = view.findViewById(R.id.button_change_password);
+        resetButton.setOnClickListener(v -> {
 
-            if (webmailInput.getText().toString().isEmpty()) {
-                webmailInput.setError("Enter a valid webmail");
+            EditText codeInput = view.findViewById(R.id.input_reset_code);
+            EditText passwordInput = view.findViewById(R.id.input_new_password);
+            EditText confirmPassword = view.findViewById(R.id.input_confirm_password);
+
+            if (codeInput.getText().toString().isEmpty()) {
+                codeInput.setError("Enter a valid code");
+            } else if (passwordInput.getText().toString().isEmpty()) {
+                codeInput.setError("Enter a valid password");
+            } else if (!confirmPassword.getText().toString().equals(passwordInput.getText().toString())) {
+                codeInput.setError("Passwords do not match!");
             } else {
-                sendHelp(webmailInput.getText().toString());
+                sendHelp(Integer.parseInt(codeInput.getText().toString()), passwordInput.getText().toString());
             }
         });
     }
 
-    private void sendHelp(String webmail) {
+    private void sendHelp(int code, String password) {
 
         progressDialog.setMessage("Processing...");
         progressDialog.show();
 
         Map<String, Object> data = new HashMap<>();
         data.put("email", webmail);
+        data.put("code", code);
+        data.put("password", password);
+        data.put("confirmPassword", password);
 
         RequestBody body = RequestBody.create((new JSONObject(data)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
 
         UserRoutes service = RetrofitClientInstance.getRetrofitInstance().create(UserRoutes.class);
-        Call<ResponseBody> call = service.forgotPassword(body);
+        Call<ResponseBody> call = service.resetPassword(body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -106,12 +123,16 @@ public class ForgotPasswordFragment extends Fragment {
                         e.printStackTrace();
                         Toast.makeText(context, "Unhandled Error", Toast.LENGTH_LONG).show();
                     }
-                } else {
-                    Toast.makeText(context, "Unknown Error, please try again !!!", Toast.LENGTH_LONG).show();
                 }
 
                 if (response.code() == 200) {
-                    mListener.onCodeSent(webmail);
+                    new AlertDialog.Builder(context)
+                            .setTitle("Password reset successful")
+                            .setMessage("Please sign in with your new password.")
+                            .setPositiveButton("OK", (dialog, which) -> {
+                                if (dialog != null) dialog.dismiss();
+                                mListener.onPasswordResetComplete();
+                            }).show();
                 }
             }
 
@@ -128,8 +149,8 @@ public class ForgotPasswordFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof OnForgotPasswordInteractionListener) {
-            mListener = (OnForgotPasswordInteractionListener) context;
+        if (context instanceof OnResetPasswordInteractionListener) {
+            mListener = (OnResetPasswordInteractionListener) context;
         }
     }
 
@@ -139,8 +160,7 @@ public class ForgotPasswordFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnForgotPasswordInteractionListener {
-        void onBackToLoginClicked();
-        void onCodeSent(String email);
+    public interface OnResetPasswordInteractionListener {
+        void onPasswordResetComplete();
     }
 }
