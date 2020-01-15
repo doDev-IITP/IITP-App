@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.grobo.notifications.R;
-import com.grobo.notifications.account.PORItem;
+import com.grobo.notifications.account.por.PORItem;
 import com.grobo.notifications.admin.positions.CoordinatorFragment;
 import com.grobo.notifications.admin.positions.MaintenanceSecretaryFragment;
 import com.grobo.notifications.admin.positions.SubCoordintorFragment;
@@ -53,15 +53,15 @@ public class XPortal extends AppCompatActivity {
 
             switch (porItem.getAccess()) {
 
-                case 1:    //sports
+                case 1:    //
                     f = new CoordinatorFragment();
                     break;
 
-                case 2:    //sports
+                case 2:    //
                     f = new SubCoordintorFragment();
                     break;
 
-                case 3:    //sports
+                case 3:    //
                     f = new SubCoordintorFragment();
                     break;
                 case 31:    //sub-coordinator
@@ -71,7 +71,7 @@ public class XPortal extends AppCompatActivity {
                     f = new SubCoordintorFragment();
                     break;
 
-                case 4:    //sports
+                case 4:    //
                     f = new CoordinatorFragment();
                     break;
                 case 41:    //coordinator
@@ -85,7 +85,7 @@ public class XPortal extends AppCompatActivity {
                     f = new CoordinatorFragment();
                     break;
 
-                case 6:    //sports
+                case 6:    //
                     f = new TechnicalSecretaryFragment();
                     break;
                 case 61:    //tech
@@ -107,7 +107,7 @@ public class XPortal extends AppCompatActivity {
                     f = new MaintenanceSecretaryFragment();
                     break;
 
-                case 7:    //gen-sec
+                case 7:    //
                     f = new TechnicalSecretaryFragment();
                     break;
                 case 71:    //gen-tech
@@ -128,14 +128,13 @@ public class XPortal extends AppCompatActivity {
                     f = new TechnicalSecretaryFragment();
                     break;
 
-
             }
 
             if (f != null) {
                 f.setArguments(b);
                 manager.beginTransaction().add(R.id.frame_layout_admin, f).commit();
             } else {
-                Toast.makeText(this, "Invalid POR !!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Invalid POR !!!", Toast.LENGTH_LONG).show();
                 finish();
             }
         }

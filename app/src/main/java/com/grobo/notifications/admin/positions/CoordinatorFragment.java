@@ -11,7 +11,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
-import com.grobo.notifications.account.PORItem;
+import com.grobo.notifications.account.por.PORItem;
 import com.grobo.notifications.admin.AddNotificationFragment;
 import com.grobo.notifications.utils.MistakeFragment;
 

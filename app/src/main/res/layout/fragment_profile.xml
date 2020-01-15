@@ -204,12 +204,19 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tv_positions_header"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:padding="8dp"
                 android:text="Positions:" />
+
+            <ImageView
+                android:id="@+id/iv_add_por"
+                android:layout_width="32dp"
+                android:background="?attr/selectableItemBackground"
+                android:visibility="gone"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_add_black_24dp" />
 
             <ProgressBar
                 android:id="@+id/progress_bar_pors"
@@ -217,6 +224,16 @@
                 android:layout_height="16dp" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_no_por"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:text="No positions found, click on add to claim." />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_pors"
@@ -231,7 +248,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="16dp"
+            android:layout_margin="32dp"
             android:background="@drawable/button_style"
             android:text="LogOut"
             android:textColor="#fff" />

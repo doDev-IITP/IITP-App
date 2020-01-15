@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.network.ClubRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,6 +42,7 @@ public class ClubsFragment extends Fragment {
     private ClubsRecyclerAdapter adapter;
     private RecyclerView clubsRecyclerView;
     private SharedPreferences prefs;
+    private List<ClubItem> allClubs = new ArrayList<>();
 
     public ClubsFragment() {
     }
@@ -88,6 +91,27 @@ public class ClubsFragment extends Fragment {
 
         observeAll();
 
+        SearchView searchView = view.findViewById(R.id.sv_club_list);
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                List<ClubItem> temp = new ArrayList<>();
+                for (ClubItem ci : allClubs)
+                    if (ci.getName().toLowerCase().contains(s.toLowerCase()))
+                        temp.add(ci);
+                adapter.setClubList(temp);
+
+                return false;
+            }
+        });
+
         return view;
     }
 
@@ -132,6 +156,7 @@ public class ClubsFragment extends Fragment {
         clubViewModel.getAllClubs().removeObservers(ClubsFragment.this);
         clubViewModel.getAllClubs().observe(ClubsFragment.this, clubItems -> {
             adapter.setClubList(clubItems);
+            allClubs = clubItems;
             if (clubItems.size() == 0) {
                 clubsRecyclerView.setVisibility(View.INVISIBLE);
                 emptyView.setVisibility(View.VISIBLE);

@@ -1,7 +1,6 @@
-package com.grobo.notifications.clubs;
+package com.grobo.notifications.account.por;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,23 +9,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.FragmentNavigator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
+import com.grobo.notifications.clubs.ClubItem;
 
 import java.util.List;
 
-public class ClubsRecyclerAdapter extends RecyclerView.Adapter<ClubsRecyclerAdapter.ClubsViewHolder> {
+public class ClaimPorClubAdapter extends RecyclerView.Adapter<ClaimPorClubAdapter.ClubsViewHolder> {
 
     private Context context;
     private List<ClubItem> clubList;
+    private OnClaimClubSelListener callback;
 
 
-    public ClubsRecyclerAdapter(Context context) {
+    public ClaimPorClubAdapter(Context context, OnClaimClubSelListener listener) {
         this.context = context;
+        this.callback = listener;
     }
 
     @NonNull
@@ -44,33 +44,15 @@ public class ClubsRecyclerAdapter extends RecyclerView.Adapter<ClubsRecyclerAdap
             final ClubItem current = clubList.get(position);
 
             holder.name.setText(current.getName());
-            holder.name.setTransitionName("transition_title" + position);
             holder.bio.setText(current.getBio());
-            holder.bio.setTransitionName("transition_bio" + position);
             Glide.with(context)
                     .load(current.getImage())
                     .placeholder(R.drawable.baseline_dashboard_24)
                     .into(holder.image);
-            holder.image.setTransitionName("transition" + position);
-            holder.image.setTransitionName("transition_image" + position);
 
             holder.rootLayout.setOnClickListener(v -> {
-                Bundle bundle = new Bundle();
-                bundle.putInt("transition_position", position);
-                bundle.putString("id", current.getId());
-
-                FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
-                        .addSharedElement(holder.image, "transition_image" + position)
-                        .addSharedElement(holder.bio, "transition_bio" + position)
-                        .addSharedElement(holder.name, "transition_title" + position)
-                        .build();
-
-                Navigation.findNavController(v).navigate(R.id.nav_club_detail,
-                        bundle,
-                        null,
-                        extras);
+                callback.onClubSelected(current);
             });
-
 
         } else {
             holder.name.setText("Loading ...");
@@ -105,4 +87,7 @@ public class ClubsRecyclerAdapter extends RecyclerView.Adapter<ClubsRecyclerAdap
         notifyDataSetChanged();
     }
 
+    public interface OnClaimClubSelListener {
+        void onClubSelected(ClubItem clubItem);
+    }
 }
