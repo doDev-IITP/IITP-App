@@ -1,8 +1,11 @@
-package com.grobo.notifications.account;
+package com.grobo.notifications.account.por;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class PORItem implements Parcelable {
     private String id;
     private String clubId;

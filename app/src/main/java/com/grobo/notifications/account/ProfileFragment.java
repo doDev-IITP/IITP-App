@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.grobo.notifications.R;
+import com.grobo.notifications.account.por.PORItem;
+import com.grobo.notifications.account.por.PORRecyclerAdapter;
 import com.grobo.notifications.network.OtherRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
@@ -65,6 +67,7 @@ public class ProfileFragment extends Fragment {
     private PORRecyclerAdapter adapter;
 
     private RecyclerView recyclerView;
+    private ImageView addButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,9 +106,14 @@ public class ProfileFragment extends Fragment {
         Button button = view.findViewById(R.id.profile_logout_button);
         button.setOnClickListener(v -> logout());
 
+        addButton = view.findViewById(R.id.iv_add_por);
+        addButton.setOnClickListener(v -> {
+            callback.onAddPorSelected();
+        });
+
         recyclerView = view.findViewById(R.id.rv_pors);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new PORRecyclerAdapter((PORRecyclerAdapter.OnPORSelectedListener)context);
+        adapter = new PORRecyclerAdapter((PORRecyclerAdapter.OnPORSelectedListener) context);
         recyclerView.setAdapter(adapter);
 
         updateData();
@@ -116,7 +124,7 @@ public class ProfileFragment extends Fragment {
         if (getView() != null) {
 
             ProgressBar porProgressBar = getView().findViewById(R.id.progress_bar_pors);
-            TextView porListHeader = getView().findViewById(R.id.tv_positions_header);
+            TextView textNoPor = getView().findViewById(R.id.tv_no_por);
 
             OtherRoutes service = RetrofitClientInstance.getRetrofitInstance().create(OtherRoutes.class);
 
@@ -156,20 +164,23 @@ public class ProfileFragment extends Fragment {
                                     adapter.setItemList(porItemList);
 
                                     recyclerView.setVisibility(View.VISIBLE);
-                                    porListHeader.setVisibility(View.VISIBLE);
-                                    porProgressBar.setVisibility(View.GONE);
+                                    textNoPor.setVisibility(View.GONE);
 
                                 } else {
                                     recyclerView.setVisibility(View.GONE);
-                                    porListHeader.setVisibility(View.GONE);
-                                    porProgressBar.setVisibility(View.GONE);
+                                    textNoPor.setVisibility(View.VISIBLE);
                                 }
 
                             } catch (IOException | JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                    }
+
+                        addButton.setVisibility(View.VISIBLE);
+                    } else
+                        Toast.makeText(context, "Update failed!!", Toast.LENGTH_SHORT).show();
+
+                    porProgressBar.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -177,6 +188,7 @@ public class ProfileFragment extends Fragment {
                     if (t.getMessage() != null)
                         Log.e("failure", t.getMessage());
                     Toast.makeText(context, "Update failed!!", Toast.LENGTH_SHORT).show();
+                    porProgressBar.setVisibility(View.GONE);
                 }
             });
         }
@@ -209,6 +221,8 @@ public class ProfileFragment extends Fragment {
 
     interface OnLogoutCallback {
         void onLogout();
+
+        void onAddPorSelected();
     }
 
     @Override

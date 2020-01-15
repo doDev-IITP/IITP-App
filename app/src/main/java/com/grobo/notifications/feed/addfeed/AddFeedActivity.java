@@ -1,7 +1,6 @@
 package com.grobo.notifications.feed.addfeed;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -181,17 +180,10 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirmation Dialog");
         builder.setMessage("Posting this feed... Please confirm!!");
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                post();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+        builder.setPositiveButton("Confirm", (dialog, which) -> post());
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
+            if (dialog != null) {
+                dialog.dismiss();
             }
         });
 

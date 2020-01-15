@@ -1,4 +1,4 @@
-package com.grobo.notifications.account;
+package com.grobo.notifications.account.por;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +26,6 @@ public class PORRecyclerAdapter extends RecyclerView.Adapter<PORRecyclerAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_por, parent, false);
-
         return new ViewHolder(view);
     }
 
@@ -66,7 +65,7 @@ public class PORRecyclerAdapter extends RecyclerView.Adapter<PORRecyclerAdapter.
         }
     }
 
-    void setItemList(List<PORItem> feeds) {
+    public void setItemList(List<PORItem> feeds) {
         porItems = feeds;
         notifyDataSetChanged();
     }
