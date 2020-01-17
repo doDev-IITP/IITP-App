@@ -21,7 +21,6 @@ import androidx.preference.PreferenceManager;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.grobo.notifications.R;
 import com.grobo.notifications.database.Person;
-import com.grobo.notifications.feed.Converters;
 import com.grobo.notifications.main.MainActivity;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.network.UserRoutes;
@@ -39,14 +38,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.PHONE_NUMBER;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
-import static com.grobo.notifications.utils.Constants.USER_POR;
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
@@ -179,15 +176,6 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnS
                         .putString(PHONE_NUMBER, person.getUser().getPhone())
                         .putString(USER_TOKEN, person.getToken())
                         .putString(USER_MONGO_ID, person.getUser().getStudentMongoId());
-
-                if (person.getUser().getPors() != null) {
-                    String porString = Converters.stringFromArray(person.getUser().getPors());
-                    prefsEditor.putString(USER_POR, porString);
-
-                    if (person.getUser().getPors().size() != 0) {
-                        prefsEditor.putBoolean(IS_ADMIN, true);
-                    }
-                }
 
                 prefsEditor.putBoolean(LOGIN_STATUS, true);
                 prefsEditor.apply();

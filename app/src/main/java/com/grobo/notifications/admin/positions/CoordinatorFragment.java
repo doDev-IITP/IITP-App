@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -40,50 +41,60 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_coordinator, container, false);
+        return inflater.inflate(R.layout.fragment_coordinator, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (currentPOR != null && getActivity() != null) {
+            getActivity().setTitle(String.format("%s (%s)", currentPOR.getClubName(), currentPOR.getPosition()));
+        }
 
         CardView notification = view.findViewById(R.id.coordinator_notification_cv);
         CardView events = view.findViewById(R.id.coordinator_events_cv);
         CardView projects = view.findViewById(R.id.coordinator_projects_cv);
+        CardView messages = view.findViewById(R.id.coordinator_messages_cv);
+        CardView clubDetails = view.findViewById(R.id.coordinator_club_details_cv);
 
         notification.setOnClickListener(this);
         events.setOnClickListener(this);
         projects.setOnClickListener(this);
-
-        return view;
+        messages.setOnClickListener(this);
+        clubDetails.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         Bundle bundle = new Bundle();
-//        bundle.putString("club", args.getString("club", ""));
-//        bundle.putString("power", args.getString("power", ""));
-        Fragment next;
+        bundle.putParcelable("data", currentPOR);
+
+        Fragment next = null;
         switch (v.getId()) {
             case R.id.coordinator_notification_cv:
                 next = new AddNotificationFragment();
-                next.setArguments(bundle);
-                transactFragment(next);
                 break;
             case R.id.coordinator_projects_cv:
                 next = new MistakeFragment();
-                next.setArguments(bundle);
-                transactFragment(next);
                 break;
             case R.id.coordinator_events_cv:
                 Toast.makeText(getContext(), "Coming soon...", Toast.LENGTH_SHORT).show();
                 break;
-            default:
-                next = new MistakeFragment();
         }
 
+        if (next != null) {
+            next.setArguments(bundle);
+            transactFragment(next);
+        }
     }
 
     private void transactFragment(Fragment frag) {
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
-                .replace(R.id.frame_layout_admin, frag)
-                .addToBackStack("later_fragment")
-                .commit();
+        if (getActivity() != null)
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
+                    .replace(R.id.frame_layout_admin, frag)
+                    .addToBackStack(frag.getTag())
+                    .commit();
     }
 }

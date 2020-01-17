@@ -62,7 +62,7 @@ public class NotificationsFragment extends Fragment implements NotificationsRecy
         notificationViewModel = ViewModelProviders.of(this).get(NotificationViewModel.class);
         //enableSwipeToDeleteAndUndo();
 
-        if (getArguments() !=null && getArguments().containsKey("time")) {
+        if (getArguments() != null && getArguments().containsKey("time")) {
             Notification notification = notificationViewModel.getNotificationByTimestamp(Long.parseLong(getArguments().getString("time")));
             if (notification != null)
                 showDialogueBox(notification);
