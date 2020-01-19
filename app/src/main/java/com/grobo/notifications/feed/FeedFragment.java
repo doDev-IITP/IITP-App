@@ -96,20 +96,15 @@ public class FeedFragment extends Fragment {
 
         if (context instanceof MainActivity) {
 
-            addFab.hide();
-
             radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
                 switch (checkedId) {
                     case R.id.feed_radio_all:
-                        addFab.hide();
                         observeAll();
                         break;
                     case R.id.feed_radio_starred:
-                        addFab.hide();
                         observeStarred();
                         break;
                     case R.id.feed_radio_my:
-                        addFab.show();
                         observeMy(prefs.getString(USER_MONGO_ID, ""));
                         break;
                 }

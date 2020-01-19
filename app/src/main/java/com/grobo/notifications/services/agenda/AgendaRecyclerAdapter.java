@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
 import com.grobo.notifications.utils.ImageViewerActivity;
 import com.grobo.notifications.utils.ViewUtils;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.List;
 
@@ -105,6 +107,11 @@ public class AgendaRecyclerAdapter extends RecyclerView.Adapter<AgendaRecyclerAd
                 callback.onReactSelected(current.getId());
             });
 
+            holder.share.setImageDrawable(new IconDrawable(context, FontAwesomeIcons.fa_share_square_o).colorRes(R.color.navy_blue_dark));
+            holder.share.setOnClickListener(v -> {
+                callback.onShareSelected(current.getId());
+            });
+
         } else {
             holder.category.setText("Loading ...");
         }
@@ -127,6 +134,7 @@ public class AgendaRecyclerAdapter extends RecyclerView.Adapter<AgendaRecyclerAd
         ImageView react;
         TextView reactCount;
         CardView reactCard;
+        ImageView share;
 
         MaintenanceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -139,6 +147,7 @@ public class AgendaRecyclerAdapter extends RecyclerView.Adapter<AgendaRecyclerAd
             react = itemView.findViewById(R.id.react);
             reactCard = itemView.findViewById(R.id.react_card);
             reactCount = itemView.findViewById(R.id.react_count);
+            share = itemView.findViewById(R.id.share);
         }
     }
 
@@ -149,7 +158,7 @@ public class AgendaRecyclerAdapter extends RecyclerView.Adapter<AgendaRecyclerAd
 
     public interface OnAgendaSelectedListener {
         void onAgendaSelected(Agenda agenda);
-
         void onReactSelected(String agendaId);
+        void onShareSelected(String agendaId);
     }
 }

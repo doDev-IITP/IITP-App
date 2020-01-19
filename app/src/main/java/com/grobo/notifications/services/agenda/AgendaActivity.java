@@ -1,5 +1,6 @@
 package com.grobo.notifications.services.agenda;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -83,5 +84,18 @@ public class AgendaActivity extends AppCompatActivity implements AgendaRecyclerA
             }
         });
 
+    }
+
+    @Override
+    public void onShareSelected(String agendaId) {
+        String link = getResources().getString(R.string.iitp_web) + "agenda/" + agendaId;
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND)
+                .putExtra(Intent.EXTRA_TEXT, link)
+                .setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, "Share this Agenda");
+        startActivity(shareIntent);
     }
 }

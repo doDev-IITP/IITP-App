@@ -48,6 +48,7 @@ import com.grobo.notifications.account.ProfileActivity;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.clubs.PorAdapter;
+import com.grobo.notifications.services.agenda.AgendaActivity;
 import com.grobo.notifications.utils.KeyboardUtils;
 
 import static com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE;
@@ -137,7 +138,12 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
                 bundle.putString("time", time);
 
                 navController.navigate(R.id.nav_notification, bundle);
+            } else if (appLinkData.contains("/agenda/")) {
+                String id = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
 
+                Intent i = new Intent(MainActivity.this, AgendaActivity.class);
+                i.putExtra("agendaId", id);
+                startActivity(i);
             }
         }
     }

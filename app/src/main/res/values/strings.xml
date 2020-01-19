@@ -28,11 +28,14 @@
     <string name="back_to_login">Back to login ?</string>
     <string-array name="agenda_categories_spinner">
         <item>Select-Category</item>
-        <item>Carpenter</item>
-        <item>Water Cooler</item>
-        <item>Pest Control</item>
-        <item>Washroom problem</item>
-        <item>Cleaning</item>
+        <item>Maintenance</item>
+        <item>Security</item>
+        <item>Hygiene and Cleaning</item>
+        <item>Sanitation</item>
+        <item>Academic</item>
+        <item>Mess and Food</item>
+        <item>Hostel rooms</item>
+        <item>Other</item>
     </string-array>
 
 </resources>

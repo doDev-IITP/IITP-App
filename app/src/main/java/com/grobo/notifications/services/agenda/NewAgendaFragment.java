@@ -233,7 +233,8 @@ public class NewAgendaFragment extends Fragment implements Spinner.OnItemSelecte
         progressDialog.show();
 
         Map<String, Object> jsonParams = new ArrayMap<>();
-        jsonParams.put("imageUrl", imageUrl);
+        if (!imageUrl.isEmpty())
+            jsonParams.put("imageUrl", imageUrl);
         jsonParams.put("problem", bodyText);
         jsonParams.put("category", category.equals("Other") ? otherTextInput.getText().toString() : category);
 
