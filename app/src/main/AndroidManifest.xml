@@ -12,12 +12,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".mail.EmailActivity"
-            android:parentActivityName=".main.MainActivity"
-            android:theme="@style/WebViewStyle">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".main.MainActivity" /></activity>
         <activity
             android:name=".main.WebActivity"
             android:parentActivityName=".main.MainActivity"
@@ -42,6 +36,7 @@
         <activity
             android:name=".admin.XPortal"
             android:launchMode="singleTop"
+            android:label="Admin Portal"
             android:parentActivityName=".main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
@@ -50,7 +45,7 @@
                 android:value=".main.MainActivity" />
         </activity>
         <activity
-            android:name=".services.maintenance.MaintenanceActivity"
+            android:name=".services.agenda.AgendaActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity"
             android:screenOrientation="portrait">

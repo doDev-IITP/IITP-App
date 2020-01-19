@@ -15,9 +15,7 @@ public class Constants {
     public static final String PHONE_NUMBER = "phone_number";
     public static final String USER_YEAR = "user_year";
     public static final String USER_BRANCH = "user_branch";
-    public static final String IS_ADMIN = "is_admin";
     public static final String USER_TOKEN = "user_token";
-    public static final String USER_POR = "user_por";
     public static final String USER_MONGO_ID = "user_mongo_id";
 
     public static final String LOGIN_STATUS = "login_status";
@@ -27,13 +25,6 @@ public class Constants {
 
     public static final String IS_QR_DOWNLOADED = "is_qr_code_downloaded";
     public static final String IS_TT_DOWNLOADED = "is_tt_downloaded";
-
-    public static final String SUB_COORDINATOR = "sco";
-    public static final String COORDINATOR = "co";
-    public static final String LEAD = "ld";
-    public static final String SECRETARY = "scr";
-    public static final String CR = "cr";
-    public static final String VP = "vp";
 
     public static final String KEY_FORCE_UPDATE = "force_update";
 

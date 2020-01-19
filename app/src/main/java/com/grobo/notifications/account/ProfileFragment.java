@@ -42,7 +42,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.grobo.notifications.utils.Constants.BASE_URL;
-import static com.grobo.notifications.utils.Constants.IS_ADMIN;
 import static com.grobo.notifications.utils.Constants.IS_QR_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.IS_TT_DOWNLOADED;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
@@ -51,7 +50,6 @@ import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
-import static com.grobo.notifications.utils.Constants.USER_POR;
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 import static com.grobo.notifications.utils.Constants.WEBMAIL;
@@ -211,8 +209,6 @@ public class ProfileFragment extends Fragment {
                 .putString("jsonString", "")
                 .putBoolean(IS_QR_DOWNLOADED, false)
                 .putBoolean(IS_TT_DOWNLOADED, false)
-                .putBoolean(IS_ADMIN, false)
-                .putString(USER_POR, "")
                 .putInt("mess_choice", 0)
                 .apply();
 

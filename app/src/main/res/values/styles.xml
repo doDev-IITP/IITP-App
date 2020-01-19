@@ -59,10 +59,21 @@
     </style>
 
     <style name="club_search_view" parent="Widget.AppCompat.Light.SearchView" >
-<!--        <item name="android:textSize">@dimen/textSizePrimary</item>-->
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorHint">#dddddd</item>
         <item name="android:tint">#dddddd</item>
+    </style>
+
+
+    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_rounder_shape</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
     </style>
 
 </resources>

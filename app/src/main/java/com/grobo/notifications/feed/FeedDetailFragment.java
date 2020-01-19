@@ -16,7 +16,6 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.preference.PreferenceManager;
 import androidx.transition.TransitionInflater;
 
 import com.bumptech.glide.Glide;
@@ -30,14 +29,11 @@ import com.grobo.notifications.utils.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import io.noties.markwon.Markwon;
 import io.noties.markwon.html.HtmlPlugin;
 import io.noties.markwon.image.glide.GlideImagesPlugin;
-
-import static com.grobo.notifications.utils.Constants.USER_POR;
 
 public class FeedDetailFragment extends Fragment {
 
@@ -179,17 +175,6 @@ public class FeedDetailFragment extends Fragment {
 
         if (context instanceof XPortal) {
 
-            List<String> itemsList = Converters.arrayFromString(PreferenceManager
-                    .getDefaultSharedPreferences(context).getString(USER_POR, ""));
-
-            if (itemsList.size() != 0)
-
-                for (String por : itemsList) {
-                    String[] array = por.split("_", 2);
-                    String club = array[1];
-                }
-
-            //TODO : implement feed edit and delete functionality
         }
 
         return view;

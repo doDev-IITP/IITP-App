@@ -25,9 +25,6 @@ public class XPortal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xportal);
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle("Admin Portal");
-
         manager = getSupportFragmentManager();
 
         Intent i = getIntent();
@@ -39,8 +36,6 @@ public class XPortal extends AppCompatActivity {
             Toast.makeText(this, "Intent extra error !!!", Toast.LENGTH_SHORT).show();
             finish();
         }
-
-        setBaseFragment();
     }
 
     private void setBaseFragment(PORItem porItem) {
@@ -138,10 +133,6 @@ public class XPortal extends AppCompatActivity {
                 finish();
             }
         }
-    }
-
-    private void setBaseFragment() {
-
     }
 
     private void transactFragment(Fragment frag) {
