@@ -79,7 +79,13 @@ abstract public class OnSwipeTouchListener extends ItemTouchHelper.Callback {
 
 
         deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
+        c.save();
+        c.clipRect(itemView.getRight()+dX,itemView.getTop(),itemView.getRight(),itemView.getBottom());
+
         deleteDrawable.draw(c);
+
+        c.restore();
+
 
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
