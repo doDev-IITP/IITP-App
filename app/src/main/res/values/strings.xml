@@ -26,7 +26,7 @@
     <string name="forgot_password">Forgot your password?</string>
     <string name="send_help">Send help!</string>
     <string name="back_to_login">Back to login ?</string>
-    <string-array name="maintenance_list_spinner">
+    <string-array name="agenda_categories_spinner">
         <item>Select-Category</item>
         <item>Carpenter</item>
         <item>Water Cooler</item>

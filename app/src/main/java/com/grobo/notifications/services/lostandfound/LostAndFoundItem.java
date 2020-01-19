@@ -4,7 +4,7 @@ import androidx.annotation.Keep;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.grobo.notifications.feed.FeedPoster;
+import com.grobo.notifications.feed.DataPoster;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class LostAndFoundItem {
     private String time;
     @SerializedName("lostnfoundPoster")
     @Expose
-    private FeedPoster lostnfoundPoster;
+    private DataPoster lostnfoundPoster;
     @SerializedName("image")
     @Expose
     private String image;
@@ -134,11 +134,11 @@ public class LostAndFoundItem {
         this.time = time;
     }
 
-    public FeedPoster getLostnfoundPoster() {
+    public DataPoster getLostnfoundPoster() {
         return lostnfoundPoster;
     }
 
-    public void setLostnfoundPoster(FeedPoster lostnfoundPoster) {
+    public void setLostnfoundPoster(DataPoster lostnfoundPoster) {
         this.lostnfoundPoster = lostnfoundPoster;
     }
 

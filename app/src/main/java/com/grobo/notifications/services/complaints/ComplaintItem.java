@@ -4,7 +4,7 @@ import androidx.annotation.Keep;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.grobo.notifications.feed.FeedPoster;
+import com.grobo.notifications.feed.DataPoster;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class ComplaintItem {
     private String id;
     @SerializedName("complaintPoster")
     @Expose
-    private FeedPoster complaintPoster;
+    private DataPoster complaintPoster;
     @SerializedName("category")
     @Expose
     private int category;
@@ -88,11 +88,11 @@ public class ComplaintItem {
         this.imageUrl = imageUrl;
     }
 
-    public FeedPoster getComplaintPoster() {
+    public DataPoster getComplaintPoster() {
         return complaintPoster;
     }
 
-    public void setComplaintPoster(FeedPoster complaintPoster) {
+    public void setComplaintPoster(DataPoster complaintPoster) {
         this.complaintPoster = complaintPoster;
     }
 }

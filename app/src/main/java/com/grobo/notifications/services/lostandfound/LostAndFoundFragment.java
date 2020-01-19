@@ -41,7 +41,7 @@ public class LostAndFoundFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_lost_and_found, container, false);
 
         emptyView = view.findViewById(R.id.lost_found_empty_view);
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lost_found);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this::populateRecycler);
         swipeRefreshLayout.setRefreshing(true);
 

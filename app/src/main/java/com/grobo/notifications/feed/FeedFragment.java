@@ -206,7 +206,7 @@ public class FeedFragment extends Fragment {
         feedViewModel.loadAllFeeds().observe(FeedFragment.this, feedItems -> {
             List<FeedItem> newList = new ArrayList<>();
             for (FeedItem n : feedItems) {
-                if (n.getFeedPoster().getId() != null && n.getFeedPoster().getId().equals(poster))
+                if (n.getDataPoster().getId() != null && n.getDataPoster().getId().equals(poster))
                     newList.add(n);
             }
             adapter.setFeedItemList(newList);

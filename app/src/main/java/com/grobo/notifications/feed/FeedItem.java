@@ -30,10 +30,10 @@ public class FeedItem {
     @SerializedName("postLinks")
     @Expose
     private List<String> postLinks = null;
-    @SerializedName("feedPoster")
+    @SerializedName("dataPoster")
     @Expose
     @Embedded(prefix = "user_")
-    private FeedPoster feedPoster;
+    private DataPoster dataPoster;
     @SerializedName("eventDate")
     @Expose
     private long eventDate;
@@ -52,12 +52,12 @@ public class FeedItem {
 
     private boolean interested = false;
 
-    public void setFeedPoster(FeedPoster feedPoster) {
-        this.feedPoster = feedPoster;
+    public void setDataPoster(DataPoster dataPoster) {
+        this.dataPoster = dataPoster;
     }
 
-    public FeedPoster getFeedPoster() {
-        return feedPoster;
+    public DataPoster getDataPoster() {
+        return dataPoster;
     }
 
     public void setPostLinks(List<String> postLinks) {

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
-import com.grobo.notifications.services.maintenance.MaintenanceItem;
 
 import java.util.List;
 
