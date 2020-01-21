@@ -9,10 +9,6 @@
             android:icon="@drawable/baseline_home_24"
             android:title="Home" />
         <item
-            android:id="@+id/nav_feed"
-            android:icon="@drawable/baseline_rss_feed_24"
-            android:title="Feed" />
-        <item
             android:id="@+id/nav_explore"
             android:icon="@drawable/baseline_timeline_24"
             android:title="Explore" />
@@ -24,6 +20,10 @@
             android:id="@+id/nav_timetable"
             android:icon="@drawable/baseline_schedule_24"
             android:title="Timetable" />
+        <item
+            android:id="@+id/nav_services"
+            android:icon="@drawable/baseline_explore_24"
+            android:title="Services" />
         <item
             android:id="@+id/nav_calender"
             android:icon="@drawable/ic_insert_invitation_black_24dp"
@@ -45,10 +45,6 @@
             android:id="@+id/nav_links"
             android:icon="@drawable/baseline_insert_link_24"
             android:title="Quick Links" />
-        <item
-            android:id="@+id/nav_services"
-            android:icon="@drawable/baseline_explore_24"
-            android:title="Services" />
         <item
             android:id="@+id/nav_fresher"
             android:icon="@drawable/ic_child_care_black_24dp"

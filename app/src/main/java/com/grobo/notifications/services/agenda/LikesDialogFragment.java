@@ -50,7 +50,7 @@ public class LikesDialogFragment extends BottomSheetDialogFragment {
 
     @Override
     public int getTheme() {
-        return R.style.BottomSheetDialogTheme;
+        return R.style.BottomSheetDialogLikes;
     }
 
     @NonNull

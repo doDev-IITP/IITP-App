@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.grobo.notifications.R;
 import com.grobo.notifications.feed.FeedViewModel;
 
 public class ClubEventDetailFragment extends Fragment {
@@ -34,7 +33,7 @@ public class ClubEventDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_feed_detail, container, false);
+//        View view = inflater.inflate(R.layout.fragment_feed_detail, container, false);
 
 //        ImageView eventPoster = view.findViewById(R.id.event_detail_header_bg);
 //        TextView eventTitle = view.findViewById(R.id.tv_event_detail_title);
@@ -129,7 +128,7 @@ public class ClubEventDetailFragment extends Fragment {
 //            //TODO : implement feed edit and delete functionality
 //        }
 
-        return view;
+        return null;
     }
 //
 //    private void toggleStar(ClubEventItem item) {

@@ -6,8 +6,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
-        <item name="android:navigationBarColor" tools:targetApi="o_mr1">@color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:navigationBarColor" tools:targetApi="o_mr1">@color/black</item>
     </style>
 
     <style name="CategoryTab" parent="Widget.Design.TabLayout">
@@ -20,6 +20,11 @@
     <style name="AppTheme.NoActionBar" parent="@style/AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="colorPrimaryDark">@color/transparent</item>
+    </style>
+
+    <style name="zoomStyle" parent="AppTheme.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -30,25 +35,14 @@
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:textSize">20sp</item></style>
 
-    <style name="zoomStyle" parent="AppTheme.NoActionBar">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
-        <item name="android:navigationBarColor" tools:targetApi="o_mr1">@color/black</item>
-    </style>
-
     <style name="TextInputLayoutOutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:textColorHint">@color/shadow</item>
         <item name="colorControlActivated">@color/shadow</item>
         <item name="boxStrokeColor">@color/shadow</item>
     </style>
 
-<!--    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">-->
-<!--        <item name="android:background">@drawable/shape_dialog_today_stats</item>-->
-<!--    </style>-->
-
     <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
-<!--        <item name="bottomSheetStyle">@style/BottomSheet</item>-->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/white</item>
     </style>
@@ -65,13 +59,13 @@
     </style>
 
 
-    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+    <style name="BottomSheetLikes" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_rounder_shape</item>
     </style>
 
-    <style name="BottomSheetDialogTheme" parent="@style/Theme.Design.Light.BottomSheetDialog">
+    <style name="BottomSheetDialogLikes" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
-        <item name="bottomSheetStyle">@style/BottomSheet</item>
+        <item name="bottomSheetStyle">@style/BottomSheetLikes</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/white</item>
     </style>

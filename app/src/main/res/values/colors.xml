@@ -16,6 +16,7 @@
 
     <!--Design colors-->
     <color name="red_dark2">#D85A1B</color>
+    <color name="deep_red">#D51313</color>
     <color name="navy_blue">#214258</color>
     <color name="navy_blue_dark">#1C3A4E</color>
     <color name="light_green">#78DC96</color>

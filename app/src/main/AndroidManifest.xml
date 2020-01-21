@@ -115,6 +115,8 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity android:name=".feed.FeedDetailActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".notifications.FcmService"

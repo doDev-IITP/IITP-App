@@ -1,10 +1,10 @@
 package com.grobo.notifications.network;
 
 import com.grobo.notifications.feed.FeedItem;
-
-import java.util.List;
+import com.grobo.notifications.feed.FeedItems;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -17,7 +17,7 @@ public interface FeedRoutes {
 
     //feeds
     @GET("/feeds")
-    Call<List<FeedItem>> getAllFeeds();
+    Call<FeedItems> getAllFeeds();
 
     @POST("/feeds")
     Call<Void> postFeed(@Header("Authorization") String credentials, @Body RequestBody body);
@@ -30,12 +30,11 @@ public interface FeedRoutes {
 
     //for new feed added
     @GET("/feeds/latestFeed/{timestamp}")
-    Call<FeedItem.FeedItemSuper1> getNewFeed(@Path("timestamp") long eventId);
+    Call<FeedItems> getNewFeed(@Path("timestamp") long eventId);
 
-    //for later events
-    @GET("/feeds/timestamp/{timestamp}")
-    Call<List<FeedItem>> getNewEvents(@Header("Authorization") String credentials, @Path("timestamp") long eventDate);
+    @POST("/feeds/react/{feedId}")
+    Call<ResponseBody> reactOnFeed(@Header("Authorization") String credentials, @Path("feedId") String feedId);
 
-
-
+    @GET("/feeds/react/{feedId}")
+    Call<ResponseBody> getFeedReacts(@Header("Authorization") String credentials, @Path("feedId") String feedId);
 }

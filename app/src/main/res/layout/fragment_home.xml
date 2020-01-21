@@ -4,26 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.HomeFragment">
+    tools:context=".feed.HomeFragment">
 
-    <FrameLayout
-        android:id="@+id/frame_layout_home"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager_home"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav_home"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="48dp"
+        android:paddingEnd="48dp"/>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav_home"
+    <RelativeLayout
+        android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:itemIconTint="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:itemTextColor="@color/colorAccent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/nav_menu_home" />
+        android:layout_height="40dp"
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/icon_mess"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/mess_icon"
+            android:tint="@color/white" />
+
+        <ImageView
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/add_icon"
+            android:tint="@color/white" />
+
+        <ImageView
+            android:id="@+id/icon_notification"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/notification_icon"
+            android:tint="@color/white" />
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

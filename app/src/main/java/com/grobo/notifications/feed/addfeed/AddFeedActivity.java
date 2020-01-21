@@ -15,7 +15,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
 import com.grobo.notifications.R;
-import com.grobo.notifications.feed.FeedDetailFragment;
 import com.grobo.notifications.network.FeedRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
@@ -135,19 +134,19 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
         this.twitter = twitter;
         this.inst = inst;
 
-        Fragment next = new FeedDetailFragment();
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        args.putString("description", description);
-        args.putString("venue", venue);
-        args.putLong("date", date);
-        args.putString("image", image);
-        args.putString("fb", fb);
-        args.putString("inst", inst);
-        args.putString("twitter", twitter);
-        args.putString("fb", fb);
-        next.setArguments(args);
-        showFragmentWithTransition(next);
+//        Fragment next = new FeedDetailFragment();
+//        Bundle args = new Bundle();
+//        args.putString("title", title);
+//        args.putString("description", description);
+//        args.putString("venue", venue);
+//        args.putLong("date", date);
+//        args.putString("image", image);
+//        args.putString("fb", fb);
+//        args.putString("inst", inst);
+//        args.putString("twitter", twitter);
+//        args.putString("fb", fb);
+//        next.setArguments(args);
+//        showFragmentWithTransition(next);
     }
 
     private void showFragmentWithTransition(Fragment newFragment) {
@@ -167,11 +166,11 @@ public class AddFeedActivity extends AppCompatActivity implements AddFeedFragmen
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.add_feed_action_save) {
-            if (getSupportFragmentManager().findFragmentById(R.id.frame_layout_add_feed) instanceof FeedDetailFragment) {
-                showUnsavedChangesDialog();
-            } else {
-                Toast.makeText(AddFeedActivity.this, "Please preview the feed first", Toast.LENGTH_SHORT).show();
-            }
+//            if (getSupportFragmentManager().findFragmentById(R.id.frame_layout_add_feed) instanceof FeedDetailFragment) {
+//                showUnsavedChangesDialog();
+//            } else {
+//                Toast.makeText(AddFeedActivity.this, "Please preview the feed first", Toast.LENGTH_SHORT).show();
+//            }
         }
         return super.onOptionsItemSelected(item);
     }

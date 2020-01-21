@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -78,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.background));
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!prefs.getBoolean(LOGIN_STATUS, false)) {
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             NavigationView navigationView = findViewById(R.id.nav_view);
 
             appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home, R.id.nav_explore, R.id.nav_calender, R.id.nav_feed, R.id.nav_notification,
+                    R.id.nav_home, R.id.nav_explore, R.id.nav_calender, R.id.nav_notification,
                     R.id.nav_timetable, R.id.nav_links, R.id.nav_services, R.id.nav_setting)
                     .setDrawerLayout(drawer)
                     .build();
@@ -109,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             new Handler().postDelayed(this::subscribeFcmTopics, 1000);
 
             handleIntent(getIntent());
+
+            Toast.makeText(this, "Thank you for testing beta version of this app. Please give feedback from about section of the app.", Toast.LENGTH_LONG).show();
         }
         KeyboardUtils.hideSoftInput(this);
     }

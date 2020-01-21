@@ -75,7 +75,7 @@ public class ClubDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_club_details, container, false);
 
-        ImageView cover = view.findViewById(R.id.event_detail_header_bg);
+        ImageView cover = view.findViewById(R.id.image);
         TextView name = view.findViewById(R.id.tv_event_detail_title);
         followingFab = view.findViewById(R.id.fab_event_detail_interested);
         TextView bio = view.findViewById(R.id.tv_event_detail_time);
