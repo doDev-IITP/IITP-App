@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             NavigationView navigationView = findViewById(R.id.nav_view);
 
             appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home, R.id.nav_explore, R.id.nav_calender, R.id.nav_notification,
+                    R.id.nav_home, R.id.nav_explore, R.id.nav_calender,
                     R.id.nav_timetable, R.id.nav_links, R.id.nav_services, R.id.nav_setting)
                     .setDrawerLayout(drawer)
                     .build();
@@ -129,7 +129,8 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
                 String feedId = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("id", feedId);
+                bundle.putBoolean("reload", true);
+                bundle.putString("feedId", feedId);
                 navController.navigate(R.id.nav_feed_detail, bundle);
             } else if (appLinkData.contains("/club/")) {
                 String id = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);

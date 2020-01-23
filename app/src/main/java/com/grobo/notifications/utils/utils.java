@@ -18,6 +18,7 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.preference.PreferenceManager;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -209,5 +210,30 @@ public class utils {
                     .addOnFailureListener(e -> Log.e("FCM TOKEN UPDATE", Objects.requireNonNull(e.getMessage())));
         }
     }
+
+    public static void openWebsiteIntent(Context context, String url) {
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+
+        String website = url;
+        if (!website.startsWith("http") && !website.startsWith("https")) {
+            website = "https://" + website;
+        }
+
+        CustomTabsIntent customTabsIntent = builder.build();
+        if (context != null)
+            customTabsIntent.launchUrl(context, Uri.parse(website));
+    }
+
+    public static void shareIntent(Context context, String text) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND)
+                .putExtra(Intent.EXTRA_TEXT, text)
+                .setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, "Share");
+        context.startActivity(shareIntent);
+    }
+
+
 }
 

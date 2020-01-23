@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingStart="48dp"
-        android:paddingEnd="48dp"/>
+        android:paddingEnd="48dp" />
 
     <RelativeLayout
         android:id="@+id/bottom_layout"
@@ -28,6 +28,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/mess_icon"
             android:tint="@color/white" />
 
@@ -36,6 +37,7 @@
             android:layout_height="38dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/add_icon"
             android:tint="@color/white" />
 
@@ -46,9 +48,22 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/notification_icon"
             android:tint="@color/white" />
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/icon_todo"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/todo_icon"
+        android:tint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

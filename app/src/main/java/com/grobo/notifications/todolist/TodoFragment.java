@@ -94,7 +94,7 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
             for (Goal g : goals)
                 if (g.getChecked() != 0)
                     modGoals.add( g );
-            new Handler().postDelayed( () -> adapter.setItemList( modGoals ), 100 );
+            new Handler().postDelayed( () -> adapter.setItemList( modGoals ), 50 );
 
 //            void onNewDataArrived(List<News> news) {
 //                List<News> oldNews = myAdapter.getItems();

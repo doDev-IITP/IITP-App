@@ -62,7 +62,8 @@ public class HomeFragment extends Fragment {
         mess.setOnClickListener(v -> NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.nav_mess));
         ImageView notifications = view.findViewById(R.id.icon_notification);
         notifications.setOnClickListener(v -> NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.nav_notification));
-
+        ImageView todo = view.findViewById(R.id.icon_todo);
+        todo.setOnClickListener(v -> NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.nav_todo));
     }
 
     private void fillViewPager() {

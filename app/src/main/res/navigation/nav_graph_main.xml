@@ -115,4 +115,10 @@
         android:label="QR"
         tools:layout="@layout/fragment_qr" />
 
+    <fragment
+        android:id="@+id/nav_todo"
+        android:name="com.grobo.notifications.todolist.TodoFragment"
+        android:label="TODO"
+        tools:layout="@layout/fragment_todo" />
+
 </navigation>

@@ -1,6 +1,10 @@
 package com.grobo.notifications.todolist;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +26,7 @@ import com.grobo.notifications.utils.DatePickerHelper;
 public class DialogFragment extends BottomSheetDialogFragment {
 
     private TodoViewModel viewModel;
+    private Context context;
 
     public static DialogFragment newInstance() {
         return new DialogFragment();
@@ -31,6 +36,9 @@ public class DialogFragment extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(TodoViewModel.class);
+
+        if (getContext() != null)
+            context = getContext();
     }
 
 
@@ -79,8 +87,10 @@ public class DialogFragment extends BottomSheetDialogFragment {
 
             if (alarm.getText().toString().isEmpty()) {
                 goal.setAlarm(0);
-            } else
+            } else {
                 goal.setAlarm(dateHelper.getTimeInMillisFromCalender());
+                setAlarm(goal.getText(), goal.getAlarm());
+            }
 
             viewModel.insert(goal);
 
@@ -89,5 +99,19 @@ public class DialogFragment extends BottomSheetDialogFragment {
         });
 
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void setAlarm(String text, long alarm) {
+        Intent notifyIntent = new Intent(context, ReminderBroadcastReceiver.class);
+        notifyIntent.putExtra("title", "Reminder");
+        notifyIntent.putExtra("body", text);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context, (int) alarm, notifyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        if (alarmManager != null) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarm, pendingIntent);
+        }
     }
 }

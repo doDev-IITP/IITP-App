@@ -1,6 +1,5 @@
 package com.grobo.notifications.network;
 
-import com.grobo.notifications.feed.FeedItem;
 import com.grobo.notifications.feed.FeedItems;
 
 import okhttp3.RequestBody;
@@ -23,7 +22,7 @@ public interface FeedRoutes {
     Call<Void> postFeed(@Header("Authorization") String credentials, @Body RequestBody body);
 
     @GET("/feeds/{id}")
-    Call<FeedItem> getFeedByEventId(@Path("id") long eventId);
+    Call<ResponseBody> getFeedById(@Header("Authorization") String credentials, @Path("id") String id);
 
     @DELETE("/feeds/{id}")
     void deleteFeedByEventId(@Header("Authorization") String credentials, @Path("id") long eventId);

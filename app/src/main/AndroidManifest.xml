@@ -132,6 +132,9 @@
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
                 android:value="@string/default_notification_channel_id" />
         </service>
+        <service android:name=".todolist.ReminderNotificationService" />
+
+        <receiver android:name=".todolist.ReminderBroadcastReceiver" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
