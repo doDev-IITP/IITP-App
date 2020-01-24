@@ -19,7 +19,7 @@ public interface FeedRoutes {
     Call<FeedItems> getAllFeeds();
 
     @POST("/feeds")
-    Call<Void> postFeed(@Header("Authorization") String credentials, @Body RequestBody body);
+    Call<ResponseBody> postFeed(@Header("Authorization") String credentials, @Body RequestBody body);
 
     @GET("/feeds/{id}")
     Call<ResponseBody> getFeedById(@Header("Authorization") String credentials, @Path("id") String id);

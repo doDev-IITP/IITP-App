@@ -21,11 +21,12 @@
 
     <string name="nav_header_title">Guest</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="hint_add_feed_description">Enter description (Markdown and basic HTML syntax supported)\nUse &lt;br&gt; tag for line break\nUse &lt;a href=\'link\'&gt;Text&lt;/a&gt; for including links\nUse ![image name](https://image_link) for displaying images.</string>
+    <string name="hint_add_feed_description">Enter description (Markdown and basic HTML syntax supported)\nUse &lt;br&gt; tag for line break\nUse &lt;a href=\'link\'&gt;Text&lt;/a&gt;\nor [Link text](https://link) for including links\nUse ![image name](https://image_link) for displaying images.\nUse **text** for bold and *text* for italic</string>
     <string name="FCM_authorization">Enter FCM Server Token Here</string>
     <string name="forgot_password">Forgot your password?</string>
     <string name="send_help">Send help!</string>
     <string name="back_to_login">Back to login ?</string>
+    <string name="placeholder_text_feed_description">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum(The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, Lorem ipsum dolor sit amet.., comes from a line in section 1.10.32. The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from de Finibus Bonorum et Malorum by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</string>
     <string-array name="agenda_categories_spinner">
         <item>Select-Category</item>
         <item>Maintenance</item>

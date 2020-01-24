@@ -181,7 +181,7 @@ public class NewAgendaFragment extends Fragment implements Spinner.OnItemSelecte
                     }
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(getActivity(), "Canceled!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Canceled!", Toast.LENGTH_SHORT).show();
             }
         }
     }

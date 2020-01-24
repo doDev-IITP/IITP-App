@@ -33,6 +33,7 @@
             android:tint="@color/white" />
 
         <ImageView
+            android:id="@+id/icon_add_feed"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_alignParentBottom="true"

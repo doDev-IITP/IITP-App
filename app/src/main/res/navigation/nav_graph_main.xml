@@ -10,6 +10,13 @@
         android:name="com.grobo.notifications.timetable.TimetableActivity"
         android:label="Timetable"
         tools:layout="@layout/activity_timetable" />
+
+    <activity
+        android:id="@+id/nav_add_feed"
+        android:name="com.grobo.notifications.feed.addfeed.AddFeedActivity"
+        android:label="Post new feed"
+        tools:layout="@layout/activity_add_feed" />
+
     <activity
         android:id="@+id/nav_virtual"
         app:action="android.intent.action.VIEW"
