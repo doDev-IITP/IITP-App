@@ -42,4 +42,13 @@
     <color name="feed_detail_title_strip_color">#44000000</color>
     <color name="feed_detail_share_bg">#88ffffff</color>
 
+    <color name="club_detail_title">#ffffff</color>
+    <color name="club_detail_bio">#00BCD4</color>
+    <color name="club_detail_like">#D51313</color>
+    <color name="club_detail_line_divider">#696969</color>
+    <color name="club_detail_description">#000000</color>
+    <color name="club_detail_title_strip_color">#44000000</color>
+    <color name="club_detail_share_bg">#88ffffff</color>
+    <color name="club_detail_website_bg">#88ffffff</color>
+
 </resources>

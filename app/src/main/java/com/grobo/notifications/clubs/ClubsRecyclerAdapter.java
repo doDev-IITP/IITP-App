@@ -1,7 +1,7 @@
 package com.grobo.notifications.clubs;
 
 import android.content.Context;
-import android.os.Bundle;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.FragmentNavigator;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -55,20 +54,21 @@ public class ClubsRecyclerAdapter extends RecyclerView.Adapter<ClubsRecyclerAdap
             holder.image.setTransitionName("transition_image" + position);
 
             holder.rootLayout.setOnClickListener(v -> {
-                Bundle bundle = new Bundle();
-                bundle.putInt("transition_position", position);
-                bundle.putString("id", current.getId());
 
-                FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
-                        .addSharedElement(holder.image, "transition_image" + position)
-                        .addSharedElement(holder.bio, "transition_bio" + position)
-                        .addSharedElement(holder.name, "transition_title" + position)
-                        .build();
+//                FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
+//                        .addSharedElement(holder.image, "transition_image" + position)
+//                        .addSharedElement(holder.bio, "transition_bio" + position)
+//                        .addSharedElement(holder.name, "transition_title" + position)
+//                        .build();
 
-                Navigation.findNavController(v).navigate(R.id.nav_club_detail,
-                        bundle,
-                        null,
-                        extras);
+//                Activity activity = (Activity) context;
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+//                        new Pair<>(imageView, IMAGE_TRANSITION_NAME)
+//                );
+
+                Intent intent = new Intent(context, ClubDetailActivity.class);
+                intent.putExtra("clubId", current.getId());
+                ActivityCompat.startActivity(context, intent, null);
             });
 
 

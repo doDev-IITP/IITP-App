@@ -17,39 +17,46 @@
     <RelativeLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
             android:id="@+id/icon_mess"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="44dp"
+            android:layout_height="36dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/white_ripple_background"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
             android:src="@drawable/mess_icon"
             android:tint="@color/white" />
 
         <ImageView
             android:id="@+id/icon_add_feed"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/white_ripple_background"
+            android:padding="4dp"
             android:src="@drawable/add_icon"
             android:tint="@color/white" />
 
         <ImageView
             android:id="@+id/icon_notification"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="44dp"
+            android:layout_height="36dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/white_ripple_background"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
             android:src="@drawable/notification_icon"
             android:tint="@color/white" />
 
@@ -57,14 +64,15 @@
 
     <ImageView
         android:id="@+id/icon_todo"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/white_ripple_background"
+        android:padding="4dp"
         android:src="@drawable/todo_icon"
         android:tint="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_layout" />
+        app:layout_constraintBottom_toTopOf="@id/bottom_layout"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

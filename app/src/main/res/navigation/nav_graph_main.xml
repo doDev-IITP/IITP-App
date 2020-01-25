@@ -74,11 +74,11 @@
             app:destination="@id/nav_club_detail" />
     </fragment>
 
-    <fragment
+    <activity
         android:id="@+id/nav_club_detail"
-        android:name="com.grobo.notifications.clubs.ClubDetailsFragment"
+        android:name="com.grobo.notifications.clubs.ClubDetailActivity"
         android:label="Explore"
-        tools:layout="@layout/fragment_club_details" />
+        tools:layout="@layout/activity_club_detail" />
 
     <fragment
         android:id="@+id/nav_club_event"

@@ -1,9 +1,11 @@
 package com.grobo.notifications.network;
 
 import com.grobo.notifications.clubs.ClubItem;
-import com.grobo.notifications.feed.FeedItem;
+
+import java.util.List;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -14,16 +16,16 @@ import retrofit2.http.Path;
 
 public interface ClubRoutes {
 
-    @GET("/clubs")
-    Call<ClubItem.Clubs> getAllClubs();
+    @GET("/clubs/v2")
+    Call<List<ClubItem>> getAllClubs(@Header("Authorization") String credentials);
 
     @POST("/clubs")
-    Call<Void> addClub(@Body RequestBody body);
+    Call<ResponseBody> addClub(@Body RequestBody body);
 
-    @GET("/clubs/{id}")
-    Call<FeedItem> getClubById(@Path("id") String clubId);
+    @GET("/clubs/v2/{id}")
+    Call<ClubItem> getClubById(@Header("Authorization") String credentials, @Path("id") String clubId);
 
-    @DELETE("/feeds/{id}")
+    @DELETE("/clubs/{id}")
     void deleteClubById(@Header("Authorization") String credentials, @Path("id") String clubId);
 
 }

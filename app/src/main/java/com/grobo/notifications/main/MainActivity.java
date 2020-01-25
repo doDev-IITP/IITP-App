@@ -48,7 +48,6 @@ import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
-import com.grobo.notifications.clubs.PorAdapter;
 import com.grobo.notifications.services.agenda.AgendaActivity;
 import com.grobo.notifications.utils.KeyboardUtils;
 
@@ -62,8 +61,7 @@ import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
-public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORSelectedListener,
-        ClubEventRecyclerAdapter.OnEventSelectedListener {
+public class MainActivity extends AppCompatActivity implements ClubEventRecyclerAdapter.OnEventSelectedListener {
 
     private final String LOG_TAG = getClass().getSimpleName();
 
@@ -133,10 +131,11 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
                 bundle.putString("feedId", feedId);
                 navController.navigate(R.id.nav_feed_detail, bundle);
             } else if (appLinkData.contains("/club/")) {
-                String id = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
+                String clubId = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("id", id);
+                bundle.putBoolean("reload", true);
+                bundle.putString("clubId", clubId);
                 navController.navigate(R.id.nav_club_detail, bundle);
             } else if (appLinkData.contains("/notification/")) {
                 String time = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
@@ -310,11 +309,6 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
         Bundle bundle = new Bundle();
         bundle.putString("clubId", eventId);
         fragment.setArguments(bundle);
-    }
-
-    @Override
-    public void onPORSelected(String userId) {
-
     }
 
     @Override

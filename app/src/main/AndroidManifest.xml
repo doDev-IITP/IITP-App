@@ -117,6 +117,8 @@
         </activity>
         <activity android:name=".feed.FeedDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".clubs.ClubDetailActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".notifications.FcmService"
