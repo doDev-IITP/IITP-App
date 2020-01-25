@@ -13,7 +13,7 @@
         android:layout_width="68dp"
         android:layout_height="68dp"
         android:layout_marginStart="8dp"
-        app:cardBackgroundColor="@color/very_light_grey"
+        app:cardBackgroundColor="@color/explore_card_image_bg"
         app:cardCornerRadius="34dp"
         app:cardElevation="0dp">
 
@@ -36,7 +36,7 @@
             android:id="@+id/club_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/explore_card_primary"
             android:textSize="22sp"
             tools:text="text" />
 
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="middle"
-            android:textColor="@color/dark_gray"
+            android:textColor="@color/explore_card_secondary"
             android:textSize="14sp"
             tools:text="text" />
 

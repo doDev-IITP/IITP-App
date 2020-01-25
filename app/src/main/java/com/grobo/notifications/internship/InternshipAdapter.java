@@ -11,10 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
-import com.grobo.notifications.feed.FeedItem;
-import com.grobo.notifications.feed.FeedRecyclerAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

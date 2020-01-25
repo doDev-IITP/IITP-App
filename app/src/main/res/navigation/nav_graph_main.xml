@@ -10,6 +10,13 @@
         android:name="com.grobo.notifications.timetable.TimetableActivity"
         android:label="Timetable"
         tools:layout="@layout/activity_timetable" />
+
+    <activity
+        android:id="@+id/nav_add_feed"
+        android:name="com.grobo.notifications.feed.addfeed.AddFeedActivity"
+        android:label="Post new feed"
+        tools:layout="@layout/activity_add_feed" />
+
     <activity
         android:id="@+id/nav_virtual"
         app:action="android.intent.action.VIEW"
@@ -48,25 +55,14 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.grobo.notifications.main.HomeFragment"
+        android:name="com.grobo.notifications.feed.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
-        android:id="@+id/nav_feed"
-        android:name="com.grobo.notifications.feed.FeedFragment"
-        android:label="Feed"
-        tools:layout="@layout/fragment_feed">
-        <action
-            android:id="@+id/action_nav_feed_to_nav_feed_detail"
-            app:destination="@id/nav_feed_detail" />
-    </fragment>
-
-    <fragment
+    <activity
         android:id="@+id/nav_feed_detail"
-        android:name="com.grobo.notifications.feed.FeedDetailFragment"
-        android:label="Feed"
-        tools:layout="@layout/fragment_feed_detail" />
+        android:name="com.grobo.notifications.feed.FeedDetailActivity"
+        tools:layout="@layout/activity_feed_detail" />
 
     <fragment
         android:id="@+id/nav_explore"
@@ -78,11 +74,11 @@
             app:destination="@id/nav_club_detail" />
     </fragment>
 
-    <fragment
+    <activity
         android:id="@+id/nav_club_detail"
-        android:name="com.grobo.notifications.clubs.ClubDetailsFragment"
+        android:name="com.grobo.notifications.clubs.ClubDetailActivity"
         android:label="Explore"
-        tools:layout="@layout/fragment_club_details" />
+        tools:layout="@layout/activity_club_detail" />
 
     <fragment
         android:id="@+id/nav_club_event"
@@ -113,5 +109,23 @@
         android:name="com.grobo.notifications.notifications.NotificationsFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/nav_mess"
+        android:name="com.grobo.notifications.Mess.MessFragment"
+        android:label="Mess"
+        tools:layout="@layout/fragment_mess" />
+
+    <fragment
+        android:id="@+id/nav_qr"
+        android:name="com.grobo.notifications.Mess.QRFragment"
+        android:label="QR"
+        tools:layout="@layout/fragment_qr" />
+
+    <fragment
+        android:id="@+id/nav_todo"
+        android:name="com.grobo.notifications.todolist.TodoFragment"
+        android:label="TODO"
+        tools:layout="@layout/fragment_todo" />
 
 </navigation>

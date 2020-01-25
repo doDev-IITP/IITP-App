@@ -20,26 +20,16 @@ public class FeedItem {
     @Expose
     @NonNull
     private String id = "new_feed";
-
     @SerializedName("eventId")
     @Expose
     private long eventId;
-    @SerializedName("coordinators")
-    @Expose
-    private List<String> coordinators = null;
     @SerializedName("postLinks")
     @Expose
     private List<String> postLinks = null;
-    @SerializedName("dataPoster")
+    @SerializedName("feedPoster")
     @Expose
     @Embedded(prefix = "user_")
     private DataPoster dataPoster;
-    @SerializedName("eventDate")
-    @Expose
-    private long eventDate;
-    @SerializedName("eventVenue")
-    @Expose
-    private String eventVenue;
     @SerializedName("eventName")
     @Expose
     private String eventName;
@@ -49,6 +39,9 @@ public class FeedItem {
     @SerializedName("eventImageUrl")
     @Expose
     private String eventImageUrl;
+    @SerializedName("likes")
+    @Expose
+    private List<String> likes;
 
     private boolean interested = false;
 
@@ -62,10 +55,6 @@ public class FeedItem {
 
     public void setPostLinks(List<String> postLinks) {
         this.postLinks = postLinks;
-    }
-
-    public void setCoordinators(List<String> coordinators) {
-        this.coordinators = coordinators;
     }
 
     public long getEventId() {
@@ -96,16 +85,8 @@ public class FeedItem {
         return eventImageUrl;
     }
 
-    public String getEventVenue() {
-        return eventVenue;
-    }
-
     public void setEventImageUrl(String eventImageUrl) {
         this.eventImageUrl = eventImageUrl;
-    }
-
-    public void setEventVenue(String eventVenue) {
-        this.eventVenue = eventVenue;
     }
 
     public String getEventName() {
@@ -114,18 +95,6 @@ public class FeedItem {
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
-    }
-
-    public void setEventDate(long eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public long getEventDate() {
-        return eventDate;
-    }
-
-    public List<String> getCoordinators() {
-        return coordinators;
     }
 
     public List<String> getPostLinks() {
@@ -140,20 +109,12 @@ public class FeedItem {
         return id;
     }
 
-    @Keep
-    public class FeedItemSuper1 {
+    public List<String> getLikes() {
+        return likes;
+    }
 
-        @SerializedName("latestFeeds")
-        @Expose
-        private List<FeedItem> latestFeeds = null;
-
-        public List<FeedItem> getLatestFeeds() {
-            return latestFeeds;
-        }
-
-        public void setLatestFeeds(List<FeedItem> latestFeeds) {
-            this.latestFeeds = latestFeeds;
-        }
+    public void setLikes(List<String> likes) {
+        this.likes = likes;
     }
 }
 

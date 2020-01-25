@@ -33,6 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.graphics.drawable.ClipDrawable.HORIZONTAL;
+import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 public class ClubsFragment extends Fragment {
 
@@ -116,18 +117,18 @@ public class ClubsFragment extends Fragment {
     }
 
     private void updateData() {
+        String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
 
         ClubRoutes service = RetrofitClientInstance.getRetrofitInstance().create(ClubRoutes.class);
 
-        Call<ClubItem.Clubs> call = service.getAllClubs();
-        call.enqueue(new Callback<ClubItem.Clubs>() {
+        Call<List<ClubItem>> call = service.getAllClubs(token);
+        call.enqueue(new Callback<List<ClubItem>>() {
             @Override
-            public void onResponse(@NonNull Call<ClubItem.Clubs> call, @NonNull Response<ClubItem.Clubs> response) {
+            public void onResponse(@NonNull Call<List<ClubItem>> call, @NonNull Response<List<ClubItem>> response) {
                 if (response.isSuccessful()) {
-                    if (response.body() != null && response.body().getClubs() != null) {
+                    if (response.body() != null) {
 
-                        List<ClubItem> allItems = response.body().getClubs();
-
+                        List<ClubItem> allItems = response.body();
                         for (ClubItem newItem : allItems) {
                             clubViewModel.insert(newItem);
                         }
@@ -142,14 +143,13 @@ public class ClubsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<ClubItem.Clubs> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<ClubItem>> call, @NonNull Throwable t) {
                 if (t.getMessage() != null)
                     Log.e("failure", t.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getContext(), "Update failed!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Update failed!! Please check internet connection!", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     private void observeAll() {

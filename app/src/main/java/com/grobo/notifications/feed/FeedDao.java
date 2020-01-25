@@ -1,6 +1,5 @@
 package com.grobo.notifications.feed;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -12,8 +11,8 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 @Dao
 public interface FeedDao {
 
-    @Query("select * from feed ORDER BY eventDate DESC")
-    LiveData<List<FeedItem>> loadAllFeed();
+    @Query("select * from feed ORDER BY eventId DESC")
+    List<FeedItem> loadAllFeed();
 
     @Query("select * from feed where eventId = :eventId")
     FeedItem loadFeedByEventId(long eventId);
@@ -27,7 +26,7 @@ public interface FeedDao {
     @Insert(onConflict = REPLACE)
     void insertOrReplaceFeed(FeedItem... feedList);
 
-    @Query("DELETE FROM feed WHERE eventDate < :time and interested = 0")
+    @Query("DELETE FROM feed WHERE eventId < :time and interested = 0")
     void deleteOldFeed(long time);
 
     @Query("DELETE FROM feed WHERE interested = 0")

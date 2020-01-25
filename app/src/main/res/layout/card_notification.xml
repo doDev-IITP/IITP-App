@@ -35,7 +35,7 @@
                 android:layout_marginEnd="10dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/notification_card_primary"
                 android:textSize="18sp"
                 tools:text="text" />
 
@@ -46,7 +46,7 @@
                 android:layout_marginEnd="10dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/black"
+                android:textColor="@color/notification_card_detail"
                 android:textSize="14sp"
                 tools:text="text" />
 
@@ -54,6 +54,7 @@
                 android:id="@+id/tv_notification_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/notification_card_time"
                 tools:text="yesterday, 9PM" />
         </LinearLayout>
     </LinearLayout>

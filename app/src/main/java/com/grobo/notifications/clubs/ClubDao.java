@@ -18,15 +18,12 @@ public interface ClubDao {
     @Query("select * from clubs where id = :id")
     ClubItem loadClubById(String id);
 
-    @Query("SELECT * FROM clubs WHERE followed = 1 ORDER BY name ASC")
-    LiveData<List<ClubItem>> loadFollowedClubs();
-
     @Insert(onConflict = REPLACE)
     void insertClub(ClubItem clubItem);
 
     @Insert(onConflict = REPLACE)
     void insertOrReplaceClub(ClubItem... clubItems);
 
-    @Query("DELETE FROM clubs WHERE followed = 0")
+    @Query("DELETE FROM clubs")
     void deleteAllClubs();
 }

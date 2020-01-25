@@ -19,9 +19,6 @@ public class ClubItem {
     @SerializedName("_id")
     @Expose
     private String id = "new_club";
-    @SerializedName("events")
-    @Expose
-    private List<String> events = null;
     @SerializedName("followers")
     @Expose
     private Integer followers;
@@ -43,24 +40,9 @@ public class ClubItem {
     @SerializedName("image")
     @Expose
     private String image;
-
-    private boolean followed;
-
-    public void setFollowed(boolean followed) {
-        this.followed = followed;
-    }
-
-    public boolean isFollowed() {
-        return followed;
-    }
-
-    public List<String> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<String> events) {
-        this.events = events;
-    }
+    @SerializedName("liked")
+    @Expose
+    private Boolean liked;
 
     public Integer getFollowers() {
         return followers;
@@ -127,20 +109,11 @@ public class ClubItem {
         this.image = image;
     }
 
-    @Keep
-    public class Clubs {
+    public Boolean getLiked() {
+        return liked;
+    }
 
-        @SerializedName("clubs")
-        @Expose
-        private List<ClubItem> clubs = null;
-
-        public List<ClubItem> getClubs() {
-            return clubs;
-        }
-
-        public void setClubs(List<ClubItem> clubs) {
-            this.clubs = clubs;
-        }
-
+    public void setLiked(Boolean liked) {
+        this.liked = liked;
     }
 }

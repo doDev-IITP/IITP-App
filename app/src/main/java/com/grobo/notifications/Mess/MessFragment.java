@@ -13,9 +13,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
-import androidx.transition.TransitionInflater;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -67,25 +66,11 @@ public class MessFragment extends Fragment {
         });
 
         View qrFragment = view.findViewById(R.id.mess_fr_qr);
-        qrFragment.setOnClickListener(v -> transactFragment(new QRFragment()));
+        qrFragment.setOnClickListener(v -> {
+            NavHostFragment.findNavController(MessFragment.this).navigate(R.id.nav_qr);
+        });
 
         super.onViewCreated(view, savedInstanceState);
     }
-
-    private void transactFragment(Fragment frag) {
-
-        FragmentManager manager = requireActivity().getSupportFragmentManager();
-
-        Fragment current = manager.findFragmentById(R.id.frame_layout_home);
-        if (current != null) {
-            current.setExitTransition(TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.fade));
-            frag.setEnterTransition(TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.fade));
-        }
-
-        manager.beginTransaction().replace(R.id.frame_layout_home, frag)
-                .addToBackStack(frag.getTag())
-                .commit();
     }
-
-}
 

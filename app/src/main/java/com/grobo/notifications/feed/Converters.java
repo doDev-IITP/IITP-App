@@ -22,9 +22,9 @@ public class Converters {
     @TypeConverter
     public static List<String> arrayFromString(String concatenatedStrings) {
 
-        if (concatenatedStrings != null) {
+        if (concatenatedStrings != null && !concatenatedStrings.isEmpty()) {
             return new ArrayList<>(Arrays.asList(concatenatedStrings.split(",")));
         }
-        return null;
+        return new ArrayList<>();
     }
 }

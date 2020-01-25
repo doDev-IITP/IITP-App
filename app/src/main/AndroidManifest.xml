@@ -115,6 +115,10 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity android:name=".feed.FeedDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".clubs.ClubDetailActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".notifications.FcmService"
@@ -130,6 +134,9 @@
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
                 android:value="@string/default_notification_channel_id" />
         </service>
+        <service android:name=".todolist.ReminderNotificationService" />
+
+        <receiver android:name=".todolist.ReminderBroadcastReceiver" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 

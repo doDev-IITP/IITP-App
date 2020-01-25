@@ -16,6 +16,7 @@
 
     <!--Design colors-->
     <color name="red_dark2">#D85A1B</color>
+    <color name="deep_red">#D51313</color>
     <color name="navy_blue">#214258</color>
     <color name="navy_blue_dark">#1C3A4E</color>
     <color name="light_green">#78DC96</color>
@@ -24,5 +25,30 @@
     <color name="color_accent_transparent">#88125488</color>
     <color name="color_agenda_tag">#88FFFFFF</color>
 
+
+    <color name="explore_card_primary">#ffffff</color>
+    <color name="explore_card_secondary">#DCDCDC</color>
+    <color name="explore_card_image_bg">#00ffffff</color>
+
+    <color name="notification_card_primary">#ffffff</color>
+    <color name="notification_card_detail">#DCDCDC</color>
+    <color name="notification_card_time">#00BCD4</color>
+
+    <color name="feed_detail_title">#ffffff</color>
+    <color name="feed_detail_poster">#00BCD4</color>
+    <color name="feed_detail_like">#D51313</color>
+    <color name="feed_detail_line_divider">#696969</color>
+    <color name="feed_detail_description">#000000</color>
+    <color name="feed_detail_title_strip_color">#44000000</color>
+    <color name="feed_detail_share_bg">#88ffffff</color>
+
+    <color name="club_detail_title">#ffffff</color>
+    <color name="club_detail_bio">#00BCD4</color>
+    <color name="club_detail_like">#D51313</color>
+    <color name="club_detail_line_divider">#696969</color>
+    <color name="club_detail_description">#000000</color>
+    <color name="club_detail_title_strip_color">#44000000</color>
+    <color name="club_detail_share_bg">#88ffffff</color>
+    <color name="club_detail_website_bg">#88ffffff</color>
 
 </resources>

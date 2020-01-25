@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,7 +48,6 @@ import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
 import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
-import com.grobo.notifications.clubs.PorAdapter;
 import com.grobo.notifications.services.agenda.AgendaActivity;
 import com.grobo.notifications.utils.KeyboardUtils;
 
@@ -61,8 +61,7 @@ import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
-public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORSelectedListener,
-        ClubEventRecyclerAdapter.OnEventSelectedListener {
+public class MainActivity extends AppCompatActivity implements ClubEventRecyclerAdapter.OnEventSelectedListener {
 
     private final String LOG_TAG = getClass().getSimpleName();
 
@@ -78,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.background));
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!prefs.getBoolean(LOGIN_STATUS, false)) {
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             NavigationView navigationView = findViewById(R.id.nav_view);
 
             appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home, R.id.nav_explore, R.id.nav_calender, R.id.nav_feed, R.id.nav_notification,
+                    R.id.nav_home, R.id.nav_explore, R.id.nav_calender,
                     R.id.nav_timetable, R.id.nav_links, R.id.nav_services, R.id.nav_setting)
                     .setDrawerLayout(drawer)
                     .build();
@@ -109,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
             new Handler().postDelayed(this::subscribeFcmTopics, 1000);
 
             handleIntent(getIntent());
+
+            Toast.makeText(this, "Thank you for testing beta version of this app. Please give feedback from about section of the app.", Toast.LENGTH_LONG).show();
         }
         KeyboardUtils.hideSoftInput(this);
     }
@@ -123,13 +127,15 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
                 String feedId = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("id", feedId);
+                bundle.putBoolean("reload", true);
+                bundle.putString("feedId", feedId);
                 navController.navigate(R.id.nav_feed_detail, bundle);
             } else if (appLinkData.contains("/club/")) {
-                String id = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
+                String clubId = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("id", id);
+                bundle.putBoolean("reload", true);
+                bundle.putString("clubId", clubId);
                 navController.navigate(R.id.nav_club_detail, bundle);
             } else if (appLinkData.contains("/notification/")) {
                 String time = appLinkData.substring(appLinkData.lastIndexOf("/") + 1);
@@ -303,11 +309,6 @@ public class MainActivity extends AppCompatActivity implements PorAdapter.OnPORS
         Bundle bundle = new Bundle();
         bundle.putString("clubId", eventId);
         fragment.setArguments(bundle);
-    }
-
-    @Override
-    public void onPORSelected(String userId) {
-
     }
 
     @Override

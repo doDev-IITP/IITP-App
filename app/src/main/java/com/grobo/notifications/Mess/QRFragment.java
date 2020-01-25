@@ -81,7 +81,7 @@ public class QRFragment extends Fragment implements utils.ImageDownloaderListene
     }
 
     private void downloadQR() {
-        String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + prefs.getString(USER_MONGO_ID, null) + "&amp;size=1000x1000";
+        String qrUrl = "https://chart.googleapis.com/chart?cht=qr&chs=500x500&chl=" + prefs.getString(USER_MONGO_ID, null);
         utils.ImageDownloader imageDownloader = new utils.ImageDownloader(this);
 
         imageDownloader.execute(qrUrl);
