@@ -21,11 +21,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.utils.OnTodoSwipe;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodoInteractionListener {
 
@@ -52,10 +49,6 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-        Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE, dd MMM YYYY", Locale.getDefault() );
-        requireActivity().setTitle( dateFormat.format( date ) );
 
         emptyView = view.findViewById(R.id.feed_empty_view);
 

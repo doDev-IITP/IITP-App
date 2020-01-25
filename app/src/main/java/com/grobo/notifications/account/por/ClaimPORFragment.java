@@ -91,6 +91,7 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
 
         adapter = new ClaimPorClubAdapter(context, this);
         recyclerView.setAdapter(adapter);
+        adapter.setClubList(allClubs);
 
         SearchView searchView = view.findViewById(R.id.sv_club_for_por);
         searchView.setIconifiedByDefault(false);
@@ -103,7 +104,7 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
             @Override
             public boolean onQueryTextChange(String s) {
 
-                if (s.length() >= 3) {
+                if (s.length() > 0) {
 
                     List<ClubItem> temp = new ArrayList<>();
 
@@ -114,7 +115,7 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
 
                     adapter.setClubList(temp);
                 } else {
-                    adapter.setClubList(new ArrayList<>());
+                    adapter.setClubList(allClubs);
                 }
 
                 return false;
