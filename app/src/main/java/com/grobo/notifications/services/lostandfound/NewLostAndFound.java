@@ -1,7 +1,11 @@
 package com.grobo.notifications.services.lostandfound;
 
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.ArrayMap;
@@ -10,8 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -22,6 +29,7 @@ import com.grobo.notifications.network.RetrofitClientInstance;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.Map;
 
 import okhttp3.RequestBody;
@@ -40,11 +48,54 @@ public class NewLostAndFound extends Fragment implements View.OnClickListener {
     }
 
     private ProgressDialog progressDialog;
+    private DatePickerDialog.OnDateSetListener dateSetListener;
+    private TimePickerDialog.OnTimeSetListener timeSetListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_lost_found, container, false);
+
+        TextView mdate = view.findViewById(R.id.lost_found_date);
+        TextView mtime = view.findViewById(R.id.lost_found_time);
+
+        ImageView date_btn = view.findViewById(R.id.date_set_btn);
+        date_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDate();
+            }
+        });
+
+        ImageView time_btn = view.findViewById(R.id.time_set_btn);
+        time_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setTime();
+            }
+        });
+
+        //Date Listener
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String date_value = dayOfMonth + "/" + month + "/" + year;
+                mdate.setText(date_value);
+
+
+            }
+        };
+
+        //Time Listener
+        timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                String time_value = hourOfDay + ":" + minute;
+                mtime.setText(time_value);
+            }
+        };
+
         Button postButton = view.findViewById(R.id.post_lost_found);
         postButton.setOnClickListener(this);
 
@@ -53,6 +104,30 @@ public class NewLostAndFound extends Fragment implements View.OnClickListener {
         progressDialog.setIndeterminate(true);
         return view;
     }
+
+    private void setTime() {
+        Calendar c2 = Calendar.getInstance();
+        int hour = c2.get(Calendar.HOUR_OF_DAY);
+        int minute = c2.get(Calendar.MINUTE);
+        int a_p = c2.get(Calendar.AM_PM);
+
+        TimePickerDialog time_object = new TimePickerDialog(getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, timeSetListener, hour, minute, true);
+        time_object.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        time_object.show();
+    }
+
+    private void setDate() {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int date = c.get(Calendar.DAY_OF_MONTH);
+
+        //Create DatePicker Dialog Object
+        DatePickerDialog date_obeject = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, dateSetListener, year, month, date);
+        date_obeject.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        date_obeject.show();
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -149,7 +224,7 @@ public class NewLostAndFound extends Fragment implements View.OnClickListener {
                         Toast.makeText(getContext(), "Posted Successfully.", Toast.LENGTH_SHORT).show();
                         getActivity().finish();
                     } else {
-                        Log.e("failure", String.valueOf(response.message()));
+                        Log.e("failure", response.message());
                     }
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
