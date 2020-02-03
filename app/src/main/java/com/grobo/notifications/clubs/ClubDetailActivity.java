@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
-import com.grobo.notifications.feed.FeedUtils;
 import com.grobo.notifications.network.ClubRoutes;
 import com.grobo.notifications.network.OtherRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
@@ -147,7 +146,7 @@ public class ClubDetailActivity extends FragmentActivity implements PorAdapter.O
                 follow.setImageDrawable(new IconDrawable(this, FontAwesomeIcons.fa_heart_o).colorRes(R.color.club_detail_like));
 
             follow.setOnClickListener(v -> {
-                FeedUtils.reactOnFeed(this, current.getId());
+                ClubUtils.followClub(this, current.getId());
                 if (current.getLiked()) {
                     follow.setImageDrawable(new IconDrawable(this, FontAwesomeIcons.fa_heart_o).colorRes(R.color.club_detail_like));
                     current.setLiked(false);

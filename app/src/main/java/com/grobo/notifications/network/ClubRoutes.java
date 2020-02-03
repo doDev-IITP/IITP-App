@@ -28,4 +28,10 @@ public interface ClubRoutes {
     @DELETE("/clubs/{id}")
     void deleteClubById(@Header("Authorization") String credentials, @Path("id") String clubId);
 
+    @POST("/clubs/follow/{clubId}")
+    Call<ResponseBody> followClub(@Header("Authorization") String credentials, @Path("clubId") String clubId);
+
+    @GET("/clubs/follow/{clubId}")
+    Call<ResponseBody> getClubFollowers(@Header("Authorization") String credentials, @Path("clubId") String clubId);
+
 }
