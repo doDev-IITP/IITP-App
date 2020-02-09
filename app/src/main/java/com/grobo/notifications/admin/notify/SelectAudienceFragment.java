@@ -83,7 +83,6 @@ public class SelectAudienceFragment extends Fragment implements AudienceListRecy
             }
         });
 
-//        textView.requestFocus();
         KeyboardUtils.showSoftInput(textView, context);
     }
 
