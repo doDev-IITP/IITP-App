@@ -33,19 +33,14 @@ public class AgendaActivity extends AppCompatActivity implements AgendaRecyclerA
 
         manager = getSupportFragmentManager();
 
-        setBaseFragment(savedInstanceState);
+        setBaseFragment();
     }
 
-    private void setBaseFragment(Bundle savedInstanceState) {
+    private void setBaseFragment() {
         if (findViewById(R.id.frame_agenda) != null) {
-
-            if (savedInstanceState != null) {
-                return;
-            }
             AgendaFragment firstFragment = new AgendaFragment();
             firstFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_agenda, firstFragment).commit();
+            manager.beginTransaction().add(R.id.frame_agenda, firstFragment).commit();
         }
     }
 

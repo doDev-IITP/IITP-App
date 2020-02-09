@@ -16,7 +16,7 @@ public interface EventsRoutes {
     @GET("/events")
     Call<ClubEventItem.ClubEventSuper> getAllEvents(@Header("Authorization") String credentials);
 
-    @GET("/events/date/{timestamp}")
+    @GET("/events/date/{timestamp}")    //events in range {timestamp - 60days, timestamp + 60days}
     Call<ClubEventItem.ClubEventSuper> getEventsByDate(@Header("Authorization") String credentials, @Path("timestamp") long timestamp);
 
     @POST("/events")

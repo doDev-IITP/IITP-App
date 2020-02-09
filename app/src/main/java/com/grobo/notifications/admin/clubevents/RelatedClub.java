@@ -17,6 +17,9 @@ public class RelatedClub {
     @SerializedName("bio")
     @Expose
     private String bio;
+    @SerializedName("image")
+    @Expose
+    private String image;
 
     public String getId() {
         return id;
@@ -40,5 +43,13 @@ public class RelatedClub {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

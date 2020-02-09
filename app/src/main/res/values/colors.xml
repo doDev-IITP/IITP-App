@@ -51,4 +51,7 @@
     <color name="club_detail_share_bg">#88ffffff</color>
     <color name="club_detail_website_bg">#88ffffff</color>
 
+    <color name="event_detail_club_primary">#125488</color>
+    <color name="event_detail_club_secondary">@color/dark_gray</color>
+
 </resources>

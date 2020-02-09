@@ -1,6 +1,8 @@
 package com.grobo.notifications.admin.clubevents;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,12 +28,10 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
 
     private Context context;
     private List<ClubEventItem> clubEventItemList;
-    final private OnEventSelectedListener callback;
 
 
-    public ClubEventRecyclerAdapter(Context context, OnEventSelectedListener listener) {
+    public ClubEventRecyclerAdapter(Context context) {
         this.context = context;
-        callback = listener;
     }
 
     @NonNull
@@ -43,6 +46,8 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
 
         if (clubEventItemList != null) {
 
+            holder.image.setTransitionName("transition_image" + position);
+
             ClubEventItem item = clubEventItemList.get(position);
             holder.title.setText(item.getName());
             Glide.with(context)
@@ -50,20 +55,29 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
                     .placeholder(R.drawable.baseline_dashboard_24)
                     .into(holder.image);
 
-            holder.root.setOnClickListener(v -> callback.onEventSelected(item.getId()));
             holder.club.setText(item.getRelatedClub().getName());
 
             Date date = new Date(item.getDate());
-            SimpleDateFormat format = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
             holder.time.setText(format.format(date));
 
             if (item.getDate() < (System.currentTimeMillis() - 3600000))
                 holder.availableIndicator.setBackgroundResource(R.color.dark_gray);
             else holder.availableIndicator.setBackgroundResource(R.color.light_green);
 
-        } else {
-            holder.title.setText("Loading ...");
-        }
+            holder.root.setOnClickListener(v -> {
+                Activity activity = (Activity) context;
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                        new Pair<>(holder.image, "transition_image" + position)
+                );
+
+                Intent intent = new Intent(context, ClubEventDetailActivity.class);
+                intent.putExtra("eventId", item.getId());
+                intent.putExtra("transition_image", "transition_image" + position);
+                ActivityCompat.startActivity(context, intent, options.toBundle());
+            });
+
+        } else holder.title.setText("Loading ...");
     }
 
     @Override
@@ -99,7 +113,4 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
         notifyDataSetChanged();
     }
 
-    public interface OnEventSelectedListener {
-        void onEventSelected(String eventId);
-    }
 }

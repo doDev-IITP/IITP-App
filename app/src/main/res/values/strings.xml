@@ -39,4 +39,50 @@
         <item>Other</item>
     </string-array>
 
+    <string-array name="list_hint_audience">
+        <item>1901</item>
+        <item>1911</item>
+        <item>1921</item>
+        <item>1912</item>
+        <item>1801</item>
+        <item>1811</item>
+        <item>1821</item>
+        <item>1812</item>
+        <item>1701</item>
+        <item>1711</item>
+        <item>1721</item>
+        <item>1712</item>
+        <item>1601</item>
+        <item>1611</item>
+        <item>1621</item>
+        <item>1612</item>
+        <item>ee</item>
+        <item>me</item>
+        <item>cs</item>
+        <item>cb</item>
+        <item>ce</item>
+        <item>mm</item>
+        <item>1901ee</item>
+        <item>1901me</item>
+        <item>1901cs</item>
+        <item>1901cb</item>
+        <item>1901ce</item>
+        <item>1901mm</item>
+        <item>1801ee</item>
+        <item>1801me</item>
+        <item>1801cs</item>
+        <item>1801cb</item>
+        <item>1801ce</item>
+        <item>1701ee</item>
+        <item>1701me</item>
+        <item>1701cs</item>
+        <item>1701cb</item>
+        <item>1701ce</item>
+        <item>1601ee</item>
+        <item>1601me</item>
+        <item>1601cs</item>
+        <item>1601cb</item>
+        <item>1601ce</item>
+    </string-array>
+
 </resources>

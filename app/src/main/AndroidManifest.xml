@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.grobo.notifications">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".utils.MyApplication"
         android:icon="@mipmap/ic_launcher"
@@ -12,6 +15,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".admin.notify.NewNotificationActivity"></activity>
+        <activity android:name=".admin.clubevents.ClubEventActivity" />
         <activity
             android:name=".main.WebActivity"
             android:parentActivityName=".main.MainActivity"
@@ -35,8 +40,8 @@
         </activity>
         <activity
             android:name=".admin.XPortal"
-            android:launchMode="singleTop"
             android:label="Admin Portal"
+            android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
@@ -115,10 +120,13 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".feed.FeedDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".clubs.ClubDetailActivity"
+        <activity
+            android:name=".feed.FeedDetailActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".clubs.ClubDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".admin.clubevents.ClubEventDetailActivity" />
 
         <service
             android:name=".notifications.FcmService"
@@ -138,8 +146,5 @@
 
         <receiver android:name=".todolist.ReminderBroadcastReceiver" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

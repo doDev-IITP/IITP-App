@@ -47,8 +47,7 @@ public class CalenderFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calender, container, false);
 
         calendar = Calendar.getInstance();
@@ -61,7 +60,7 @@ public class CalenderFragment extends Fragment {
 
         RecyclerView eventsRecycler = view.findViewById(R.id.eventlist);
         eventsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        clubEventRecyclerAdapter = new ClubEventRecyclerAdapter(getContext(), (ClubEventRecyclerAdapter.OnEventSelectedListener) getActivity());
+        clubEventRecyclerAdapter = new ClubEventRecyclerAdapter(getContext());
         eventsRecycler.setAdapter(clubEventRecyclerAdapter);
 
         DayViewDecorator todayDecorator = new DayViewDecorator() {

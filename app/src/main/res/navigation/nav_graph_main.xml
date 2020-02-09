@@ -81,12 +81,6 @@
         tools:layout="@layout/activity_club_detail" />
 
     <fragment
-        android:id="@+id/nav_club_event"
-        android:name="com.grobo.notifications.admin.clubevents.ClubEventFragment"
-        android:label="Events"
-        tools:layout="@layout/fragment_club_event" />
-
-    <fragment
         android:id="@+id/nav_calender"
         android:name="com.grobo.notifications.main.CalenderFragment"
         android:label="Calender"
@@ -127,5 +121,10 @@
         android:name="com.grobo.notifications.todolist.TodoFragment"
         android:label="TODO"
         tools:layout="@layout/fragment_todo" />
+
+    <activity
+        android:id="@+id/nav_club_event"
+        android:name="com.grobo.notifications.admin.clubevents.ClubEventActivity"
+        tools:layout="@layout/activity_club_event" />
 
 </navigation>

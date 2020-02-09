@@ -32,9 +32,6 @@ public class ClubEventItem {
 
     }
 
-    @SerializedName("coordinators")
-    @Expose
-    private List<String> coordinators = null;
     @SerializedName("postLinks")
     @Expose
     private List<String> postLinks = null;
@@ -62,14 +59,6 @@ public class ClubEventItem {
     @SerializedName("imageUrl")
     @Expose
     private String imageUrl;
-
-    public List<String> getCoordinators() {
-        return coordinators;
-    }
-
-    public void setCoordinators(List<String> coordinators) {
-        this.coordinators = coordinators;
-    }
 
     public List<String> getPostLinks() {
         return postLinks;

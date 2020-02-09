@@ -19,24 +19,26 @@
         <item
             android:id="@+id/nav_services"
             android:icon="@drawable/baseline_explore_24"
-            android:title="Services" />
+            android:title="Services (new)" />
         <item
             android:id="@+id/nav_calender"
             android:icon="@drawable/ic_insert_invitation_black_24dp"
-            android:title="Calender (new)" />
+            android:title="Calender" />
         <item
             android:id="@+id/nav_internship"
             android:icon="@drawable/ic_widgets_black_24dp"
-            android:visible="false"
-            android:title="Internship Portal" />
+            android:title="Internship Portal"
+            android:visible="false" />
         <item
             android:id="@+id/nav_tech"
             android:icon="@drawable/ic_all_inclusive_black_24dp"
-            android:title="Tech Section" />
+            android:title="Tech Section"
+            android:visible="false" />
         <item
             android:id="@+id/nav_exam"
             android:icon="@drawable/ic_book_black_24dp"
-            android:title="Exam Section" />
+            android:title="Exam Section"
+            android:visible="false" />
         <item
             android:id="@+id/nav_links"
             android:icon="@drawable/baseline_insert_link_24"
@@ -44,15 +46,16 @@
         <item
             android:id="@+id/nav_fresher"
             android:icon="@drawable/ic_child_care_black_24dp"
-            android:title="Fresher Zone" />
+            android:title="Fresher Zone"
+            android:visible="false" />
         <item
             android:id="@+id/nav_virtual"
             android:icon="@drawable/ic_map_black_24dp"
-            android:title="Maps (new)" />
+            android:title="Maps" />
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_info_black_24dp"
-            android:title="About"/>
+            android:title="About" />
     </group>
 
 </menu>

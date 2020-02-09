@@ -18,7 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
+import com.grobo.notifications.admin.clubevents.ClubEventActivity;
 import com.grobo.notifications.network.ClubRoutes;
 import com.grobo.notifications.network.OtherRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
@@ -53,15 +54,17 @@ import static com.grobo.notifications.utils.utils.openWebsiteIntent;
 
 public class ClubDetailActivity extends FragmentActivity implements PorAdapter.OnPORSelectedListener {
 
-    public static final String IMAGE_TRANSITION_NAME = "transitionImage";
-
     private ClubViewModel clubViewModel;
+
+    private ProgressDialog progressDialog;
+
     private PorAdapter porAdapter;
     private View porListParent;
+
     private ClubItem current;
+
     private boolean reload = false;
     private boolean porRefreshed = false;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,30 +73,29 @@ public class ClubDetailActivity extends FragmentActivity implements PorAdapter.O
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        clubViewModel = ViewModelProviders.of(this).get(ClubViewModel.class);
+        clubViewModel = new ViewModelProvider(this).get(ClubViewModel.class);
 
         if (getIntent().hasExtra("reload"))
             reload = getIntent().getBooleanExtra("reload", false);
 
-        if (!reload) {
+        if (reload) {
+            String clubId = getIntent().getStringExtra("clubId");
+            downloadClubData(clubId);
+        } else {
             String clubId = getIntent().getStringExtra("clubId");
             current = clubViewModel.getClubById(clubId);
             showData();
-        } else {
-            String clubId = getIntent().getStringExtra("clubId");
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
-            downloadClubData(clubId);
         }
+
 
     }
 
     private void showData() {
 
         ImageView imageView = findViewById(R.id.image);
-        ViewCompat.setTransitionName(imageView, IMAGE_TRANSITION_NAME);
+        if (getIntent().hasExtra("transition_image")) {
+            ViewCompat.setTransitionName(imageView, getIntent().getStringExtra("transition_image"));
+        }
 
         TextView title = findViewById(R.id.title);
         TextView description = findViewById(R.id.description);
@@ -127,10 +129,13 @@ public class ClubDetailActivity extends FragmentActivity implements PorAdapter.O
             final Spanned spanned = markwon.toMarkdown(current.getDescription());
             markwon.setParsedMarkdown(description, spanned);
 
-            if (current.getImage() != null && !current.getImage().isEmpty()) {
+            if (current.getImage() != null && !current.getImage().isEmpty() && !current.getImage().equals("placeholder")) {
                 imageView.setOnClickListener(v -> {
                     Intent i = new Intent(ClubDetailActivity.this, ImageViewerActivity.class);
                     i.putExtra("image_url", current.getImage());
+                    if (getIntent().hasExtra("transition_image")) {
+                        i.putExtra("transition_image", getIntent().getStringExtra("transition_image"));
+                    }
 
                     ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             this, imageView, "transition");
@@ -185,11 +190,11 @@ public class ClubDetailActivity extends FragmentActivity implements PorAdapter.O
 
             website.setOnClickListener(v -> utils.openWebsiteIntent(ClubDetailActivity.this, current.getWebsite()));
 
-                events.setOnClickListener(v -> {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("clubId", current.getId());
-//                    NavHostFragment.findNavController(this).navigate(R.id.nav_club_event, bundle);
-                });
+            events.setOnClickListener(v -> {
+                Intent i = new Intent(ClubDetailActivity.this, ClubEventActivity.class);
+                i.putExtra("club_id", current.getId());
+                startActivity(i);
+            });
 
 
             porListParent = findViewById(R.id.por_cv_clubs);
@@ -207,6 +212,11 @@ public class ClubDetailActivity extends FragmentActivity implements PorAdapter.O
     }
 
     private void downloadClubData(String clubId) {
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
 
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_TOKEN, "0");
 

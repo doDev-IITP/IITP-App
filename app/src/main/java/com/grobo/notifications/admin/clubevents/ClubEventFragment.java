@@ -1,16 +1,19 @@
 package com.grobo.notifications.admin.clubevents;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,10 +21,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
-import com.grobo.notifications.admin.XPortal;
-import com.grobo.notifications.main.MainActivity;
+import com.grobo.notifications.account.por.PORItem;
+import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.network.EventsRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
+import com.grobo.notifications.utils.utils;
 
 import java.util.List;
 
@@ -44,14 +48,34 @@ public class ClubEventFragment extends Fragment {
 
     private ClubEventViewModel viewModel;
 
-    private String clubId;
+    private PORItem porItem = null;
+    private String clubId = null;
+
     private boolean refreshed = false;
+
+    private Context context;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        clubId = getArguments().getString("club_id", "");
-        viewModel = ViewModelProviders.of(this).get(ClubEventViewModel.class);
+
+        if (getContext() != null)
+            context = getContext();
+
+        if (getArguments() != null && getArguments().containsKey("por")) {
+            porItem = getArguments().getParcelable("por");
+            if (porItem != null)
+                clubId = porItem.getClubId();
+            else
+                utils.showSimpleAlertDialog(context, "Alert!!!", "Error in retrieving POR data!");
+
+        } else if (getArguments() != null && getArguments().containsKey("club_id")) {
+            clubId = getArguments().getString("club_id");
+        } else {
+            utils.showSimpleAlertDialog(context, "Alert!!!", "Error in retrieving information!");
+        }
+
+        viewModel = new ViewModelProvider(this).get(ClubEventViewModel.class);
     }
 
     @Override
@@ -64,10 +88,7 @@ public class ClubEventFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_club_event);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            Log.e("events", "refreshing");
-            updateData();
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::updateData);
 
         if (!refreshed) {
             swipeRefreshLayout.setRefreshing(true);
@@ -76,27 +97,29 @@ public class ClubEventFragment extends Fragment {
 
         addFab = view.findViewById(R.id.add_club_event_fab);
         addFab.hide();
+
         emptyView = view.findViewById(R.id.club_events_empty_view);
         recyclerView = view.findViewById(R.id.recycler_club_events);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ClubEventRecyclerAdapter(getContext(), (ClubEventRecyclerAdapter.OnEventSelectedListener) getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+        ViewTreeObserver observer = recyclerView.getViewTreeObserver();
+        postponeEnterTransition();
+        observer.addOnGlobalLayoutListener(this::startPostponedEnterTransition);
+
+        adapter = new ClubEventRecyclerAdapter(context);
         recyclerView.setAdapter(adapter);
 
         populateRecycler();
 
-        if (getContext() instanceof MainActivity) {
-
+        if (porItem == null) {
             addFab.hide();
-
-        } else if (getContext() instanceof XPortal) {
-
-//            addFab.show();
-//            addFab.setOnClickListener(v -> {
-//                Intent intent = new Intent(getContext(), AddFeedActivity.class);
-//                startActivity(intent);
-//            });
-
+        } else {
+            addFab.show();
+            addFab.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), AddFeedActivity.class);
+                startActivity(intent);
+            });
         }
 
         super.onViewCreated(view, savedInstanceState);
@@ -104,9 +127,7 @@ public class ClubEventFragment extends Fragment {
 
     private void populateRecycler() {
 
-        viewModel.getAllClubEvents(clubId).removeObservers(ClubEventFragment.this);
-        viewModel.getAllClubEvents(clubId).observe(ClubEventFragment.this, clubEventItems -> {
-
+        viewModel.getAllClubEvents(clubId).observe(getViewLifecycleOwner(), clubEventItems -> {
             adapter.setClubEventItemList(clubEventItems);
             if (clubEventItems.size() == 0) {
                 recyclerView.setVisibility(View.INVISIBLE);
@@ -115,7 +136,6 @@ public class ClubEventFragment extends Fragment {
                 recyclerView.setVisibility(View.VISIBLE);
                 emptyView.setVisibility(View.INVISIBLE);
             }
-
         });
     }
 
@@ -129,6 +149,7 @@ public class ClubEventFragment extends Fragment {
         call.enqueue(new Callback<ClubEventItem.ClubEventSuper>() {
             @Override
             public void onResponse(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Response<ClubEventItem.ClubEventSuper> response) {
+                swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getEvents() != null) {
                         List<ClubEventItem> allItems = response.body().getEvents();
@@ -142,15 +163,14 @@ public class ClubEventFragment extends Fragment {
                         refreshed = true;
                     }
                     Toast.makeText(getContext(), "Events Updated", Toast.LENGTH_SHORT).show();
-                } else {
+                } else
                     Toast.makeText(getContext(), "Failed to get events!", Toast.LENGTH_SHORT).show();
-                }
-                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Throwable t) {
-                Log.e("failure", t.getMessage());
+                if (t.getMessage() != null)
+                    Log.e("failure", t.getMessage());
                 Toast.makeText(getContext(), "Event fetch failure!!", Toast.LENGTH_LONG).show();
                 swipeRefreshLayout.setRefreshing(false);
             }

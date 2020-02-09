@@ -4,17 +4,12 @@ import android.app.Application;
 import android.os.Handler;
 import android.util.Log;
 
-import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.grobo.notifications.work.DeleteWorker;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class MyApplication extends Application {
 
@@ -31,16 +26,7 @@ public class MyApplication extends Application {
     }
 
     private void scheduleTask() {
-        Constraints constraints = new Constraints.Builder()
-                .setRequiresCharging(true)
-                .build();
-
-        PeriodicWorkRequest deleteRequest = new PeriodicWorkRequest.Builder(DeleteWorker.class, 1, TimeUnit.DAYS)
-                .setConstraints(constraints)
-                .setInitialDelay(1, TimeUnit.HOURS)
-                .build();
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork("delete_feed", ExistingPeriodicWorkPolicy.KEEP, deleteRequest);
+        WorkManager.getInstance(this).cancelAllWork();
     }
 
     private void fetchRemoteConfig() {
