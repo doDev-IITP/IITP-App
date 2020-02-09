@@ -63,7 +63,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_clear_black_24dp" />
+                android:src="@drawable/clear_black_24dp" />
 
             <ImageView
                 android:id="@+id/ivTaskReminderIcon"

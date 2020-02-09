@@ -7,19 +7,38 @@
     android:orientation="vertical"
     tools:context=".admin.positions.CoordinatorFragment">
 
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:id="@+id/coordinator_coordination_cv"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="8dp"-->
+<!--        app:cardCornerRadius="8dp">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="8dp"-->
+<!--            android:drawableEnd="@drawable/ic_right"-->
+<!--            android:padding="8dp"-->
+<!--            android:text="POR Coordination"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="18sp" />-->
+
+<!--    </androidx.cardview.widget.CardView>-->
+
     <androidx.cardview.widget.CardView
         android:id="@+id/coordinator_notification_cv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:contentPadding="8dp">
+        app:cardCornerRadius="8dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:drawableEnd="@drawable/ic_right"
+            android:padding="8dp"
             android:text="Send notification"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -31,14 +50,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:contentPadding="8dp">
+        app:cardCornerRadius="8dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:drawableEnd="@drawable/ic_right"
+            android:padding="8dp"
             android:text="Club Events"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -50,14 +69,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:contentPadding="8dp">
+        app:cardCornerRadius="8dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:drawableEnd="@drawable/ic_right"
+            android:padding="8dp"
             android:text="Projects"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -69,14 +88,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:contentPadding="8dp">
+        app:cardCornerRadius="8dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:drawableEnd="@drawable/ic_right"
+            android:padding="8dp"
             android:text="Messages"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -88,14 +107,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:contentPadding="8dp">
+        app:cardCornerRadius="8dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:drawableEnd="@drawable/ic_right"
+            android:padding="8dp"
             android:text="Club Details"
             android:textColor="@color/black"
             android:textSize="18sp" />

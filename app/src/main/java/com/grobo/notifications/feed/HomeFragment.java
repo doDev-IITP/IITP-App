@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,8 @@ public class HomeFragment extends Fragment {
     private FeedViewModel feedViewModel;
     private List<FeedItem> allFeed = new ArrayList<>();
     private boolean loaded = false;
+    private ProgressBar progressBar;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,9 +57,14 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        progressBar = view.findViewById(R.id.progress_load_feed);
+
         allFeed = feedViewModel.loadAllFeeds();
         fillViewPager();
-        if (!loaded) loadData();
+        if (!loaded) {
+            if (allFeed.isEmpty()) progressBar.setVisibility(View.VISIBLE);
+            loadData();
+        }
 
         ImageView mess = view.findViewById(R.id.icon_mess);
         mess.setOnClickListener(v -> NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.nav_mess));
@@ -128,6 +136,7 @@ public class HomeFragment extends Fragment {
                         loaded = true;
                     }
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -135,6 +144,7 @@ public class HomeFragment extends Fragment {
                 if (t.getMessage() != null)
                     Log.e("failure", t.getMessage());
                 Toast.makeText(context, "Update failed!!", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

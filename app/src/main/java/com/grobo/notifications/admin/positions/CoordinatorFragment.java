@@ -1,5 +1,6 @@
 package com.grobo.notifications.admin.positions;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,9 @@ import androidx.fragment.app.Fragment;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.por.PORItem;
-import com.grobo.notifications.admin.AddNotificationFragment;
-import com.grobo.notifications.utils.MistakeFragment;
+import com.grobo.notifications.admin.clubevents.ClubEventActivity;
+import com.grobo.notifications.admin.notify.NewNotificationActivity;
+import com.grobo.notifications.clubs.ClubDetailActivity;
 
 public class CoordinatorFragment extends Fragment implements View.OnClickListener {
 
@@ -68,17 +70,26 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("data", currentPOR);
+        bundle.putParcelable("por", currentPOR);
 
         Fragment next = null;
         switch (v.getId()) {
             case R.id.coordinator_notification_cv:
-                next = new AddNotificationFragment();
-                break;
-            case R.id.coordinator_projects_cv:
-                next = new MistakeFragment();
+                Intent i = new Intent(getContext(), NewNotificationActivity.class);
+                i.putExtra("por", currentPOR);
+                startActivity(i);
                 break;
             case R.id.coordinator_events_cv:
+                Intent i1 = new Intent(getContext(), ClubEventActivity.class);
+                i1.putExtra("por", currentPOR);
+                startActivity(i1);
+                break;
+            case R.id.coordinator_club_details_cv:
+                Intent i2 = new Intent(getContext(), ClubDetailActivity.class);
+                i2.putExtra("por", currentPOR);
+                startActivity(i2);
+                break;
+            default:
                 Toast.makeText(getContext(), "Coming soon...", Toast.LENGTH_SHORT).show();
                 break;
         }

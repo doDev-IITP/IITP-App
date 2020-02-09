@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +21,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -46,8 +44,6 @@ import com.grobo.notifications.BuildConfig;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.LoginActivity;
 import com.grobo.notifications.account.ProfileActivity;
-import com.grobo.notifications.admin.clubevents.ClubEventDetailFragment;
-import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
 import com.grobo.notifications.services.agenda.AgendaActivity;
 import com.grobo.notifications.utils.KeyboardUtils;
 
@@ -61,7 +57,7 @@ import static com.grobo.notifications.utils.Constants.USER_BRANCH;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
-public class MainActivity extends AppCompatActivity implements ClubEventRecyclerAdapter.OnEventSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private final String LOG_TAG = getClass().getSimpleName();
 
@@ -112,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements ClubEventRecycler
 
             handleIntent(getIntent());
 
-            Toast.makeText(this, "Thank you for testing beta version of this app. Please give feedback from about section of the app.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, "Thank you for testing beta version of this app. Please give feedback from about section of the app.", Toast.LENGTH_LONG).show();
         }
         KeyboardUtils.hideSoftInput(this);
     }
@@ -301,14 +297,6 @@ public class MainActivity extends AppCompatActivity implements ClubEventRecycler
             fcm.subscribeToTopic(prefs.getString(USER_YEAR, "junk") + prefs.getString(USER_BRANCH, ""));
             fcm.subscribeToTopic(prefs.getString(ROLL_NUMBER, "junk"));
         }
-    }
-
-    @Override
-    public void onEventSelected(String eventId) {
-        Fragment fragment = new ClubEventDetailFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("clubId", eventId);
-        fragment.setArguments(bundle);
     }
 
     @Override

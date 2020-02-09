@@ -19,7 +19,7 @@ import com.grobo.notifications.notifications.NotificationDao;
 import com.grobo.notifications.todolist.Goal;
 import com.grobo.notifications.todolist.TodoDao;
 
-@Database(entities = {Notification.class, FeedItem.class, ClubItem.class, ClubEventItem.class, Goal.class}, version = 6, exportSchema = false)
+@Database(entities = {Notification.class, FeedItem.class, ClubItem.class, ClubEventItem.class, Goal.class}, version = 7, exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
 

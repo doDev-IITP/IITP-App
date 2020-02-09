@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,12 +58,11 @@ public class ClubsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        clubViewModel = ViewModelProviders.of(this).get(ClubViewModel.class);
+        clubViewModel = new ViewModelProvider(this).get(ClubViewModel.class);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_clubs, container, false);
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_clubs);
@@ -154,7 +153,7 @@ public class ClubsFragment extends Fragment {
 
     private void observeAll() {
         clubViewModel.getAllClubs().removeObservers(ClubsFragment.this);
-        clubViewModel.getAllClubs().observe(ClubsFragment.this, clubItems -> {
+        clubViewModel.getAllClubs().observe(getViewLifecycleOwner(), clubItems -> {
             adapter.setClubList(clubItems);
             allClubs = clubItems;
             if (clubItems.size() == 0) {

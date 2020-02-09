@@ -1,5 +1,6 @@
 package com.grobo.notifications.clubs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -50,7 +53,6 @@ public class ClubsRecyclerAdapter extends RecyclerView.Adapter<ClubsRecyclerAdap
                     .load(current.getImage())
                     .placeholder(R.drawable.baseline_dashboard_24)
                     .into(holder.image);
-            holder.image.setTransitionName("transition" + position);
             holder.image.setTransitionName("transition_image" + position);
 
             holder.rootLayout.setOnClickListener(v -> {
@@ -66,9 +68,15 @@ public class ClubsRecyclerAdapter extends RecyclerView.Adapter<ClubsRecyclerAdap
 //                        new Pair<>(imageView, IMAGE_TRANSITION_NAME)
 //                );
 
+                Activity activity = (Activity) context;
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                        new Pair<>(holder.image, "transition_image" + position)
+                );
+
                 Intent intent = new Intent(context, ClubDetailActivity.class);
                 intent.putExtra("clubId", current.getId());
-                ActivityCompat.startActivity(context, intent, null);
+                intent.putExtra("transition_image", "transition_image" + position);
+                ActivityCompat.startActivity(context, intent, options.toBundle());
             });
 
 

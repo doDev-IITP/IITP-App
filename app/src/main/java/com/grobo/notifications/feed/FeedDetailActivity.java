@@ -15,7 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
@@ -66,7 +66,7 @@ public class FeedDetailActivity extends FragmentActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
         myMongoId = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_MONGO_ID, "");
-        feedViewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
+        feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
 
         ((FloatingActionButton) findViewById(R.id.fab_edit)).hide();
 
@@ -129,6 +129,7 @@ public class FeedDetailActivity extends FragmentActivity {
                 imageView.setOnClickListener(v -> {
                     Intent i = new Intent(FeedDetailActivity.this, ImageViewerActivity.class);
                     i.putExtra("image_url", current.getEventImageUrl());
+                    i.putExtra("transition_image", IMAGE_TRANSITION_NAME);
 
                     ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             this, imageView, "transition");
@@ -185,7 +186,7 @@ public class FeedDetailActivity extends FragmentActivity {
             });
 
             TextView lastEdited = findViewById(R.id.last_edited);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM YYYY, hh:mm a", Locale.getDefault());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
             lastEdited.setText(String.format("Last edited: %s", dateFormat.format(current.getEventId())));
 
             if (current.getDataPoster().getId().equals(myMongoId)) {
