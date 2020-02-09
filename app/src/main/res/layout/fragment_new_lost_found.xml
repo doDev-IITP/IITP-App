@@ -25,13 +25,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Did you lose something?" />
+                android:text="@string/did_you_lose_something" />
 
             <RadioButton
                 android:id="@+id/radio_found"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No, I found something." />
+                android:text="@string/no_i_found_something" />
         </RadioGroup>
 
         <LinearLayout
@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Name:"
+                android:text="@string/name"
                 android:textSize="20sp" />
 
             <EditText
@@ -51,7 +51,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Enter item name"
+                android:hint="@string/enter_item_name"
                 android:inputType="text"
                 android:textSize="20sp" />
 
@@ -66,7 +66,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="What?"
+                android:text="@string/what"
                 android:textSize="20sp" />
 
             <EditText
@@ -76,7 +76,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text"
                 android:gravity="top"
-                android:hint="Describe the item briefly."
+                android:hint="@string/describe_the_item_briefly"
                 android:inputType="textMultiLine"
                 android:padding="4dp"
                 android:textSize="20sp" />
@@ -92,7 +92,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Where?"
+                android:text="@string/where"
                 android:textSize="20sp" />
 
             <EditText
@@ -100,7 +100,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Place where lost/found"
+                android:hint="@string/place_where_lost_found"
                 android:inputType="text"
                 android:textSize="20sp" />
 
@@ -115,7 +115,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="When?"
+                android:text="@string/when"
                 android:textSize="20sp" />
 
             <EditText
@@ -123,18 +123,58 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Date"
+                android:hint="@string/enter_date"
                 android:inputType="date"
                 android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/date_set_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:src="@drawable/calendar" />
+            <!--            <EditText-->
+            <!--                android:id="@+id/lost_found_date"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:hint="Date"-->
+            <!--                android:inputType="date"-->
+            <!--                android:textSize="20sp" />-->
+
+            <!--            <EditText-->
+            <!--                android:id="@+id/lost_found_time"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:hint="Time"-->
+            <!--                android:inputType="time"-->
+            <!--                android:textSize="20sp" />-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/lost_found_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
                 android:layout_weight="1"
-                android:hint="Time"
+                android:hint="@string/enter_time"
                 android:inputType="time"
                 android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/time_set_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_access_time_black_24dp" />
+
 
         </LinearLayout>
 
@@ -147,7 +187,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Contact:"
+                android:text="@string/contact"
                 android:textSize="20sp" />
 
             <EditText
@@ -155,7 +195,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Phone number"
+                android:hint="@string/phone_number"
                 android:inputType="phone"
                 android:textSize="20sp" />
 
@@ -168,7 +208,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="8dp"
-            android:text="Post" />
+            android:text="@string/post" />
 
     </LinearLayout>
 </ScrollView>
