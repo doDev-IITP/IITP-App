@@ -11,6 +11,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -25,6 +26,9 @@ public interface ClubRoutes {
     @GET("/clubs/v2/{id}")
     Call<ClubItem> getClubById(@Header("Authorization") String credentials, @Path("id") String clubId);
 
+    @PATCH("/clubs/v2/{clubId}")
+    Call<ResponseBody> patchClub(@Header("Authorization") String credentials, @Path("clubId") String clubId, @Body RequestBody body);
+
     @DELETE("/clubs/{id}")
     void deleteClubById(@Header("Authorization") String credentials, @Path("id") String clubId);
 
@@ -34,4 +38,4 @@ public interface ClubRoutes {
     @GET("/clubs/follow/{clubId}")
     Call<ResponseBody> getClubFollowers(@Header("Authorization") String credentials, @Path("clubId") String clubId);
 
-}
+  }

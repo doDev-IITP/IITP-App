@@ -115,7 +115,7 @@
             android:layout_margin="8dp"
             android:drawableEnd="@drawable/ic_right"
             android:padding="8dp"
-            android:text="Club Details"
+            android:text="Edit club details"
             android:textColor="@color/black"
             android:textSize="18sp" />
 

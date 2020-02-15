@@ -127,6 +127,7 @@
             android:name=".clubs.ClubDetailActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".admin.clubevents.ClubEventDetailActivity" />
+        <activity android:name=".clubs.EditClubDetailActivity" />
 
         <service
             android:name=".notifications.FcmService"

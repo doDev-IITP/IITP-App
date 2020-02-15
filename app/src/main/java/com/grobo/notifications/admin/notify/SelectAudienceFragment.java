@@ -2,12 +2,15 @@ package com.grobo.notifications.admin.notify;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.por.PORItem;
-import com.grobo.notifications.utils.KeyboardUtils;
 import com.grobo.notifications.utils.utils;
 
 import java.util.ArrayList;
@@ -76,14 +78,38 @@ public class SelectAudienceFragment extends Fragment implements AudienceListRecy
         ImageView addButton = view.findViewById(R.id.iv_add_audience);
         addButton.setOnClickListener(v -> {
             String t = textView.getText().toString().toLowerCase().trim();
-            if (!t.isEmpty()) {
+            if ("all".equals(t))
+                Toast.makeText(context, "You cannot send notifications to all!", Toast.LENGTH_LONG).show();
+            else if (!t.isEmpty()) {
                 selectedAudiences.add(t);
                 textView.setText("");
                 recyclerAdapter.setItemList(selectedAudiences);
             }
         });
 
-        KeyboardUtils.showSoftInput(textView, context);
+        ViewGroup insertPoint = (ViewGroup) view.findViewById(R.id.insert_point);
+
+        new CountDownTimer(5010, 1000){
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
+
+        for (int i = 0; i < 10; i++) {
+            TextView v = new TextView(context);
+            v.setText("text view" + i);
+            insertPoint.addView(v, i, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+
+//        KeyboardUtils.showSoftInput(textView, context);
     }
 
     @Override

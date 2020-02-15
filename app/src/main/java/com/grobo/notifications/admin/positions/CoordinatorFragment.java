@@ -16,7 +16,7 @@ import com.grobo.notifications.R;
 import com.grobo.notifications.account.por.PORItem;
 import com.grobo.notifications.admin.clubevents.ClubEventActivity;
 import com.grobo.notifications.admin.notify.NewNotificationActivity;
-import com.grobo.notifications.clubs.ClubDetailActivity;
+import com.grobo.notifications.clubs.EditClubDetailActivity;
 
 public class CoordinatorFragment extends Fragment implements View.OnClickListener {
 
@@ -85,7 +85,7 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
                 startActivity(i1);
                 break;
             case R.id.coordinator_club_details_cv:
-                Intent i2 = new Intent(getContext(), ClubDetailActivity.class);
+                Intent i2 = new Intent(getContext(), EditClubDetailActivity.class);
                 i2.putExtra("por", currentPOR);
                 startActivity(i2);
                 break;
