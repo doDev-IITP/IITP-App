@@ -292,7 +292,7 @@ public class EditClubDetailActivity extends FragmentActivity {
 
             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
-            StorageReference storageRef = firebaseStorage.getReference().child(String.format("feeds/feed%s%s.jpg", String.valueOf(System.currentTimeMillis()), String.valueOf(i)));
+            StorageReference storageRef = firebaseStorage.getReference().child(String.format("clubs/club%s%s.jpg", String.valueOf(System.currentTimeMillis()), String.valueOf(i)));
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             selectedImage.compress(Bitmap.CompressFormat.JPEG, 30, baos);

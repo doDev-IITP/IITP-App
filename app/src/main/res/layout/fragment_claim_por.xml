@@ -58,6 +58,16 @@
             android:inputType="textCapSentences"
             android:padding="16dp" />
 
+        <EditText
+            android:id="@+id/input_description_por"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_edit_text"
+            android:hint="Describe your role"
+            android:inputType="text|textCapSentences"
+            android:padding="16dp" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/submit_por_for_approval"
             android:layout_width="wrap_content"

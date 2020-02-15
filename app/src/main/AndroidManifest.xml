@@ -15,8 +15,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".admin.notify.NewNotificationActivity"></activity>
-        <activity android:name=".admin.clubevents.ClubEventActivity" />
+        <activity android:name=".profile.UserProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".admin.notify.NewNotificationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".admin.clubevents.ClubEventActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".main.WebActivity"
             android:parentActivityName=".main.MainActivity"
@@ -126,8 +133,10 @@
         <activity
             android:name=".clubs.ClubDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".admin.clubevents.ClubEventDetailActivity" />
-        <activity android:name=".clubs.EditClubDetailActivity" />
+        <activity android:name=".admin.clubevents.ClubEventDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".clubs.EditClubDetailActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".notifications.FcmService"

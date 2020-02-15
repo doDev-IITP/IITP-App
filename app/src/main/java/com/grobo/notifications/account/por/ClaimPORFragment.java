@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,7 +43,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.grobo.notifications.utils.Constants.USER_MONGO_ID;
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.OnClaimClubSelListener {
@@ -63,7 +62,7 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        clubViewModel = ViewModelProviders.of(this).get(ClubViewModel.class);
+        clubViewModel = new ViewModelProvider(this).get(ClubViewModel.class);
         if (getContext() != null)
             this.context = getContext();
 
@@ -82,7 +81,7 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
         super.onViewCreated(view, savedInstanceState);
 
 
-        clubViewModel.getAllClubs().observe(ClaimPORFragment.this, clubItems -> {
+        clubViewModel.getAllClubs().observe(getViewLifecycleOwner(), clubItems -> {
             allClubs = clubItems;
         });
 
@@ -146,36 +145,36 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
                     .into((ImageView) selectedCard.findViewById(R.id.club_image));
 
             EditText position = getView().findViewById(R.id.input_position_por);
+            EditText description = getView().findViewById(R.id.input_description_por);
             Button submit = getView().findViewById(R.id.submit_por_for_approval);
             submit.setOnClickListener(v -> {
                 if (position.getText().toString().length() == 0) {
                     position.setError("Enter a valid position");
-                } else showConfirmation(position.getText().toString());
+                } else showConfirmation(position.getText().toString(), description.getText().toString());
             });
         }
     }
 
-    private void showConfirmation(String positionText) {
+    private void showConfirmation(String positionText, String descriptionText) {
         new AlertDialog.Builder(context)
                 .setTitle("Confirmation Dialog")
                 .setMessage("Submitting POR for approval...\nPlease confirm!!")
-                .setPositiveButton("Confirm", (dialog, which) -> postPor(positionText))
+                .setPositiveButton("Confirm", (dialog, which) -> postPor(positionText, descriptionText))
                 .setNegativeButton("Cancel", (dialog, id) -> {
                     if (dialog != null) dialog.dismiss();
                 }).show();
     }
 
-    private void postPor(String positionText) {
+    private void postPor(String positionText, String descriptionText) {
         progressDialog.setMessage("Processing...");
         progressDialog.show();
 
         String token = PreferenceManager.getDefaultSharedPreferences(context).getString(USER_TOKEN, "");
-        String userId = PreferenceManager.getDefaultSharedPreferences(context).getString(USER_MONGO_ID, "");
 
         Map<String, Object> data = new HashMap<>();
-        data.put("user", userId);
         data.put("club", selectedClub.getId());
         data.put("position", positionText);
+        data.put("description", descriptionText);
 
         RequestBody body = RequestBody.create((new JSONObject(data)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
 
@@ -187,8 +186,7 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "POR sent for approval.", Toast.LENGTH_SHORT).show();
-                    if (getActivity() != null)
-                        getActivity().getSupportFragmentManager().popBackStackImmediate();
+                    getChildFragmentManager().popBackStackImmediate();
                 } else {
                     Log.e("failure", String.valueOf(response.code()));
                     Toast.makeText(context, "Upload failed", Toast.LENGTH_LONG).show();

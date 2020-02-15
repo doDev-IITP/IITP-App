@@ -17,6 +17,7 @@ public class Constants {
     public static final String USER_BRANCH = "user_branch";
     public static final String USER_TOKEN = "user_token";
     public static final String USER_MONGO_ID = "user_mongo_id";
+    public static final String USER_IMAGE = "user_image";
 
     public static final String LOGIN_STATUS = "login_status";
 

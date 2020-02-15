@@ -5,8 +5,6 @@ import androidx.annotation.Keep;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 @Keep
 public class Person {
 
@@ -37,9 +35,6 @@ public class Person {
     @Keep
     public class User {
 
-        @SerializedName("pors")
-        @Expose
-        private List<String> pors = null;
         @SerializedName("email")
         @Expose
         private String email;
@@ -67,6 +62,9 @@ public class Person {
         @SerializedName("active")
         @Expose
         private int active;
+        @SerializedName("image")
+        @Expose
+        private String image;
 
         public String getEmail() {
             return email;
@@ -136,18 +134,16 @@ public class Person {
             return active;
         }
 
-
         public void setActive(int active) {
             this.active = active;
         }
 
-
-        public List<String> getPors() {
-            return pors;
+        public String getImage() {
+            return image;
         }
 
-        public void setPors(List<String> pors) {
-            this.pors = pors;
+        public void setImage(String image) {
+            this.image = image;
         }
     }
 }

@@ -30,6 +30,7 @@ import com.grobo.notifications.admin.clubevents.ClubEventActivity;
 import com.grobo.notifications.network.ClubRoutes;
 import com.grobo.notifications.network.OtherRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
+import com.grobo.notifications.profile.UserProfileActivity;
 import com.grobo.notifications.utils.ImageViewerActivity;
 import com.grobo.notifications.utils.utils;
 import com.joanzapata.iconify.IconDrawable;
@@ -308,6 +309,8 @@ public class ClubDetailActivity extends FragmentActivity implements PorAdapter.O
 
     @Override
     public void onPORSelected(String userId) {
-
+        Intent i = new Intent(ClubDetailActivity.this, UserProfileActivity.class);
+        i.putExtra("user_id", userId);
+        startActivity(i);
     }
 }

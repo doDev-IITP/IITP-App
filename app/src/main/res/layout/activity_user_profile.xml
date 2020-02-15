@@ -140,6 +140,19 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:tint="@color/white"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/back_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/ic_arrow_back_black_24dp"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -194,7 +207,7 @@
                     android:layout_gravity="center_vertical"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:text="+917424904721"
+                    tools:text="+917424904721"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -239,14 +252,6 @@
                 android:padding="8dp"
                 android:text="PORs:" />
 
-            <ImageView
-                android:id="@+id/iv_add_por"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="?attr/selectableItemBackground"
-                android:src="@drawable/ic_add_black_24dp"
-                android:visibility="gone" />
-
             <ProgressBar
                 android:id="@+id/progress_bar_pors"
                 android:layout_width="16dp"
@@ -260,9 +265,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
             android:layout_marginEnd="32dp"
             android:gravity="center"
-            android:text="No positions found, click on add to claim." />
+            android:text="No positions found." />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_pors"
@@ -270,16 +276,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
+            android:paddingBottom="16dp"
+            android:clipToPadding="false"
             android:visibility="gone" />
-
-        <Button
-            android:id="@+id/profile_logout_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="32dp"
-            android:text="LogOut"
-            android:textColor="#fff" />
 
     </LinearLayout>
 
