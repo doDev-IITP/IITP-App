@@ -1,6 +1,7 @@
 package com.grobo.notifications.account.por;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +77,9 @@ public class ClaimPorClubAdapter extends RecyclerView.Adapter<ClaimPorClubAdapte
         ClubsViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.club_name);
+            name.setTextColor(Color.BLACK);
             bio = itemView.findViewById(R.id.club_bio);
+            bio.setTextColor(Color.DKGRAY);
             rootLayout = itemView.findViewById(R.id.card_club_root);
             image = itemView.findViewById(R.id.club_image);
         }

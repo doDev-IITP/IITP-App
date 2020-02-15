@@ -2,6 +2,7 @@ package com.grobo.notifications.account.por;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,7 +48,6 @@ import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.OnClaimClubSelListener {
 
-
     public ClaimPORFragment() {
     }
 
@@ -57,7 +57,6 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
     private ClubItem selectedClub = null;
     private Context context;
     private ProgressDialog progressDialog;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +78,6 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         clubViewModel.getAllClubs().observe(getViewLifecycleOwner(), clubItems -> {
             allClubs = clubItems;
@@ -137,8 +135,16 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
             sel.setVisibility(View.VISIBLE);
 
             View selectedCard = getView().findViewById(R.id.selected_club_card);
-            ((TextView) selectedCard.findViewById(R.id.club_name)).setText(clubItem.getName());
-            ((TextView) selectedCard.findViewById(R.id.club_bio)).setText(clubItem.getBio());
+
+            TextView clubName = selectedCard.findViewById(R.id.club_name);
+            TextView clubBio = selectedCard.findViewById(R.id.club_bio);
+
+            clubName.setTextColor(Color.BLACK);
+            clubBio.setTextColor(Color.DKGRAY);
+
+            clubName.setText(clubItem.getName());
+            clubBio.setText(clubItem.getBio());
+
             Glide.with(context)
                     .load(clubItem.getImage())
                     .placeholder(R.drawable.baseline_dashboard_24)
@@ -186,7 +192,8 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "POR sent for approval.", Toast.LENGTH_SHORT).show();
-                    getChildFragmentManager().popBackStackImmediate();
+                    if (getActivity() != null)
+                        getActivity().getSupportFragmentManager().popBackStackImmediate();
                 } else {
                     Log.e("failure", String.valueOf(response.code()));
                     Toast.makeText(context, "Upload failed", Toast.LENGTH_LONG).show();

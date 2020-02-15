@@ -55,7 +55,7 @@ dependencies {
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
 
     //play store core
-    implementation 'com.google.android.play:core:1.6.4'
+    implementation 'com.google.android.play:core:1.6.5'
 
     //navigation
     implementation 'androidx.navigation:navigation-fragment:2.2.1'
