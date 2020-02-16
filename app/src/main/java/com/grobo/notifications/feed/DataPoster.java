@@ -28,6 +28,9 @@ public class DataPoster implements Parcelable {
     @SerializedName("instituteId")
     @Expose
     private String instituteId;
+    @SerializedName("image")
+    @Expose
+    private String image;
 
     @Ignore
     public DataPoster() {}
@@ -62,11 +65,19 @@ public class DataPoster implements Parcelable {
         this.instituteId = instituteId;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     protected DataPoster(Parcel in) {
         id = in.readString();
         name = in.readString();
         instituteId = in.readString();
+        image = in.readString();
     }
 
     @Override
@@ -79,6 +90,7 @@ public class DataPoster implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(instituteId);
+        dest.writeString(image);
     }
 
     @SuppressWarnings("unused")
@@ -98,4 +110,5 @@ public class DataPoster implements Parcelable {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return new DataPoster(preferences.getString(USER_MONGO_ID, ""), preferences.getString(USER_NAME, ""), preferences.getString(ROLL_NUMBER, ""));
     }
+
 }

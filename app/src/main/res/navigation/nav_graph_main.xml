@@ -122,6 +122,12 @@
         android:label="TODO"
         tools:layout="@layout/fragment_todo" />
 
+    <fragment
+        android:id="@+id/nav_surveys"
+        android:name="com.grobo.notifications.survey.SurveysFragment"
+        android:label="Surveys"
+        tools:layout="@layout/fragment_surveys" />
+
     <activity
         android:id="@+id/nav_club_event"
         android:name="com.grobo.notifications.admin.clubevents.ClubEventActivity"

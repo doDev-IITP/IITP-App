@@ -25,6 +25,10 @@
             android:icon="@drawable/ic_insert_invitation_black_24dp"
             android:title="Calender" />
         <item
+            android:id="@+id/nav_surveys"
+            android:icon="@drawable/ic_survey_black_24dp"
+            android:title="Surveys" />
+        <item
             android:id="@+id/nav_internship"
             android:icon="@drawable/ic_widgets_black_24dp"
             android:title="Internship Portal"

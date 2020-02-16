@@ -7,7 +7,6 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.grobo.notifications.R;
 import com.grobo.notifications.network.LostAndFoundRoutes;

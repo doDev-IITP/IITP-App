@@ -61,14 +61,6 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="3" />
 
-        <LinearLayout
-            android:id="@+id/insert_point"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
-
     </LinearLayout>
 
     <Button
