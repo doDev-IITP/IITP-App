@@ -1,6 +1,8 @@
 package com.grobo.notifications.clubs;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.network.ClubRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
@@ -45,6 +48,8 @@ public class ClubsFragment extends Fragment {
     private SharedPreferences prefs;
     private List<ClubItem> allClubs = new ArrayList<>();
 
+    private Context context;
+
     public ClubsFragment() {
     }
 
@@ -59,6 +64,8 @@ public class ClubsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         clubViewModel = new ViewModelProvider(this).get(ClubViewModel.class);
+
+        if (getContext() != null) context = getContext();
     }
 
     @Override
@@ -68,9 +75,9 @@ public class ClubsFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_clubs);
         swipeRefreshLayout.setOnRefreshListener(this::updateData);
 
-        if (getContext() != null)
-            prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if ((System.currentTimeMillis() - prefs.getLong("last_club_update_time", 0)) >= (6 * 60 * 60 * 1000)) {
+        if (context != null)
+            prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if ((System.currentTimeMillis() - prefs.getLong("last_club_update_time", 0)) >= (60 * 60 * 1000)) {
             swipeRefreshLayout.setRefreshing(true);
             updateData();
         }
@@ -86,7 +93,7 @@ public class ClubsFragment extends Fragment {
         adapter = new ClubsRecyclerAdapter(getContext());
         clubsRecyclerView.setAdapter(adapter);
 
-        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), HORIZONTAL);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(context, HORIZONTAL);
         clubsRecyclerView.addItemDecoration(itemDecor);
 
         observeAll();
@@ -112,11 +119,17 @@ public class ClubsFragment extends Fragment {
             }
         });
 
+        FloatingActionButton addFab = view.findViewById(R.id.fab_add_club);
+        addFab.setOnClickListener(v -> {
+            Intent i = new Intent(context, EditClubDetailActivity.class);
+            startActivity(i);
+        });
+
         return view;
     }
 
     private void updateData() {
-        String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
+        String token = PreferenceManager.getDefaultSharedPreferences(context).getString(USER_TOKEN, "0");
 
         ClubRoutes service = RetrofitClientInstance.getRetrofitInstance().create(ClubRoutes.class);
 
@@ -126,6 +139,7 @@ public class ClubsFragment extends Fragment {
             public void onResponse(@NonNull Call<List<ClubItem>> call, @NonNull Response<List<ClubItem>> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
+                        clubViewModel.delete();
 
                         List<ClubItem> allItems = response.body();
                         for (ClubItem newItem : allItems) {

@@ -6,8 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,13 +18,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:theme="@style/club_search_view"
-                android:queryHint="Search for a club" />
+                android:queryHint="Search for a club"
+                android:theme="@style/club_search_view" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_clubs"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:paddingBottom="64dp"
+                android:clipToPadding="false"/>
 
         </LinearLayout>
 
@@ -33,6 +34,16 @@
             android:id="@+id/clubs_empty_view"
             layout="@layout/item_empty_view"
             android:visibility="invisible" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_club"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_add_black_24dp" />
 
     </RelativeLayout>
 

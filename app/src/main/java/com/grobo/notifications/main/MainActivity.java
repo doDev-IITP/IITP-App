@@ -148,8 +148,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         }
-
-        navController.navigate(R.id.nav_surveys);
     }
 
     private void populateHeaderView(View v) {

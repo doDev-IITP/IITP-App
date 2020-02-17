@@ -59,6 +59,8 @@ public class EditClubDetailActivity extends FragmentActivity {
     private ClubItem current;
     private PORItem currentPor;
 
+    private boolean editMode = false;
+
     private static final int SELECT_PICTURE = 783;
     private Bitmap selectedImage;
 
@@ -82,18 +84,60 @@ public class EditClubDetailActivity extends FragmentActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
-        if (getIntent().hasExtra("por"))
+        if (getIntent().hasExtra("por")) {
             currentPor = getIntent().getParcelableExtra("por");
-
-        if (currentPor != null) {
-            String clubId = currentPor.getClubId();
-            downloadClubData(clubId);
+            if (currentPor != null) {
+                editMode = true;
+                String clubId = currentPor.getClubId();
+                downloadClubData(clubId);
+            } else {
+                utils.showFinishAlertDialog(this, "Alert!!!", "POR data not found.");
+            }
         } else {
-            utils.showSimpleAlertDialog(this, "Alert!!!", "POR data not found.");
+            editMode = false;
+            showCreateData();
         }
     }
 
-    private void showData() {
+    private void showCreateData() {
+
+        imagePreview = findViewById(R.id.image_preview);
+
+        clubTitle = findViewById(R.id.edit_club_title);
+        clubDescription = findViewById(R.id.edit_club_description);
+        clubBio = findViewById(R.id.edit_club_bio);
+
+        Button imageSelector = findViewById(R.id.button_select_image);
+        imageSelector.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            startActivityForResult(intent, SELECT_PICTURE);
+        });
+
+        ImageView fb = findViewById(R.id.club_facebook);
+        fb.setOnClickListener(v -> showLinkDialog(1));
+
+        ImageView inst = findViewById(R.id.club_instagram);
+        inst.setOnClickListener(v -> showLinkDialog(2));
+
+        ImageView twitter = findViewById(R.id.club_twitter);
+        twitter.setOnClickListener(v -> showLinkDialog(3));
+
+        CardView website = findViewById(R.id.cv_website);
+        website.setOnClickListener(v -> showLinkDialog(4));
+
+        Button saveClubButton = findViewById(R.id.button_save_club);
+        saveClubButton.setOnClickListener(v -> {
+            if (clubTitle.getText().toString().isEmpty()) {
+                clubTitle.setError("Enter a title!");
+            } else if (clubDescription.getText().toString().isEmpty()) {
+                clubDescription.setError("Enter a valid description!");
+            } else if (clubBio.getText().toString().isEmpty()) {
+                clubBio.setError("Enter a valid bio!");
+            } else showPostDialog();
+        });
+    }
+
+    private void showEditData() {
         if (current != null) {
 
             imagePreview = findViewById(R.id.image_preview);
@@ -148,9 +192,7 @@ public class EditClubDetailActivity extends FragmentActivity {
 
             websiteLink = current.getWebsite();
 
-        } else {
-            utils.showSimpleAlertDialog(this, "Alert!!!", "Club not found.");
-        }
+        } else utils.showSimpleAlertDialog(this, "Alert!!!", "Club not found.");
     }
 
     private void downloadClubData(String clubId) {
@@ -170,7 +212,7 @@ public class EditClubDetailActivity extends FragmentActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     current = response.body();
                 }
-                showData();
+                showEditData();
             }
 
             @Override
@@ -278,7 +320,7 @@ public class EditClubDetailActivity extends FragmentActivity {
     private void postImage() {
 
         if (selectedImage == null) {
-            if (current.getImage() != null && !current.getImage().isEmpty())
+            if (current != null && current.getImage() != null && !current.getImage().isEmpty())
                 post(current.getImage());
             else post("");
         } else {
@@ -303,7 +345,6 @@ public class EditClubDetailActivity extends FragmentActivity {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                 Log.e("progress", "Upload is " + progress + "% done");
                 progressDialog.setProgress((int) progress);
-//                progressDialog.show();
             });
 
             uploadTask.continueWithTask(task -> {
@@ -312,8 +353,8 @@ public class EditClubDetailActivity extends FragmentActivity {
             }).addOnSuccessListener(imageUrl -> {
                 post(imageUrl.toString());
             }).addOnFailureListener(e -> {
-                utils.showSimpleAlertDialog(this, "Alert!", "File upload failed !!!");
                 progressDialog.dismiss();
+                utils.showSimpleAlertDialog(this, "Alert!", "File upload failed !!!");
             });
         }
     }
@@ -340,24 +381,30 @@ public class EditClubDetailActivity extends FragmentActivity {
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_TOKEN, "0");
 
         ClubRoutes service = RetrofitClientInstance.getRetrofitInstance().create(ClubRoutes.class);
-        Call<ResponseBody> call = service.patchClub(token, currentPor.getClubId(), body);
+
+        Call<ResponseBody> call;
+        if (editMode) call = service.patchClub(token, currentPor.getClubId(), body);
+        else call = service.addClub(token, body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (progressDialog != null) progressDialog.dismiss();
-                if (response.isSuccessful()) {
-                    Toast.makeText(EditClubDetailActivity.this, "Club successfully saved", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
+                if (response.isSuccessful() && response.body() != null) {
                     try {
-                        if (response.errorBody() != null)
-                            Log.e("failure", String.valueOf(response.code()) + response.errorBody().string());
+                        utils.showFinishAlertDialog(EditClubDetailActivity.this, "Alert!!!", response.body().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-                    utils.showSimpleAlertDialog(EditClubDetailActivity.this, "Alert!!!", "Save failed! Error: " + response.code());
+                } else {
+                    try {
+                        if (response.errorBody() != null) {
+                            Log.e("failure", String.valueOf(response.code()) + response.errorBody().string());
+                            utils.showSimpleAlertDialog(EditClubDetailActivity.this, "Alert!!!", response.errorBody().string() + " Error: " + response.code());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

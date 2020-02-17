@@ -1,5 +1,6 @@
 package com.grobo.notifications.utils;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -194,6 +195,16 @@ public class utils {
                 .setMessage(message)
                 .setPositiveButton("OK", (dialog, which) -> {
                     if (dialog != null) dialog.dismiss();
+                }).show();
+    }
+
+    public static void showFinishAlertDialog(Context context, String title, String message) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    if (dialog != null) dialog.dismiss();
+                    ((Activity) context).finish();
                 }).show();
     }
 

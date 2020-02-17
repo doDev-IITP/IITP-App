@@ -20,8 +20,8 @@ public interface ClubRoutes {
     @GET("/clubs/v2")
     Call<List<ClubItem>> getAllClubs(@Header("Authorization") String credentials);
 
-    @POST("/clubs")
-    Call<ResponseBody> addClub(@Body RequestBody body);
+    @POST("/clubs/v2")
+    Call<ResponseBody> addClub(@Header("Authorization") String credentials, @Body RequestBody body);
 
     @GET("/clubs/v2/{id}")
     Call<ClubItem> getClubById(@Header("Authorization") String credentials, @Path("id") String clubId);
