@@ -223,16 +223,16 @@ public class utils {
     }
 
     public static void openWebsiteIntent(Context context, String url) {
-        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        if (context != null && url != null && !url.isEmpty()) {
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
 
-        String website = url;
-        if (!website.startsWith("http") && !website.startsWith("https")) {
-            website = "https://" + website;
+            if (!url.startsWith("http") && !url.startsWith("https")) {
+                url = "https://" + url;
+            }
+
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.launchUrl(context, Uri.parse(url));
         }
-
-        CustomTabsIntent customTabsIntent = builder.build();
-        if (context != null)
-            customTabsIntent.launchUrl(context, Uri.parse(website));
     }
 
     public static void shareIntent(Context context, String text) {
