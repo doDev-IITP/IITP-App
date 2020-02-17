@@ -38,7 +38,7 @@ import com.google.firebase.storage.UploadTask;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.por.PORItem;
 import com.grobo.notifications.account.por.PORRecyclerAdapter;
-import com.grobo.notifications.network.OtherRoutes;
+import com.grobo.notifications.network.PorRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.network.UserRoutes;
 import com.grobo.notifications.utils.utils;
@@ -160,7 +160,7 @@ public class ProfileFragment extends Fragment {
             ProgressBar porProgressBar = getView().findViewById(R.id.progress_bar_pors);
             TextView textNoPor = getView().findViewById(R.id.tv_no_por);
 
-            OtherRoutes service = RetrofitClientInstance.getRetrofitInstance().create(OtherRoutes.class);
+            PorRoutes service = RetrofitClientInstance.getRetrofitInstance().create(PorRoutes.class);
 
             String token = prefs.getString(USER_TOKEN, "");
             String userId = prefs.getString(USER_MONGO_ID, "");
@@ -189,10 +189,14 @@ public class ProfileFragment extends Fragment {
                                         JSONObject club = por.getJSONObject("club");
                                         String clubId = club.getString("_id");
                                         String clubName = club.getString("name");
-                                        int access = por.getInt("access");
+                                        int code = por.getInt("code");
                                         String position = por.getString("position");
 
-                                        porItemList.add(new PORItem(porId, clubId, clubName, access, position));
+                                        JSONArray array = por.getJSONArray("access");
+                                        List<Integer> access = new ArrayList<>();
+                                        for (int j = 0; j < array.length(); j++) access.add(array.getInt(j));
+
+                                        porItemList.add(new PORItem(porId, clubId, clubName, code, position, access));
                                     }
 
                                     adapter.setItemList(porItemList);

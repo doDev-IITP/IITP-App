@@ -58,12 +58,12 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
 
     @Override
     public void onPORSelected(PORItem porItem) {
-        if (porItem.getAccess() != 0) {
+        if (porItem.getCode() != 0) {
             Intent i = new Intent(ProfileActivity.this, XPortal.class);
-            i.putExtra("data", porItem);
+            i.putExtra("por", porItem);
             startActivity(i);
         } else {
-            Toast.makeText(this, "Invalid POR !!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "POR not approved yet !!!", Toast.LENGTH_LONG).show();
         }
     }
 }

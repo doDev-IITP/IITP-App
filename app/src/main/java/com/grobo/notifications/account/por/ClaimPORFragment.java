@@ -29,7 +29,8 @@ import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
 import com.grobo.notifications.clubs.ClubItem;
 import com.grobo.notifications.clubs.ClubViewModel;
-import com.grobo.notifications.network.OtherRoutes;
+import com.grobo.notifications.network.ClubRoutes;
+import com.grobo.notifications.network.PorRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 
 import org.json.JSONObject;
@@ -79,16 +80,17 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        clubViewModel.getAllClubs().observe(getViewLifecycleOwner(), clubItems -> {
-            allClubs = clubItems;
-        });
+        updateClubsData();
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_clubs);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         adapter = new ClaimPorClubAdapter(context, this);
         recyclerView.setAdapter(adapter);
-        adapter.setClubList(allClubs);
+        clubViewModel.getAllClubs().observe(getViewLifecycleOwner(), clubItems -> {
+            allClubs = clubItems;
+            adapter.setClubList(allClubs);
+        });
 
         SearchView searchView = view.findViewById(R.id.sv_club_for_por);
         searchView.setIconifiedByDefault(false);
@@ -119,7 +121,39 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
             }
         });
 
+    }
 
+    private void updateClubsData() {
+        String token = PreferenceManager.getDefaultSharedPreferences(context).getString(USER_TOKEN, "0");
+
+        ClubRoutes service = RetrofitClientInstance.getRetrofitInstance().create(ClubRoutes.class);
+
+        Call<List<ClubItem>> call = service.getAllClubs(token);
+        call.enqueue(new Callback<List<ClubItem>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ClubItem>> call, @NonNull Response<List<ClubItem>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        clubViewModel.delete();
+
+                        List<ClubItem> allItems = response.body();
+                        for (ClubItem newItem : allItems) {
+                            clubViewModel.insert(newItem);
+                        }
+
+                    }
+                    Toast.makeText(context, "Updated.", Toast.LENGTH_SHORT).show();
+                    PreferenceManager.getDefaultSharedPreferences(context).edit().putLong("last_club_update_time", System.currentTimeMillis()).apply();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ClubItem>> call, @NonNull Throwable t) {
+                if (t.getMessage() != null)
+                    Log.e("failure", t.getMessage());
+                Toast.makeText(getContext(), "Update failed!! Please check internet connection!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
@@ -156,7 +190,8 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
             submit.setOnClickListener(v -> {
                 if (position.getText().toString().length() == 0) {
                     position.setError("Enter a valid position");
-                } else showConfirmation(position.getText().toString(), description.getText().toString());
+                } else
+                    showConfirmation(position.getText().toString(), description.getText().toString());
             });
         }
     }
@@ -184,7 +219,7 @@ public class ClaimPORFragment extends Fragment implements ClaimPorClubAdapter.On
 
         RequestBody body = RequestBody.create((new JSONObject(data)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
 
-        OtherRoutes service = RetrofitClientInstance.getRetrofitInstance().create(OtherRoutes.class);
+        PorRoutes service = RetrofitClientInstance.getRetrofitInstance().create(PorRoutes.class);
         Call<Void> call = service.claimPor(token, body);
 
         call.enqueue(new Callback<Void>() {

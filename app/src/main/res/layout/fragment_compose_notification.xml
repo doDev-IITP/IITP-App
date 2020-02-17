@@ -2,67 +2,79 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".admin.AddNotificationFragment">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textStyle="bold"
+            android:text="@string/suggestion_compose_notification"
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/add_notification_title"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/bg_edit_text"
             android:hint="Notification title"
-            android:inputType="text"
+            android:inputType="text|textCapSentences"
+            android:minHeight="56dp"
             android:padding="8dp"
             android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/add_notification_body"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/bg_edit_text"
             android:hint="Notification Body"
-            android:inputType="text"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minHeight="56dp"
             android:padding="8dp"
             android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/add_notification_image_uri"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/bg_edit_text"
-            android:hint="Notification image URL"
-            android:inputType="textUri"
+            android:hint="Image URL"
+            android:inputType="textUri|textMultiLine"
+            android:minHeight="56dp"
             android:padding="8dp"
             android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/add_notification_description"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/bg_edit_text"
             android:gravity="top"
             android:hint="Enter detailed description (to be shown after opening notification)."
             android:inputType="textMultiLine"
+            android:minHeight="200dp"
             android:padding="8dp"
             android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/add_notification_reference"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/bg_edit_text"
-            android:hint="Link to attach with notification"
-            android:inputType="text"
+            android:hint="Link to attach"
+            android:inputType="textMultiLine"
+            android:minHeight="56dp"
             android:padding="8dp"
             android:textColor="@color/black" />
 

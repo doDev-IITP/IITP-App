@@ -2,7 +2,6 @@ package com.grobo.notifications.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -15,6 +14,7 @@ import com.grobo.notifications.admin.positions.MaintenanceSecretaryFragment;
 import com.grobo.notifications.admin.positions.SubCoordintorFragment;
 import com.grobo.notifications.admin.positions.TechnicalSecretaryFragment;
 import com.grobo.notifications.admin.positions.VPFragment;
+import com.grobo.notifications.utils.utils;
 
 public class XPortal extends AppCompatActivity {
 
@@ -29,11 +29,13 @@ public class XPortal extends AppCompatActivity {
 
         Intent i = getIntent();
 
-        if (i.hasExtra("data")) {
-            PORItem j = i.getParcelableExtra("data");
+        if (i.hasExtra("por")) {
+            PORItem j = i.getParcelableExtra("por");
             if (j != null) setBaseFragment(j);
+            else utils.showFinishAlertDialog(this, "Alert!!!", "Invalid POR!");
+
         } else {
-            Toast.makeText(this, "Intent extra error !!!", Toast.LENGTH_SHORT).show();
+            utils.showFinishAlertDialog(this, "Alert!!!", "Intent extra error!");
             finish();
         }
     }
@@ -42,21 +44,21 @@ public class XPortal extends AppCompatActivity {
         if (findViewById(R.id.frame_layout_admin) != null) {
 
             Bundle b = new Bundle();
-            b.putParcelable("data", porItem);
+            b.putParcelable("por", porItem);
 
             Fragment f = null;
 
-            switch (porItem.getAccess()) {
+            switch (porItem.getCode()) {
 
-                case 1:    //
+                case 10:    //
                     f = new CoordinatorFragment();
                     break;
 
-                case 2:    //
+                case 20:    //
                     f = new SubCoordintorFragment();
                     break;
 
-                case 3:    //
+                case 30:    //
                     f = new SubCoordintorFragment();
                     break;
                 case 31:    //sub-coordinator
@@ -66,7 +68,7 @@ public class XPortal extends AppCompatActivity {
                     f = new SubCoordintorFragment();
                     break;
 
-                case 4:    //
+                case 40:    //
                     f = new CoordinatorFragment();
                     break;
                 case 41:    //coordinator
@@ -76,11 +78,11 @@ public class XPortal extends AppCompatActivity {
                     f = new CoordinatorFragment();
                     break;
 
-                case 5:    //overall-coordinator
+                case 50:    //overall-coordinator
                     f = new CoordinatorFragment();
                     break;
 
-                case 6:    //
+                case 60:    //
                     f = new TechnicalSecretaryFragment();
                     break;
                 case 61:    //tech
@@ -102,7 +104,7 @@ public class XPortal extends AppCompatActivity {
                     f = new MaintenanceSecretaryFragment();
                     break;
 
-                case 7:    //
+                case 70:    //
                     f = new TechnicalSecretaryFragment();
                     break;
                 case 71:    //gen-tech
@@ -115,11 +117,11 @@ public class XPortal extends AppCompatActivity {
                     f = new TechnicalSecretaryFragment();
                     break;
 
-                case 8:    //vp-gymkhana
+                case 80:    //vp-gymkhana
                     f = new VPFragment();
                     break;
 
-                case 9:    //superuser
+                case 90:    //superuser
                     f = new TechnicalSecretaryFragment();
                     break;
 
@@ -128,10 +130,8 @@ public class XPortal extends AppCompatActivity {
             if (f != null) {
                 f.setArguments(b);
                 manager.beginTransaction().add(R.id.frame_layout_admin, f).commit();
-            } else {
-                Toast.makeText(this, "Invalid POR !!!", Toast.LENGTH_LONG).show();
-                finish();
-            }
+            } else utils.showFinishAlertDialog(this, "Alert!!!", "Invalid POR!");
+
         }
     }
 

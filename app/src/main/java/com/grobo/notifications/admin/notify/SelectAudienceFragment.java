@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,7 +23,6 @@ import com.grobo.notifications.utils.KeyboardUtils;
 import com.grobo.notifications.utils.utils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 
@@ -32,7 +32,7 @@ public class SelectAudienceFragment extends Fragment implements AudienceListRecy
     }
 
     private Context context;
-    private List<String> selectedAudiences = new ArrayList<>();
+    private ArrayList<String> selectedAudiences = new ArrayList<>();
     private AudienceListRecyclerAdapter recyclerAdapter;
     private PORItem porItem;
 
@@ -84,6 +84,21 @@ public class SelectAudienceFragment extends Fragment implements AudienceListRecy
                 textView.setText("");
                 recyclerAdapter.setItemList(selectedAudiences);
             }
+        });
+
+        Button proceedButton = view.findViewById(R.id.proceed_button);
+        proceedButton.setOnClickListener(v -> {
+            if (selectedAudiences.size() > 0) {
+                Bundle b = new Bundle();
+                b.putStringArrayList("audience", selectedAudiences);
+                b.putParcelable("por",porItem);
+
+                ComposeNotificationFragment compose = new ComposeNotificationFragment();
+                compose.setArguments(b);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_new_notification, compose)
+                        .addToBackStack(compose.getTag()).commit();
+            } else Toast.makeText(context, "Select some audience!", Toast.LENGTH_SHORT).show();
         });
 
         KeyboardUtils.showSoftInput(textView, context);

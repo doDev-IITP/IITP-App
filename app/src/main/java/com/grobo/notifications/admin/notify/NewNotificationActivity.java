@@ -16,7 +16,6 @@ public class NewNotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_notification);
 
-        manager = getSupportFragmentManager();
         setBaseFragment();
     }
 
@@ -24,8 +23,10 @@ public class NewNotificationActivity extends AppCompatActivity {
         if (findViewById(R.id.frame_new_notification) != null) {
             SelectAudienceFragment firstFragment = new SelectAudienceFragment();
             firstFragment.setArguments(getIntent().getExtras());
-            manager.beginTransaction().add(R.id.frame_new_notification, firstFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.frame_new_notification, firstFragment).commit();
         }
     }
+
+
 
 }

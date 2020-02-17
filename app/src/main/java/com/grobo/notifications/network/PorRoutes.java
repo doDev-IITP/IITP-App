@@ -9,7 +9,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-public interface OtherRoutes {
+public interface PorRoutes {
 
     @GET("/pors")
     Call<ResponseBody> getAllPORs(@Header("Authorization") String credentials);
@@ -25,5 +25,7 @@ public interface OtherRoutes {
 
     @GET("/pors/{porId}")
     Call<ResponseBody> getPorById(@Header("Authorization") String credentials, @Path("porId") String id);
+
+
 
 }

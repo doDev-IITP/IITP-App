@@ -5,22 +5,27 @@ import android.os.Parcelable;
 
 import androidx.annotation.Keep;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Keep
 public class PORItem implements Parcelable {
     private String id;
     private String clubId;
     private String clubName;
-    private int access;
+    private int code;
     private String position;
+    private List<Integer> access;
 
     public PORItem() {}
 
-    public PORItem(String id, String clubId, String clubName, int access, String position) {
+    public PORItem(String id, String clubId, String clubName, int code, String position, List<Integer> access) {
         this.id = id;
         this.clubId = clubId;
         this.clubName = clubName;
-        this.access = access;
+        this.code = code;
         this.position = position;
+        this.access = access;
     }
 
     public String getId() {
@@ -47,14 +52,6 @@ public class PORItem implements Parcelable {
         this.clubName = clubName;
     }
 
-    public int getAccess() {
-        return access;
-    }
-
-    public void setAccess(int access) {
-        this.access = access;
-    }
-
     public String getPosition() {
         return position;
     }
@@ -63,12 +60,34 @@ public class PORItem implements Parcelable {
         this.position = position;
     }
 
+    public List<Integer> getAccess() {
+        return access;
+    }
+
+    public void setAccess(List<Integer> access) {
+        this.access = access;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
     protected PORItem(Parcel in) {
         id = in.readString();
         clubId = in.readString();
         clubName = in.readString();
-        access = in.readInt();
+        code = in.readInt();
         position = in.readString();
+        if (in.readByte() == 0x01) {
+            access = new ArrayList<Integer>();
+            in.readList(access, Integer.class.getClassLoader());
+        } else {
+            access = null;
+        }
     }
 
     @Override
@@ -81,8 +100,14 @@ public class PORItem implements Parcelable {
         dest.writeString(id);
         dest.writeString(clubId);
         dest.writeString(clubName);
-        dest.writeInt(access);
+        dest.writeInt(code);
         dest.writeString(position);
+        if (access == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(access);
+        }
     }
 
     @SuppressWarnings("unused")

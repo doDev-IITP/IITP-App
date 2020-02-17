@@ -170,7 +170,7 @@ public class utils {
     }
 
 
-    public static void createNotificationChannel(Context context) {
+    public static void createMainNotificationChannel(Context context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Notifications";
@@ -179,6 +179,25 @@ public class utils {
             channel.enableLights(true);
             channel.setLightColor(Color.BLUE);
             channel.setDescription(context.getString(R.string.default_notification_channel_description));
+            channel.enableVibration(true);
+            channel.setShowBadge(true);
+
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+    }
+
+    public static void createTestNotificationChannel(Context context) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Test Notifications";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(context.getString(R.string.test_notification_channel_id), name, importance);
+            channel.enableLights(true);
+            channel.setLightColor(Color.BLUE);
+            channel.setDescription(context.getString(R.string.test_notification_channel_description));
             channel.enableVibration(true);
             channel.setShowBadge(true);
 

@@ -3,14 +3,18 @@ package com.grobo.notifications.notifications;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.grobo.notifications.R;
@@ -18,9 +22,8 @@ import com.grobo.notifications.database.AppDatabase;
 import com.grobo.notifications.utils.utils;
 
 import java.util.Map;
-import java.util.concurrent.Future;
 
-import static com.grobo.notifications.utils.utils.createNotificationChannel;
+import static com.grobo.notifications.utils.utils.createMainNotificationChannel;
 
 public class FcmService extends FirebaseMessagingService {
 
@@ -37,46 +40,51 @@ public class FcmService extends FirebaseMessagingService {
 
         Map<String, String> data = remoteMessage.getData();
 
-            if (data.containsKey("notify")) {
-            if (data.get("notify").equals("1")) {
+        if (data.containsKey("notify") && data.get("notify").equals("1")) {
 
-                String imageUri = null;
-                String messageBody = remoteMessage.getData().get("body");
-                String messageTitle = remoteMessage.getData().get("title");
-                String messageDescription = remoteMessage.getData().get("description");
-                long time = remoteMessage.getSentTime();
-                String link = remoteMessage.getData().get("link");
+            String messageBody = data.get("body");
+            String messageTitle = data.get("title");
+            String messageDescription = data.get("description");
+            long time = remoteMessage.getSentTime();
+            String link = data.get("link");
 
-                Bitmap bitmap = null;
-                if (data.containsKey("image_uri")) {
-                    imageUri = remoteMessage.getData().get("image_uri");
-                    Future<Bitmap> futureTarget = Glide.with(this)
-                            .asBitmap()
-                            .load(imageUri)
-                            .error(R.drawable.baseline_dashboard_24)
-                            .submit();
-                    try {
-                        bitmap = futureTarget.get();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+            String imageUri = "";
+            if (data.containsKey("image_uri")) imageUri = remoteMessage.getData().get("image_uri");
 
-                addToDb(messageTitle, messageBody, messageDescription, imageUri, time, link);
-                sendNotification(messageTitle, messageBody, bitmap, time);
+            addToDb(messageTitle, messageBody, messageDescription, imageUri, time, link);
+
+            if (imageUri != null && !imageUri.isEmpty()) {
+                Glide.with(this).asBitmap()
+                        .load(imageUri)
+                        .into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                sendNotification(messageTitle, messageBody, resource, time);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                            }
+
+                            @Override
+                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                sendNotification(messageTitle, messageBody, null, time);
+                            }
+                        });
+            } else {
+                sendNotification(messageTitle, messageBody, null, time);
             }
         }
-
     }
 
 
     @Override
     public void onNewToken(@NonNull String token) {
         Log.d("FCM", "Refreshed token: " + token);
-        utils.storeFCMToken(this,token);
+        utils.storeFCMToken(this, token);
     }
 
-    private void addToDb(String messageTitle, String messageBody, String messageDescription, String imageUri, long time, String link){
+    private void addToDb(String messageTitle, String messageBody, String messageDescription, String imageUri, long time, String link) {
         NotificationDao notificationDao = AppDatabase.getDatabase(this).notificationDao();
 
         Notification notification = new Notification();
@@ -91,7 +99,7 @@ public class FcmService extends FirebaseMessagingService {
     }
 
     private void sendNotification(String title, String body, Bitmap image, long time) {
-        createNotificationChannel(getApplicationContext());
+        createMainNotificationChannel(getApplicationContext());
 
         String link = getResources().getString(R.string.iitp_web) + "notification/" + time;
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -107,10 +115,10 @@ public class FcmService extends FirebaseMessagingService {
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setCategory(NotificationCompat.CATEGORY_EVENT);
-        
+
         if (image == null) {
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(body));
         } else {

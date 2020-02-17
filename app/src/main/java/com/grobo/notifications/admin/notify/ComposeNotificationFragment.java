@@ -2,9 +2,11 @@ package com.grobo.notifications.admin.notify;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +17,40 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.grobo.notifications.R;
+import com.grobo.notifications.account.por.PORItem;
+import com.grobo.notifications.network.AdminRoutes;
+import com.grobo.notifications.network.RetrofitClientInstance;
+import com.grobo.notifications.utils.utils;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.grobo.notifications.utils.Constants.USER_TOKEN;
+import static com.grobo.notifications.utils.utils.createTestNotificationChannel;
 
 public class ComposeNotificationFragment extends Fragment {
 
     public ComposeNotificationFragment() {
     }
+
+    private PORItem currentPor;
 
     private ProgressDialog dialog;
     private Context context;
@@ -42,6 +61,8 @@ public class ComposeNotificationFragment extends Fragment {
     private EditText body;
     private EditText reference;
 
+    private ArrayList<String> audience;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +72,15 @@ public class ComposeNotificationFragment extends Fragment {
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
+
+        if (getArguments() != null && getArguments().containsKey("por"))
+            currentPor = getArguments().getParcelable("por");
+
+        if (getArguments() != null && getArguments().containsKey("audience"))
+            audience = getArguments().getStringArrayList("audience");
+
+        if (currentPor == null || audience == null || audience.size() == 0)
+            utils.showFinishAlertDialog(context, "Alert!!!", "Error in retrieving POR data!");
     }
 
     @Override
@@ -71,6 +101,36 @@ public class ComposeNotificationFragment extends Fragment {
         Button sendButton = view.findViewById(R.id.add_notification_send_button);
         sendButton.setOnClickListener(v -> {
             if (validateInput()) showUnsavedChangesDialog();
+        });
+
+        Button previewButton = view.findViewById(R.id.add_notification_preview_button);
+        previewButton.setOnClickListener(v -> {
+            if (validateInput()) {
+                if (!image.getText().toString().isEmpty()) {
+                    dialog.setMessage("Loading image...");
+                    dialog.show();
+
+                    Glide.with(this).asBitmap()
+                            .load(image.getText().toString())
+                            .into(new CustomTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                    sendTestNotification(title.getText().toString(), body.getText().toString(), resource);
+                                    if (dialog != null) dialog.dismiss();
+                                }
+
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
+                                }
+
+                                @Override
+                                public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                    sendTestNotification(title.getText().toString(), body.getText().toString(), null);
+                                    if (dialog != null) dialog.dismiss();                                }
+                            });
+                } else
+                    sendTestNotification(title.getText().toString(), body.getText().toString(), null);
+            }
         });
     }
 
@@ -101,57 +161,70 @@ public class ComposeNotificationFragment extends Fragment {
 
     private void post() {
 
-        dialog.setMessage("Sending Notification");
+        dialog.setMessage("Sending Notification...");
         dialog.show();
 
-        Map<String, Object> jsonParams = new ArrayMap<>();
-        jsonParams.put("to", "/topics/dev");
-        jsonParams.put("priority", "high");
+        String token = PreferenceManager.getDefaultSharedPreferences(context).getString(USER_TOKEN, "");
 
         Map<String, Object> data = new ArrayMap<>();
         data.put("title", title.getText().toString());
         data.put("body", body.getText().toString());
         data.put("description", description.getText().toString());
         data.put("image_uri", image.getText().toString());
-        data.put("notify", "1");
-        data.put("reference", reference.getText().toString());
-        jsonParams.put("data", data);
+        data.put("link", reference.getText().toString());
+        data.put("club", currentPor.getClubId());
 
-        RequestBody body = RequestBody.create((new JSONObject(jsonParams)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
+        String[] audienceArray = audience.toArray(new String[0]);
+        data.put("audience", audienceArray);
 
-        final OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder()
-                .url("https://fcm.googleapis.com/fcm/send")
-                .post(body)
-                .addHeader("Authorization", getResources().getString(R.string.FCM_authorization))
-                .addHeader("content-type", "application/json")
-                .build();
+        RequestBody body = RequestBody.create((new JSONObject(data)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
 
-        new AsyncTask<Void, Void, Integer>() {
-
+        AdminRoutes service = RetrofitClientInstance.getRetrofitInstance().create(AdminRoutes.class);
+        Call<ResponseBody> call = service.postNotification(token, body);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            protected Integer doInBackground(Void... voids) {
-                try (okhttp3.Response response = client.newCall(request).execute()) {
-                    return response.code();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Integer integer) {
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                if (integer == 200) {
-                    Toast.makeText(context, "Notification sent", Toast.LENGTH_LONG).show();
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (dialog != null) dialog.dismiss();
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Notification Sent", Toast.LENGTH_SHORT).show();
+                    if (getActivity() != null) getActivity().finish();
                 } else {
-                    Toast.makeText(context, "Notification send Failed", Toast.LENGTH_LONG).show();
+                    Log.e("failure", String.valueOf(response.code()));
+                    utils.showSimpleAlertDialog(context, "Alert!!!", "Notification send failed! Error: " + response.code());
                 }
             }
 
-        }.execute();
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                if (t.getMessage() != null) Log.e("failure", t.getMessage());
+                if (dialog != null) dialog.dismiss();
+
+                Toast.makeText(context, "Notification send failed, please check internet connection", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void sendTestNotification(String title, String body, Bitmap image) {
+        createTestNotificationChannel(context.getApplicationContext());
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, getString(R.string.test_notification_channel_id))
+                .setSmallIcon(R.drawable.baseline_dashboard_24)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setCategory(NotificationCompat.CATEGORY_EVENT);
+
+        if (image == null) {
+            notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(body));
+        } else {
+            notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(image));
+            notificationBuilder.setLargeIcon(image);
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(5325, notificationBuilder.build());
 
     }
 }

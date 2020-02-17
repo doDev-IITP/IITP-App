@@ -28,7 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.clubevents.ClubEventActivity;
 import com.grobo.notifications.network.ClubRoutes;
-import com.grobo.notifications.network.OtherRoutes;
+import com.grobo.notifications.network.PorRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.profile.UserProfileActivity;
 import com.grobo.notifications.utils.ImageViewerActivity;
@@ -244,7 +244,7 @@ public class ClubDetailActivity extends FragmentActivity implements PorAdapter.O
     private void getClubPOR(String clubId) {
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_TOKEN, "0");
 
-        OtherRoutes service = RetrofitClientInstance.getRetrofitInstance().create(OtherRoutes.class);
+        PorRoutes service = RetrofitClientInstance.getRetrofitInstance().create(PorRoutes.class);
 
         Call<ResponseBody> call = service.getPorByClub(token, clubId);
         call.enqueue(new Callback<ResponseBody>() {

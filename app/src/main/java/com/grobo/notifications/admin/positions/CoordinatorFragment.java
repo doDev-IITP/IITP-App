@@ -1,5 +1,6 @@
 package com.grobo.notifications.admin.positions;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.grobo.notifications.account.por.PORItem;
 import com.grobo.notifications.admin.clubevents.ClubEventActivity;
 import com.grobo.notifications.admin.notify.NewNotificationActivity;
 import com.grobo.notifications.clubs.EditClubDetailActivity;
+import com.grobo.notifications.utils.utils;
 
 public class CoordinatorFragment extends Fragment implements View.OnClickListener {
 
@@ -24,21 +26,20 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
     }
 
     private PORItem currentPOR;
+    private Context context;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null && getArguments().containsKey("data")) {
-            currentPOR = getArguments().getParcelable("data");
-            if (currentPOR == null && getActivity() != null) {
-                Toast.makeText(getActivity(), "Invalid POR", Toast.LENGTH_LONG).show();
-                getActivity().finish();
-            }
-        } else {
-            Toast.makeText(getActivity(), "Invalid POR", Toast.LENGTH_LONG).show();
-            if (getActivity() != null)
-                getActivity().finish();
+
+        if (getContext() != null)
+            context = getContext();
+
+        if (getArguments() != null && getArguments().containsKey("por")) {
+            currentPOR = getArguments().getParcelable("por");
         }
+
+        if (currentPOR == null) utils.showFinishAlertDialog(context, "Alert!!!", "Invalid POR!");
     }
 
     @Override
@@ -75,29 +76,38 @@ public class CoordinatorFragment extends Fragment implements View.OnClickListene
         Fragment next = null;
         switch (v.getId()) {
             case R.id.coordinator_notification_cv:
-                Intent i = new Intent(getContext(), NewNotificationActivity.class);
-                i.putExtra("por", currentPOR);
-                startActivity(i);
+                if (currentPOR.getAccess().contains(2)) {
+                    Intent i = new Intent(context, NewNotificationActivity.class);
+                    i.putExtra("por", currentPOR);
+                    startActivity(i);
+                } else
+                    Toast.makeText(getContext(), "You don't have required access" + new String(Character.toChars(0x1f97a)), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.coordinator_events_cv:
-                Intent i1 = new Intent(getContext(), ClubEventActivity.class);
-                i1.putExtra("por", currentPOR);
-                startActivity(i1);
+                if (currentPOR.getAccess().contains(3)) {
+                    Intent i = new Intent(context, ClubEventActivity.class);
+                    i.putExtra("por", currentPOR);
+                    startActivity(i);
+                } else
+                    Toast.makeText(getContext(), "You don't have required access" + new String(Character.toChars(0x1f97a)), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.coordinator_club_details_cv:
-                Intent i2 = new Intent(getContext(), EditClubDetailActivity.class);
-                i2.putExtra("por", currentPOR);
-                startActivity(i2);
+                if (currentPOR.getAccess().contains(1)) {
+                    Intent i = new Intent(getContext(), EditClubDetailActivity.class);
+                    i.putExtra("por", currentPOR);
+                    startActivity(i);
+                } else
+                    Toast.makeText(getContext(), "You don't have required access" + new String(Character.toChars(0x1f97a)), Toast.LENGTH_SHORT).show();
                 break;
             default:
                 Toast.makeText(getContext(), "Coming soon...", Toast.LENGTH_SHORT).show();
                 break;
         }
 
-        if (next != null) {
-            next.setArguments(bundle);
-            transactFragment(next);
-        }
+//        if (next != null) {
+//            next.setArguments(bundle);
+//            transactFragment(next);
+//        }
     }
 
     private void transactFragment(Fragment frag) {

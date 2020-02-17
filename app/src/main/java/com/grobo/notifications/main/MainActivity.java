@@ -49,11 +49,11 @@ import com.grobo.notifications.utils.KeyboardUtils;
 
 import static com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE;
 import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
-import static com.grobo.notifications.utils.Constants.BASE_URL;
 import static com.grobo.notifications.utils.Constants.KEY_FORCE_UPDATE;
 import static com.grobo.notifications.utils.Constants.LOGIN_STATUS;
 import static com.grobo.notifications.utils.Constants.ROLL_NUMBER;
 import static com.grobo.notifications.utils.Constants.USER_BRANCH;
+import static com.grobo.notifications.utils.Constants.USER_IMAGE;
 import static com.grobo.notifications.utils.Constants.USER_NAME;
 import static com.grobo.notifications.utils.Constants.USER_YEAR;
 
@@ -107,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
             new Handler().postDelayed(this::subscribeFcmTopics, 1000);
 
             handleIntent(getIntent());
-
-//            Toast.makeText(this, "Thank you for testing beta version of this app. Please give feedback from about section of the app.", Toast.LENGTH_LONG).show();
         }
         KeyboardUtils.hideSoftInput(this);
     }
@@ -156,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             ((TextView) v.findViewById(R.id.user_email_nav_header)).setText(prefs.getString(ROLL_NUMBER, ""));
             ImageView profileImage = v.findViewById(R.id.user_image_nav_header);
             Glide.with(this)
-                    .load(BASE_URL + "img/" + prefs.getString(ROLL_NUMBER, ROLL_NUMBER).toLowerCase() + ".jpg")
+                    .load(prefs.getString(USER_IMAGE, ""))
                     .centerCrop()
                     .placeholder(R.drawable.profile_photo)
                     .into(profileImage);

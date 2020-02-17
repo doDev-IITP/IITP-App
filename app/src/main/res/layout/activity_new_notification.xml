@@ -4,6 +4,6 @@
     android:id="@+id/frame_new_notification"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".admin.clubevents.ClubEventActivity">
+    tools:context=".admin.notify.NewNotificationActivity">
 
 </FrameLayout>
