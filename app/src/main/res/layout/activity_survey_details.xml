@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/very_light_grey"
     tools:context=".survey.SurveyDetailsActivity">
 
     <LinearLayout
@@ -48,7 +49,6 @@
             android:textSize="16sp"
             tools:text="This is a survey description, details about survey will be here." />
 
-
         <LinearLayout
             android:id="@+id/survey_insert_point"
             android:layout_width="match_parent"
@@ -63,10 +63,10 @@
             android:id="@+id/button_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_gravity="center_horizontal"
             android:layout_margin="8dp"
-            android:text="Submit" />
+            android:text="Submit"
+            android:visibility="gone" />
 
     </LinearLayout>
 

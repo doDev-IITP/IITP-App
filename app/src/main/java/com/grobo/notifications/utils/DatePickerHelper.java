@@ -35,6 +35,7 @@ public class DatePickerHelper {
         return new TimePickerDialog(context, (view, hourOfDay, minute) -> {
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
 
             DateFormat format = SimpleDateFormat.getDateTimeInstance();
             editText.setText(format.format(calendar.getTime()));

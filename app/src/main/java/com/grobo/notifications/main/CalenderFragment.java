@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.grobo.notifications.R;
 import com.grobo.notifications.admin.clubevents.ClubEventItem;
 import com.grobo.notifications.admin.clubevents.ClubEventRecyclerAdapter;
+import com.grobo.notifications.admin.clubevents.ClubEventViewModel;
 import com.grobo.notifications.network.EventsRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -37,26 +40,41 @@ import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 public class CalenderFragment extends Fragment {
 
     private ArrayList<CalendarDay> dates;
-    private List<ClubEventItem> allItems;
+    private List<ClubEventItem> allItems = new ArrayList<>();
     private Calendar calendar;
     private MaterialCalendarView calendarView;
     private ClubEventRecyclerAdapter clubEventRecyclerAdapter;
     private CalendarDay currentDay;
+    private CalendarDay selectedDay;
+
+    private ClubEventViewModel viewModel;
 
     public CalenderFragment() {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(ClubEventViewModel.class);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_calender, container, false);
+        return inflater.inflate(R.layout.fragment_calender, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         calendar = Calendar.getInstance();
         currentDay = CalendarDay.from(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE));
+        selectedDay = currentDay;
+
         calendarView = view.findViewById(R.id.calendarView);
         calendarView.setSelectionColor(getResources().getColor(R.color.colorPrimary));
 
         dates = new ArrayList<>();
-        allItems = new ArrayList<>();
 
         RecyclerView eventsRecycler = view.findViewById(R.id.eventlist);
         eventsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -76,13 +94,19 @@ public class CalenderFragment extends Fragment {
         };
         calendarView.addDecorator(todayDecorator);
 
-        populateRecycler();
+        viewModel.getAllEvents().observe(getViewLifecycleOwner(), clubEventItems -> {
+            allItems = clubEventItems;
+            for (ClubEventItem i : clubEventItems) {
+                calendar.setTimeInMillis(i.getDate());
+                dates.add(CalendarDay.from(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE)));
+            }
+            further();
+        });
 
-        return view;
+        updateData();
     }
 
-
-    private void populateRecycler() {
+    private void updateData() {
 
         String token = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(USER_TOKEN, "0");
         Log.e("token", token);
@@ -93,24 +117,16 @@ public class CalenderFragment extends Fragment {
         call.enqueue(new Callback<ClubEventItem.ClubEventSuper>() {
             @Override
             public void onResponse(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Response<ClubEventItem.ClubEventSuper> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null && response.body().getEvents() != null) {
-                        allItems = response.body().getEvents();
-                        for (ClubEventItem i : allItems) {
-                            calendar.setTimeInMillis(i.getDate());
-                            dates.add(CalendarDay.from(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE)));
-                        }
-                        further();
-                    }
-                }
+                if (response.isSuccessful())
+                    if (response.body() != null && response.body().getEvents() != null)
+                        for (ClubEventItem i : response.body().getEvents()) viewModel.insert(i);
             }
 
             @Override
             public void onFailure(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Throwable t) {
-                Log.e("failure", t.getMessage());
+                if (t.getMessage() != null) Log.e("failure", t.getMessage());
             }
         });
-
 
     }
 
@@ -131,6 +147,7 @@ public class CalenderFragment extends Fragment {
 
         calendarView.setOnDateChangedListener((widget, date, selected) -> {
             showEvents(date);
+            selectedDay = date;
         });
 
     }
@@ -165,7 +182,6 @@ public class CalenderFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        showEvents(currentDay);
+        showEvents(selectedDay);
     }
 }

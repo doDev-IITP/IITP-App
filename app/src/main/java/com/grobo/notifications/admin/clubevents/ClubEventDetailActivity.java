@@ -60,19 +60,21 @@ public class ClubEventDetailActivity extends FragmentActivity {
         if (getIntent().hasExtra("reload"))
             reload = getIntent().getBooleanExtra("reload", false);
 
-        if (!reload) {
+        if (getIntent().hasExtra("eventId")){
             String eventId = getIntent().getStringExtra("eventId");
-            current = viewModel.getEventById(eventId);
-            showData();
-        } else {
-            String eventId = getIntent().getStringExtra("eventId");
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
-            downloadData(eventId);
-        }
 
+            if (!reload) {
+                current = viewModel.getEventById(eventId);
+                showData();
+            } else {
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Loading...");
+                progressDialog.show();
+                downloadData(eventId);
+            }
+        }
+        else utils.showFinishAlertDialog(this, "Alert!!!", "Event not found.");
     }
 
     private void showData() {

@@ -21,6 +21,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.grobo.notifications.R;
 import com.grobo.notifications.network.FeedRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
+import com.grobo.notifications.timetable.DayFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,14 +88,27 @@ public class HomeFragment extends Fragment {
                 @NonNull
                 @Override
                 public Fragment getItem(int position) {
-                    FeedCardFragment fragment = new FeedCardFragment();
-                    fragment.bindData(allFeed.get(position).getId());
-                    return fragment;
+                    if (position == 0) {
+                        return DayFragment.newInstance(position + 2);
+                    } else {
+                        FeedCardFragment fragment = new FeedCardFragment();
+                        fragment.bindData(allFeed.get(position - 1).getId());
+                        return fragment;
+                    }
                 }
 
                 @Override
                 public int getCount() {
-                    return allFeed.size();
+                    return allFeed.size() + 1;
+                }
+
+                @NonNull
+                @Override
+                public Object instantiateItem(@NonNull ViewGroup container, int position) {
+                    if (position == 1 && viewPager.getCurrentItem() == 0) {
+                        viewPager.setCurrentItem(1, true);
+                    }
+                    return super.instantiateItem(container, position);
                 }
             });
 
@@ -105,6 +119,13 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onPageSelected(int position) {
+                    if (position == 0) {
+                        if (getView() != null)
+                            getView().findViewById(R.id.bottom_layout).animate().translationY(100).alpha(0).setDuration(300).start();
+                    } else {
+                        if (getView() != null)
+                            getView().findViewById(R.id.bottom_layout).animate().translationY(0).alpha(1).setDuration(300).start();
+                    }
                 }
 
                 @Override

@@ -28,7 +28,7 @@
     <RelativeLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="96dp"
         android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -71,19 +71,18 @@
             android:src="@drawable/notification_icon"
             android:tint="@color/white" />
 
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/icon_todo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_above="@id/icon_notification"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/white_ripple_background"
+            android:padding="4dp"
+            android:src="@drawable/todo_icon"
+            android:tint="@color/white" />
 
-    <ImageView
-        android:id="@+id/icon_todo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/white_ripple_background"
-        android:padding="4dp"
-        android:src="@drawable/todo_icon"
-        android:tint="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/bottom_layout"
-        app:layout_constraintEnd_toEndOf="parent" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

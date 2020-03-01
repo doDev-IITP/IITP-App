@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_por_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/card_por_root"
-    android:orientation="horizontal"
-    app:cardBackgroundColor="@android:color/transparent"
-    app:strokeColor="@color/colorAccent"
-    app:cardCornerRadius="8dp"
     android:layout_margin="4dp"
+    android:orientation="horizontal"
+    app:cardCornerRadius="8dp"
+    app:strokeColor="@color/colorAccent"
     app:strokeWidth="0.5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/card_por_club"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:minHeight="?android:attr/listPreferredItemHeightSmall"
             android:padding="8dp"
-            android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
     </LinearLayout>

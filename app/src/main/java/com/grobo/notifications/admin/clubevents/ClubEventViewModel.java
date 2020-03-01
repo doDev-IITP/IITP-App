@@ -24,7 +24,7 @@ public class ClubEventViewModel extends AndroidViewModel {
         allEvents = dao.getAllEvents();
     }
 
-    LiveData<List<ClubEventItem>> getAllEvents() {
+    public LiveData<List<ClubEventItem>> getAllEvents() {
         return allEvents;
     }
 

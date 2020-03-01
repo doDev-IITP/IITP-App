@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,7 +38,7 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        viewModel = ViewModelProviders.of( this ).get( TodoViewModel.class );
+        viewModel = new ViewModelProvider(this).get( TodoViewModel.class );
         preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
     }
 
@@ -60,7 +60,7 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
 
         new Handler().postDelayed(() -> {
             fab.animate().scaleX(1).scaleY(1).setDuration(200).start();
-        }, 1000);
+        }, 600);
 
         recyclerView = view.findViewById( R.id.recycler_todo );
         recyclerView.setLayoutManager( new LinearLayoutManager( requireContext() ) );
@@ -79,7 +79,7 @@ public class TodoFragment extends Fragment implements TodoRecyclerAdapter.OnTodo
     }
 
     private void populateRecycler() {
-        viewModel.getAllTodo().observe( TodoFragment.this, goals -> {
+        viewModel.getAllTodo().observe( getViewLifecycleOwner(), goals -> {
             List<Goal> modGoals = new ArrayList<>();
             for (Goal g : goals)
                 if (g.getChecked() == 0)
