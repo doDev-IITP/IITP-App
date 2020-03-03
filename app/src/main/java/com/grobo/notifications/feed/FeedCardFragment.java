@@ -17,7 +17,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
@@ -49,7 +49,7 @@ public class FeedCardFragment extends Fragment implements FeedDragLayout.GotoDet
         myMongoId = PreferenceManager.getDefaultSharedPreferences(context).getString(USER_MONGO_ID, "");
 
         if (viewModel == null)
-            viewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
+            viewModel = new ViewModelProvider(this).get(FeedViewModel.class);
 
         currentFeed = viewModel.getFeedById(feedId);
 
@@ -68,49 +68,55 @@ public class FeedCardFragment extends Fragment implements FeedDragLayout.GotoDet
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        populateData();
+    }
 
-        imageView = view.findViewById(R.id.image);
-        ViewCompat.setTransitionName(imageView, IMAGE_TRANSITION_NAME);
+    private void populateData() {
+        if (getView() != null) {
+            View view = getView();
 
-        TextView title = view.findViewById(R.id.title);
-        TextView poster = view.findViewById(R.id.poster_name);
-        TextView likesCount = view.findViewById(R.id.react_count);
-        ImageView likeIcon = view.findViewById(R.id.react);
+            imageView = view.findViewById(R.id.image);
+            ViewCompat.setTransitionName(imageView, IMAGE_TRANSITION_NAME);
 
-        if (currentFeed != null) {
-            Glide.with(context)
-                    .load(currentFeed.getEventImageUrl())
-                    .centerCrop()
-                    .placeholder(R.drawable.baseline_dashboard_24)
-                    .into(imageView);
+            TextView title = view.findViewById(R.id.title);
+            TextView poster = view.findViewById(R.id.poster_name);
+            TextView likesCount = view.findViewById(R.id.react_count);
+            ImageView likeIcon = view.findViewById(R.id.react);
 
-            title.setText(currentFeed.getEventName());
-            poster.setText(String.format("Posted by:\n%s", currentFeed.getDataPoster().getName()));
+            if (currentFeed != null) {
+                Glide.with(context)
+                        .load(currentFeed.getEventImageUrl())
+                        .centerCrop()
+                        .placeholder(R.drawable.baseline_dashboard_24)
+                        .into(imageView);
 
-            if (currentFeed.getLikes() != null)
-                likesCount.setText(String.valueOf(currentFeed.getLikes().size()));
-            else likesCount.setText("0");
+                title.setText(currentFeed.getEventName());
+                poster.setText(String.format("Posted by:\n%s", currentFeed.getDataPoster().getName()));
 
-            if (currentFeed.getLikes().contains(myMongoId))
-                likeIcon.setImageDrawable(new IconDrawable(context, FontAwesomeIcons.fa_heart).colorRes(R.color.deep_red));
-            else
-                likeIcon.setImageDrawable(new IconDrawable(context, FontAwesomeIcons.fa_heart_o).colorRes(R.color.deep_red));
-
-            likeIcon.setOnClickListener(v -> {
-                FeedUtils.reactOnFeed(context, currentFeed.getId());
-                if (currentFeed.getLikes().contains(myMongoId)) {
-                    likeIcon.setImageDrawable(new IconDrawable(context, FontAwesomeIcons.fa_heart_o).colorRes(R.color.deep_red));
-                    currentFeed.getLikes().remove(myMongoId);
+                if (currentFeed.getLikes() != null)
                     likesCount.setText(String.valueOf(currentFeed.getLikes().size()));
-                    viewModel.insert(currentFeed);
-                } else {
+                else likesCount.setText("0");
+
+                if (currentFeed.getLikes().contains(myMongoId))
                     likeIcon.setImageDrawable(new IconDrawable(context, FontAwesomeIcons.fa_heart).colorRes(R.color.deep_red));
-                    currentFeed.getLikes().add(myMongoId);
-                    likesCount.setText(String.valueOf(currentFeed.getLikes().size()));
-                    viewModel.insert(currentFeed);}
-            });
-        }
+                else
+                    likeIcon.setImageDrawable(new IconDrawable(context, FontAwesomeIcons.fa_heart_o).colorRes(R.color.deep_red));
 
+                likeIcon.setOnClickListener(v -> {
+                    FeedUtils.reactOnFeed(context, currentFeed.getId());
+                    if (currentFeed.getLikes().contains(myMongoId)) {
+                        likeIcon.setImageDrawable(new IconDrawable(context, FontAwesomeIcons.fa_heart_o).colorRes(R.color.deep_red));
+                        currentFeed.getLikes().remove(myMongoId);
+                        likesCount.setText(String.valueOf(currentFeed.getLikes().size()));
+                        viewModel.insert(currentFeed);
+                    } else {
+                        likeIcon.setImageDrawable(new IconDrawable(context, FontAwesomeIcons.fa_heart).colorRes(R.color.deep_red));
+                        currentFeed.getLikes().add(myMongoId);
+                        likesCount.setText(String.valueOf(currentFeed.getLikes().size()));
+                        viewModel.insert(currentFeed);}
+                });
+            }
+        }
     }
 
     @Override
@@ -127,5 +133,10 @@ public class FeedCardFragment extends Fragment implements FeedDragLayout.GotoDet
 
     public void bindData(String feedId) {
         this.feedId = feedId;
+        populateData();
+    }
+
+    public String getBoundFeedId() {
+        return feedId;
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.grobo.notifications.database.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -28,7 +29,17 @@ public class FeedViewModel extends AndroidViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
+    }
+
+    public List<String> loadAllFeedIds() {
+        LoadAllFeedIdsTask task = new LoadAllFeedIdsTask(feedDao);
+        try {
+            return task.execute().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     public void insert(FeedItem feedItem) {
@@ -78,6 +89,19 @@ public class FeedViewModel extends AndroidViewModel {
         @Override
         protected List<FeedItem> doInBackground(Void... voids) {
             return mAsyncTaskDao.loadAllFeed();
+        }
+    }
+
+    private static class LoadAllFeedIdsTask extends AsyncTask<Void, Void, List<String>> {
+        private FeedDao mAsyncTaskDao;
+
+        LoadAllFeedIdsTask(FeedDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... voids) {
+            return mAsyncTaskDao.loadAllFeedIds();
         }
     }
 

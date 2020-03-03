@@ -14,6 +14,9 @@ public interface FeedDao {
     @Query("select * from feed ORDER BY eventId DESC")
     List<FeedItem> loadAllFeed();
 
+    @Query("select id from feed ORDER BY eventId DESC")
+    List<String> loadAllFeedIds();
+
     @Query("select * from feed where eventId = :eventId")
     FeedItem loadFeedByEventId(long eventId);
 

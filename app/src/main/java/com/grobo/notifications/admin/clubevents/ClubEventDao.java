@@ -21,7 +21,7 @@ public interface ClubEventDao {
     @Query("SELECT * FROM events WHERE club_id = :clubId ORDER BY date ASC")
     LiveData<List<ClubEventItem>> loadEventsByClubId(String clubId);
 
-    @Query("SELECT * FROM events WHERE date > :start AND date < :end ORDER BY date ASC")
+    @Query("SELECT * FROM events WHERE date >= :start AND date < :end ORDER BY date ASC")
     LiveData<List<ClubEventItem>> getEventsByDate(long start, long end);
 
     @Insert(onConflict = REPLACE)

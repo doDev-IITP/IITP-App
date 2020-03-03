@@ -37,8 +37,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    tools:text="Aman Jee"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:text="Aman Jee" />
 
                 <TextView
                     android:id="@+id/react_count"
@@ -46,9 +46,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="16dp"
-                    tools:text="121"
                     android:textColor="@color/deep_red"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    tools:text="121" />
 
                 <ImageView
                     android:id="@+id/react"

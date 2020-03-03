@@ -36,7 +36,6 @@ public class ClubEventViewModel extends AndroidViewModel {
         return dao.getEventsByDate(start, end);
     }
 
-
     public void insert(ClubEventItem clubEventItem) {
         new insertAsyncTask(dao).execute(clubEventItem);
     }
