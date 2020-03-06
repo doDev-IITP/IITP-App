@@ -1,37 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipe_refresh_club_event"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:minHeight="300dp"
+        android:translationY="-20dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="8dp">
 
-        <androidx.cardview.widget.CardView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_club_events"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:minHeight="300dp"
-            android:translationY="-20dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="8dp">
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:visibility="visible" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_club_events"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="8dp"
-                android:visibility="visible" />
+        <include
+            android:id="@+id/club_events_empty_view"
+            layout="@layout/item_empty_view"
+            android:visibility="invisible" />
 
-            <include
-                android:id="@+id/club_events_empty_view"
-                layout="@layout/item_empty_view"
-                android:visibility="invisible" />
+    </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
-
-    </RelativeLayout>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</RelativeLayout>

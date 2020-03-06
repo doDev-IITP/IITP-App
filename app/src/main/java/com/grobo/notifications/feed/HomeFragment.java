@@ -2,6 +2,7 @@ package com.grobo.notifications.feed;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -175,6 +176,15 @@ public class HomeFragment extends Fragment {
                 viewPager.setCurrentItem(1, true);
             }
             return super.instantiateItem(container, position);
+        }
+
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+            try {
+                super.restoreState(state, loader);
+            } catch (Exception e) {
+                Log.e("TAG", "Error Restore State of Fragment : " + e.getMessage(), e);
+            }
         }
     }
 

@@ -102,6 +102,14 @@ public class FeedCardFragment extends Fragment implements FeedDragLayout.GotoDet
                 else
                     likeIcon.setImageDrawable(new IconDrawable(context, FontAwesomeIcons.fa_heart_o).colorRes(R.color.deep_red));
 
+                view.findViewById(R.id.ll_feed_card_body).setOnClickListener(v -> {
+                    Bundle b = new Bundle();
+                    b.putString("feedId", currentFeed.getId());
+                    FeedLikesDialogFragment fragment = new FeedLikesDialogFragment();
+                    fragment.setArguments(b);
+                    fragment.show(getChildFragmentManager(), fragment.getTag());
+                });
+
                 likeIcon.setOnClickListener(v -> {
                     FeedUtils.reactOnFeed(context, currentFeed.getId());
                     if (currentFeed.getLikes().contains(myMongoId)) {

@@ -1,7 +1,9 @@
-package com.grobo.notifications.clubs;
+package com.grobo.notifications.admin.clubevents;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.text.Spanned;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
@@ -21,17 +24,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.por.PORItem;
-import com.grobo.notifications.network.ClubRoutes;
+import com.grobo.notifications.network.EventsRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.utils.utils;
 
@@ -39,11 +42,17 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
+import io.noties.markwon.Markwon;
+import io.noties.markwon.html.HtmlPlugin;
+import io.noties.markwon.image.glide.GlideImagesPlugin;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -52,11 +61,11 @@ import retrofit2.Response;
 
 import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
-public class EditClubDetailActivity extends FragmentActivity {
+public class EditClubEventDetailActivity extends FragmentActivity {
 
     private ProgressDialog progressDialog;
 
-    private ClubItem current;
+    private ClubEventItem current;
     private PORItem currentPor;
 
     private boolean editMode = false;
@@ -65,18 +74,24 @@ public class EditClubDetailActivity extends FragmentActivity {
     private Bitmap selectedImage;
 
     private ImageView imagePreview;
-    private EditText clubTitle;
-    private EditText clubDescription;
-    private EditText clubBio;
+    private EditText eventTitle;
+    private EditText eventDescription;
+    private EditText eventDate;
+    private EditText eventVenue;
+    private MaterialButton previewDescription;
     private String fbLink = null;
     private String instLink = null;
     private String twitterLink = null;
-    private String websiteLink = null;
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+
+    private String originalDescription = "";
+    private boolean previewMode = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_club_detail);
+        setContentView(R.layout.activity_edit_club_event_detail);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
@@ -84,28 +99,34 @@ public class EditClubDetailActivity extends FragmentActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
+        dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
+        calendar = Calendar.getInstance();
+
         if (getIntent().hasExtra("por")) {
             currentPor = getIntent().getParcelableExtra("por");
             if (currentPor != null) {
-                editMode = true;
-                String clubId = currentPor.getClubId();
-                downloadClubData(clubId);
-            } else {
-                utils.showFinishAlertDialog(this, "Alert!!!", "POR data not found.");
-            }
-        } else {
-            editMode = false;
-            showCreateData();
-        }
+
+                if (getIntent().hasExtra("eventId")) {
+                    String eventId = getIntent().getStringExtra("eventId");
+                    editMode = true;
+                    downloadEventData(eventId);
+                } else {
+                    editMode = false;
+                    showCreateData();
+                }
+
+            } else utils.showFinishAlertDialog(this, "Alert!!!", "POR data not found.");
+        } else utils.showFinishAlertDialog(this, "Alert!!!", "POR not found.");
     }
 
     private void showCreateData() {
 
         imagePreview = findViewById(R.id.image_preview);
 
-        clubTitle = findViewById(R.id.edit_club_title);
-        clubDescription = findViewById(R.id.edit_club_description);
-        clubBio = findViewById(R.id.edit_club_bio);
+        eventTitle = findViewById(R.id.edit_event_title);
+        eventDescription = findViewById(R.id.edit_event_description);
+        eventVenue = findViewById(R.id.edit_event_venue);
+        eventDate = findViewById(R.id.edit_event_date);
 
         Button imageSelector = findViewById(R.id.button_select_image);
         imageSelector.setOnClickListener(v -> {
@@ -113,28 +134,29 @@ public class EditClubDetailActivity extends FragmentActivity {
             startActivityForResult(intent, SELECT_PICTURE);
         });
 
-        ImageView fb = findViewById(R.id.club_facebook);
+        ImageView fb = findViewById(R.id.event_facebook);
         fb.setOnClickListener(v -> showLinkDialog(1));
 
-        ImageView inst = findViewById(R.id.club_instagram);
+        ImageView inst = findViewById(R.id.event_instagram);
         inst.setOnClickListener(v -> showLinkDialog(2));
 
-        ImageView twitter = findViewById(R.id.club_twitter);
+        ImageView twitter = findViewById(R.id.event_twitter);
         twitter.setOnClickListener(v -> showLinkDialog(3));
 
-        CardView website = findViewById(R.id.cv_website);
-        website.setOnClickListener(v -> showLinkDialog(4));
-
-        Button saveClubButton = findViewById(R.id.button_save_club);
-        saveClubButton.setOnClickListener(v -> {
-            if (clubTitle.getText().toString().isEmpty()) {
-                clubTitle.setError("Enter a title!");
-            } else if (clubDescription.getText().toString().isEmpty()) {
-                clubDescription.setError("Enter a valid description!");
-            } else if (clubBio.getText().toString().isEmpty()) {
-                clubBio.setError("Enter a valid bio!");
+        Button saveEventButton = findViewById(R.id.button_save_event);
+        saveEventButton.setOnClickListener(v -> {
+            if (eventTitle.getText().toString().isEmpty()) {
+                eventTitle.setError("Enter a title!");
+            } else if (eventDescription.getText().toString().isEmpty()) {
+                eventDescription.setError("Enter a valid description!");
+            } else if (eventVenue.getText().toString().isEmpty()) {
+                eventVenue.setError("Enter a valid venue!");
             } else showPostDialog();
         });
+
+        eventDate.setOnClickListener(view1 -> setDate());
+
+        activatePreviewButton();
     }
 
     private void showEditData() {
@@ -143,17 +165,17 @@ public class EditClubDetailActivity extends FragmentActivity {
             imagePreview = findViewById(R.id.image_preview);
             Glide.with(this)
                     .load("")
-                    .thumbnail(Glide.with(this).load(current.getImage()))
+                    .thumbnail(Glide.with(this).load(current.getImageUrl()))
                     .centerInside()
                     .placeholder(R.drawable.baseline_dashboard_24)
                     .into(imagePreview);
 
-            clubTitle = findViewById(R.id.edit_club_title);
-            clubTitle.setText(current.getName());
-            clubDescription = findViewById(R.id.edit_club_description);
-            clubDescription.setText(current.getDescription());
-            clubBio = findViewById(R.id.edit_club_bio);
-            clubBio.setText(current.getBio());
+            eventTitle = findViewById(R.id.edit_event_title);
+            eventTitle.setText(current.getName());
+            eventDescription = findViewById(R.id.edit_event_description);
+            eventDescription.setText(current.getDescription());
+            eventVenue = findViewById(R.id.edit_event_venue);
+            eventVenue.setText(current.getVenue());
 
             Button imageSelector = findViewById(R.id.button_select_image);
             imageSelector.setOnClickListener(v -> {
@@ -161,63 +183,90 @@ public class EditClubDetailActivity extends FragmentActivity {
                 startActivityForResult(intent, SELECT_PICTURE);
             });
 
-            ImageView fb = findViewById(R.id.club_facebook);
+            ImageView fb = findViewById(R.id.event_facebook);
             fb.setOnClickListener(v -> showLinkDialog(1));
 
-            ImageView inst = findViewById(R.id.club_instagram);
+            ImageView inst = findViewById(R.id.event_instagram);
             inst.setOnClickListener(v -> showLinkDialog(2));
 
-            ImageView twitter = findViewById(R.id.club_twitter);
+            ImageView twitter = findViewById(R.id.event_twitter);
             twitter.setOnClickListener(v -> showLinkDialog(3));
 
-            CardView website = findViewById(R.id.cv_website);
-            website.setOnClickListener(v -> showLinkDialog(4));
-
-            Button saveClubButton = findViewById(R.id.button_save_club);
-            saveClubButton.setOnClickListener(v -> {
-                if (clubTitle.getText().toString().isEmpty()) {
-                    clubTitle.setError("Enter a title!");
-                } else if (clubDescription.getText().toString().isEmpty()) {
-                    clubDescription.setError("Enter a valid description!");
-                } else if (clubBio.getText().toString().isEmpty()) {
-                    clubBio.setError("Enter a valid bio!");
+            Button saveEventButton = findViewById(R.id.button_save_event);
+            saveEventButton.setOnClickListener(v -> {
+                if (eventTitle.getText().toString().isEmpty()) {
+                    eventTitle.setError("Enter a title!");
+                } else if (eventDescription.getText().toString().isEmpty()) {
+                    eventDescription.setError("Enter a valid description!");
+                } else if (eventVenue.getText().toString().isEmpty()) {
+                    eventVenue.setError("Enter a valid venue!");
                 } else showPostDialog();
             });
 
-            if (current.getPages() != null) for (String page : current.getPages()) {
+            if (current.getPostLinks() != null) for (String page : current.getPostLinks()) {
                 if (page.contains("facebook")) fbLink = page;
                 else if (page.contains("instagram")) instLink = page;
                 else if (page.contains("twitter")) twitterLink = page;
             }
 
-            websiteLink = current.getWebsite();
+            SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
+            eventDate = findViewById(R.id.edit_event_date);
+            eventDate.setText(format.format(current.getDate()));
+            calendar.setTimeInMillis(current.getDate());
+            eventDate.setOnClickListener(view1 -> setDate());
 
-        } else utils.showSimpleAlertDialog(this, "Alert!!!", "Club not found.");
+            activatePreviewButton();
+
+        } else utils.showSimpleAlertDialog(this, "Alert!!!", "Event not found.");
     }
 
-    private void downloadClubData(String clubId) {
+    private void activatePreviewButton() {
+        previewDescription = findViewById(R.id.button_preview_description);
+        previewDescription.setOnClickListener(v -> {
+            if (!previewMode) {
+                originalDescription = eventDescription.getText().toString();
+                if (!originalDescription.isEmpty()) {
+                    final Markwon markwon = Markwon.builder(this)
+                            .usePlugin(GlideImagesPlugin.create(this))
+                            .usePlugin(HtmlPlugin.create())
+                            .build();
+                    final Spanned spanned = markwon.toMarkdown(originalDescription);
+                    markwon.setParsedMarkdown(eventDescription, spanned);
+                    previewDescription.setText("Back to edit");
+                    eventDescription.setEnabled(false);
+                    previewMode = true;
+                }
+            } else {
+                eventDescription.setText(originalDescription);
+                previewDescription.setText("Preview");
+                eventDescription.setEnabled(true);
+                previewMode = false;
+            }
+        });
+    }
+
+    private void downloadEventData(String eventId) {
 
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_TOKEN, "0");
 
-        ClubRoutes service = RetrofitClientInstance.getRetrofitInstance().create(ClubRoutes.class);
+        EventsRoutes service = RetrofitClientInstance.getRetrofitInstance().create(EventsRoutes.class);
 
-        Call<ClubItem> call = service.getClubById(token, clubId);
-        call.enqueue(new Callback<ClubItem>() {
+        Call<ClubEventItem> call = service.getEventById(token, eventId);
+        call.enqueue(new Callback<ClubEventItem>() {
             @Override
-            public void onResponse(@NonNull Call<ClubItem> call, @NonNull Response<ClubItem> response) {
+            public void onResponse(@NonNull Call<ClubEventItem> call, @NonNull Response<ClubEventItem> response) {
                 if (progressDialog != null) progressDialog.dismiss();
-                if (response.isSuccessful() && response.body() != null) {
-                    current = response.body();
-                }
+                if (response.isSuccessful() && response.body() != null) current = response.body();
                 showEditData();
             }
 
             @Override
-            public void onFailure(@NonNull Call<ClubItem> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ClubEventItem> call, @NonNull Throwable t) {
                 if (progressDialog != null) progressDialog.dismiss();
+                showEditData();
             }
         });
     }
@@ -240,10 +289,6 @@ public class EditClubDetailActivity extends FragmentActivity {
                 editText.setHint("Enter twitter URL");
                 if (twitterLink != null) editText.setText(twitterLink);
                 break;
-            case 4:
-                editText.setHint("Enter website URL");
-                if (websiteLink != null) editText.setText(websiteLink);
-                break;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -258,9 +303,6 @@ public class EditClubDetailActivity extends FragmentActivity {
                     break;
                 case 3:
                     twitterLink = editText.getText().toString();
-                    break;
-                case 4:
-                    websiteLink = editText.getText().toString();
                     break;
             }
         });
@@ -311,7 +353,7 @@ public class EditClubDetailActivity extends FragmentActivity {
     private void showPostDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Confirmation Dialog")
-                .setMessage("Saving club... Please confirm!!")
+                .setMessage("Saving event... Please confirm!!")
                 .setPositiveButton("Confirm", (dialog, which) -> postImage())
                 .setNegativeButton("Cancel", (dialog, id) -> dialog.dismiss())
                 .show();
@@ -320,8 +362,8 @@ public class EditClubDetailActivity extends FragmentActivity {
     private void postImage() {
 
         if (selectedImage == null) {
-            if (current != null && current.getImage() != null && !current.getImage().isEmpty())
-                post(current.getImage());
+            if (current != null && current.getImageUrl() != null && !current.getImageUrl().isEmpty())
+                post(current.getImageUrl());
             else post("");
         } else {
 
@@ -335,7 +377,7 @@ public class EditClubDetailActivity extends FragmentActivity {
 
             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
-            StorageReference storageRef = firebaseStorage.getReference().child(String.format("clubs/club%s%s.jpg", String.valueOf(System.currentTimeMillis()), String.valueOf(i)));
+            StorageReference storageRef = firebaseStorage.getReference().child(String.format("events/event%s%s.jpg", String.valueOf(System.currentTimeMillis()), String.valueOf(i)));
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             selectedImage.compress(Bitmap.CompressFormat.JPEG, 30, baos);
@@ -362,47 +404,47 @@ public class EditClubDetailActivity extends FragmentActivity {
 
     private void post(String imageUrl) {
 
-        progressDialog.setMessage("Saving club details...");
+        progressDialog.setMessage("Saving event details...");
         progressDialog.setIndeterminate(true);
         progressDialog.show();
 
         Map<String, Object> jsonParams = new ArrayMap<>();
-        jsonParams.put("name", clubTitle.getText().toString());
-        jsonParams.put("description", clubDescription.getText().toString());
-        jsonParams.put("bio", clubBio.getText().toString());
-        jsonParams.put("image", imageUrl);
-        if (websiteLink != null) jsonParams.put("website", websiteLink);
+        jsonParams.put("name", eventTitle.getText().toString());
+
+        if (previewMode) jsonParams.put("description", originalDescription);
+        else jsonParams.put("description", eventDescription.getText().toString());
+
+        jsonParams.put("venue", eventVenue.getText().toString());
+        jsonParams.put("imageUrl", imageUrl);
+        jsonParams.put("relatedClub", currentPor.getClubId());
+        jsonParams.put("date", calendar.getTimeInMillis());
 
         List<String> social = new ArrayList<>();
         if (fbLink != null && !fbLink.isEmpty()) social.add(fbLink);
         if (instLink != null && !instLink.isEmpty()) social.add(instLink);
         if (twitterLink != null && !twitterLink.isEmpty()) social.add(twitterLink);
-        jsonParams.put("pages", social);
+        jsonParams.put("postLinks", social);
 
         RequestBody body = RequestBody.create((new JSONObject(jsonParams)).toString(), okhttp3.MediaType.parse("application/json; charset=utf-8"));
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_TOKEN, "0");
 
-        ClubRoutes service = RetrofitClientInstance.getRetrofitInstance().create(ClubRoutes.class);
+        EventsRoutes service = RetrofitClientInstance.getRetrofitInstance().create(EventsRoutes.class);
 
         Call<ResponseBody> call;
-        if (editMode) call = service.patchClub(token, currentPor.getClubId(), body);
-        else call = service.addClub(token, body);
+        if (editMode) call = service.patchEventById(token, body, current.getId());
+        else call = service.postEvent(token, body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (progressDialog != null) progressDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        utils.showFinishAlertDialog(EditClubDetailActivity.this, "Alert!!!", response.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    utils.showFinishAlertDialog(EditClubEventDetailActivity.this, "Alert!!!", "Event saved.");
                 } else {
                     try {
                         if (response.errorBody() != null) {
-                            Log.e("failure", String.valueOf(response.code()) + response.errorBody().string());
-                            utils.showSimpleAlertDialog(EditClubDetailActivity.this, "Alert!!!", response.errorBody().string() + " Error: " + response.code());
+                            Log.e("failure", response.code() + response.errorBody().string());
+                            utils.showSimpleAlertDialog(EditClubEventDetailActivity.this, "Alert!!!", response.errorBody().string() + " Error: " + response.code());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -412,11 +454,39 @@ public class EditClubDetailActivity extends FragmentActivity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("failure", t.getMessage());
+                if (t.getMessage() != null)
+                    Log.e("failure", t.getMessage());
                 if (progressDialog != null) progressDialog.dismiss();
-                Toast.makeText(EditClubDetailActivity.this, "Save failed, please check internet connection", Toast.LENGTH_LONG).show();
+                Toast.makeText(EditClubEventDetailActivity.this, "Save failed, please check internet connection", Toast.LENGTH_LONG).show();
             }
         });
+
     }
 
+    private void setDate() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, dateSetListener,
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+    DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
+        calendar.set(year, month, dayOfMonth);
+        eventDate.setText(dateFormat.format(calendar.getTime()));
+        setTime();
+    };
+
+    private void setTime() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, timeSetListener,
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+        timePickerDialog.show();
+    }
+
+    TimePickerDialog.OnTimeSetListener timeSetListener = (view, hourOfDay, minute) -> {
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        eventDate.setText(dateFormat.format(calendar.getTime()));
+    };
 }

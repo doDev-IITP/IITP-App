@@ -2,6 +2,8 @@ package com.grobo.notifications.clubs;
 
 import androidx.annotation.Keep;
 
+import java.util.List;
+
 @Keep
 public class ClubPorItem {
     private String image;
@@ -11,7 +13,8 @@ public class ClubPorItem {
     private String instituteId;
     private String clubId;
     private String porId;
-    private int access;
+    private int code;
+    private List<Integer> access;
 
     public ClubPorItem(){}
 
@@ -53,10 +56,6 @@ public class ClubPorItem {
         return instituteId;
     }
 
-    public int getAccess() {
-        return access;
-    }
-
     public String getClubId() {
         return clubId;
     }
@@ -69,10 +68,6 @@ public class ClubPorItem {
         return userId;
     }
 
-    public void setAccess(int access) {
-        this.access = access;
-    }
-
     public void setClubId(String clubId) {
         this.clubId = clubId;
     }
@@ -83,5 +78,21 @@ public class ClubPorItem {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public List<Integer> getAccess() {
+        return access;
+    }
+
+    public void setAccess(List<Integer> access) {
+        this.access = access;
     }
 }

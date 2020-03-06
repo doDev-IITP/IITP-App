@@ -4,8 +4,6 @@ import android.app.Application;
 import android.os.Handler;
 import android.util.Log;
 
-import androidx.work.WorkManager;
-
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.HashMap;
@@ -19,14 +17,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        new Handler().postDelayed(() -> {
-            scheduleTask();
-            fetchRemoteConfig();
-        }, 500);
-    }
-
-    private void scheduleTask() {
-        WorkManager.getInstance(this).cancelAllWork();
+        new Handler().postDelayed(this::fetchRemoteConfig, 500);
     }
 
     private void fetchRemoteConfig() {

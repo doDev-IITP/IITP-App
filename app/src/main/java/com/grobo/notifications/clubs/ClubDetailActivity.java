@@ -34,7 +34,9 @@ import com.grobo.notifications.profile.UserProfileActivity;
 import com.grobo.notifications.utils.ImageViewerActivity;
 import com.grobo.notifications.utils.utils;
 import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -92,6 +94,8 @@ public class ClubDetailActivity extends FragmentActivity implements PorAdapter.O
     }
 
     private void showData() {
+
+        Iconify.with(new FontAwesomeModule());
 
         ImageView imageView = findViewById(R.id.image);
         if (getIntent().hasExtra("transition_image")) {
@@ -266,8 +270,11 @@ public class ClubDetailActivity extends FragmentActivity implements PorAdapter.O
                                     newPor.setPorId(singlePor.getString("_id"));
                                 if (singlePor.has("club"))
                                     newPor.setClubId(singlePor.getString("club"));
-                                if (singlePor.has("access"))
-                                    newPor.setAccess(singlePor.getInt("access"));
+
+                                if (singlePor.has("code"))
+                                    newPor.setCode(singlePor.getInt("code"));
+                                if (!(newPor.getCode() > 0)) continue;
+
                                 if (singlePor.has("position"))
                                     newPor.setPosition(singlePor.getString("position"));
 

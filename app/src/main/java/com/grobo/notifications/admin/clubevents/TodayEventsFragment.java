@@ -1,6 +1,7 @@
 package com.grobo.notifications.admin.clubevents;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,15 +37,14 @@ public class TodayEventsFragment extends Fragment {
     public TodayEventsFragment() {
     }
 
-//    private SwipeRefreshLayout swipeRefreshLayout;
     private TodayEventsRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private View emptyView;
 
     private ClubEventViewModel viewModel;
 
-    private boolean refreshed = false;
     private Context context;
+    private SharedPreferences prefs;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +54,7 @@ public class TodayEventsFragment extends Fragment {
             context = getContext();
 
         viewModel = new ViewModelProvider(this).get(ClubEventViewModel.class);
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -63,15 +64,6 @@ public class TodayEventsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-//        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_club_event);
-//        swipeRefreshLayout.setOnRefreshListener(this::updateData);
-
-//        if (!refreshed) {
-//            swipeRefreshLayout.setRefreshing(true);
-//            updateData();
-//        }
-
         emptyView = view.findViewById(R.id.club_events_empty_view);
         TextView emptyMessage = emptyView.findViewById(R.id.tv_message);
         emptyMessage.setText("No events today!");
@@ -113,44 +105,35 @@ public class TodayEventsFragment extends Fragment {
                 emptyView.setVisibility(View.INVISIBLE);
             }
         });
+
+        if (prefs.getLong("last_today_event_update", 0) < System.currentTimeMillis() - 60 * 60 * 1000)
+            updateData(start, end);
     }
 
-    private void updateData() {
+    private void updateData(long start, long end) {
 
         String token = PreferenceManager.getDefaultSharedPreferences(requireContext()).getString(USER_TOKEN, "0");
-
         EventsRoutes service = RetrofitClientInstance.getRetrofitInstance().create(EventsRoutes.class);
 
-        Call<ClubEventItem.ClubEventSuper> call = service.getEventsByDate(token, 1);
-        call.enqueue(new Callback<ClubEventItem.ClubEventSuper>() {
+        Call<List<ClubEventItem>> call = service.getEventsByDate(token, start, end);
+        call.enqueue(new Callback<List<ClubEventItem>>() {
             @Override
-            public void onResponse(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Response<ClubEventItem.ClubEventSuper> response) {
-//                swipeRefreshLayout.setRefreshing(false);
-                if (response.isSuccessful()) {
-                    if (response.body() != null && response.body().getEvents() != null) {
-                        List<ClubEventItem> allItems = response.body().getEvents();
-
-                        if (allItems != null) {
-                            for (ClubEventItem item : allItems) {
-                                viewModel.insert(item);
-                            }
-                        }
-                        refreshed = true;
-                    }
-                    Toast.makeText(getContext(), "Events Updated", Toast.LENGTH_SHORT).show();
+            public void onResponse(@NonNull Call<List<ClubEventItem>> call, @NonNull Response<List<ClubEventItem>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ClubEventItem> allItems = response.body();
+                    for (ClubEventItem item : allItems) viewModel.insert(item);
+                    Toast.makeText(context, "Events Updated", Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(getContext(), "Failed to get events!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Failed to get events!", Toast.LENGTH_SHORT).show();
+                prefs.edit().putLong("last_today_event_update", System.currentTimeMillis()).apply();
             }
 
             @Override
-            public void onFailure(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<ClubEventItem>> call, @NonNull Throwable t) {
                 if (t.getMessage() != null)
                     Log.e("failure", t.getMessage());
-                Toast.makeText(getContext(), "Event fetch failure!!", Toast.LENGTH_LONG).show();
-//                swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(context, "Event fetch failure!!", Toast.LENGTH_LONG).show();
             }
         });
     }
-
-
 }

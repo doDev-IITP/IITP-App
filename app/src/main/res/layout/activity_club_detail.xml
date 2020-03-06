@@ -19,7 +19,7 @@
             android:scaleType="centerCrop" />
 
         <ImageView
-            android:id="@+id/club_detail_title_background"
+            android:id="@+id/event_detail_title_background"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_alignBottom="@id/image"
@@ -68,8 +68,8 @@
             style="@android:style/TextAppearance.Medium"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_alignTop="@id/club_detail_title_background"
-            android:layout_alignBottom="@id/club_detail_title_background"
+            android:layout_alignTop="@id/event_detail_title_background"
+            android:layout_alignBottom="@id/event_detail_title_background"
             android:layout_alignParentStart="true"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"

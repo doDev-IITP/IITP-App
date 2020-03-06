@@ -2,6 +2,8 @@ package com.grobo.notifications.network;
 
 import com.grobo.notifications.admin.clubevents.ClubEventItem;
 
+import java.util.List;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -16,8 +18,8 @@ public interface EventsRoutes {
     @GET("/events")
     Call<ClubEventItem.ClubEventSuper> getAllEvents(@Header("Authorization") String credentials);
 
-    @GET("/events/date/{timestamp}")    //events in range {timestamp - 60days, timestamp + 60days}
-    Call<ClubEventItem.ClubEventSuper> getEventsByDate(@Header("Authorization") String credentials, @Path("timestamp") long timestamp);
+    @GET("/events/date/{from}/{to}")
+    Call<List<ClubEventItem>> getEventsByDate(@Header("Authorization") String credentials, @Path("from") long from, @Path("to") long to);
 
     @POST("/events")
     Call<ResponseBody> postEvent(@Header("Authorization") String credentials, @Body RequestBody body);
@@ -30,5 +32,4 @@ public interface EventsRoutes {
 
     @PATCH("/events/{id}")
     Call<ResponseBody> patchEventById(@Header("Authorization") String credentials, @Body RequestBody requestBody, @Path("id") String id);
-
 }

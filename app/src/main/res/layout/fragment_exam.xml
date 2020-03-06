@@ -26,12 +26,12 @@
                 android:orientation="horizontal"
                 android:padding="8dp">
 
-                <io.github.ponnamkarthik.richlinkpreview.RichLinkView
-                    android:id="@+id/seating_plan"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+<!--                <io.github.ponnamkarthik.richlinkpreview.RichLinkView-->
+<!--                    android:id="@+id/seating_plan"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
 
-                </io.github.ponnamkarthik.richlinkpreview.RichLinkView>
+<!--                </io.github.ponnamkarthik.richlinkpreview.RichLinkView>-->
 
             </LinearLayout>
 
@@ -50,12 +50,12 @@
                 android:orientation="horizontal"
                 android:padding="8dp">
 
-                <io.github.ponnamkarthik.richlinkpreview.RichLinkView
-                    android:id="@+id/examschedule"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+<!--                <io.github.ponnamkarthik.richlinkpreview.RichLinkView-->
+<!--                    android:id="@+id/examschedule"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
 
-                </io.github.ponnamkarthik.richlinkpreview.RichLinkView>
+<!--                </io.github.ponnamkarthik.richlinkpreview.RichLinkView>-->
 
             </LinearLayout>
 

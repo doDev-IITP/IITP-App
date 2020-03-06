@@ -22,7 +22,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
 import com.grobo.notifications.account.por.PORItem;
-import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.network.EventsRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.utils.utils;
@@ -107,7 +106,7 @@ public class ClubEventFragment extends Fragment {
         postponeEnterTransition();
         observer.addOnGlobalLayoutListener(this::startPostponedEnterTransition);
 
-        adapter = new ClubEventRecyclerAdapter(context);
+        adapter = new ClubEventRecyclerAdapter(context, porItem);
         recyclerView.setAdapter(adapter);
 
         populateRecycler();
@@ -117,7 +116,8 @@ public class ClubEventFragment extends Fragment {
         } else {
             addFab.show();
             addFab.setOnClickListener(v -> {
-                Intent intent = new Intent(getContext(), AddFeedActivity.class);
+                Intent intent = new Intent(getContext(), EditClubEventDetailActivity.class);
+                intent.putExtra("por", porItem);
                 startActivity(intent);
             });
         }

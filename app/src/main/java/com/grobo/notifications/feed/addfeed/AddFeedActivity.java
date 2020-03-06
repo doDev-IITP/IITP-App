@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.text.Spanned;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
@@ -23,12 +24,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
+import com.bumptech.glide.Glide;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.grobo.notifications.R;
+import com.grobo.notifications.feed.FeedItem;
+import com.grobo.notifications.feed.FeedViewModel;
 import com.grobo.notifications.network.FeedRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.utils.utils;
@@ -36,11 +42,15 @@ import com.grobo.notifications.utils.utils;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import io.noties.markwon.Markwon;
+import io.noties.markwon.html.HtmlPlugin;
+import io.noties.markwon.image.glide.GlideImagesPlugin;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -63,9 +73,17 @@ public class AddFeedActivity extends FragmentActivity {
     private ImageView imagePreview;
     private TextView feedTitle;
     private TextView feedDescription;
+    private MaterialButton previewDescription;
     private String fbLink = null;
     private String instLink = null;
     private String twitterLink = null;
+
+    private String originalDescription = "";
+    private boolean previewMode = false;
+
+    private boolean editMode = false;
+    private FeedViewModel viewModel;
+    private FeedItem currentFeed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +92,22 @@ public class AddFeedActivity extends FragmentActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        viewModel = new ViewModelProvider(this).get(FeedViewModel.class);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Uploading...");
+
+        if (getIntent().hasExtra("feedId")) {
+            String feedId = getIntent().getStringExtra("feedId");
+            if (feedId != null) {
+                currentFeed = viewModel.getFeedById(feedId);
+                if (currentFeed != null) editMode = true;
+                else utils.showFinishAlertDialog(this, "Alert!!!", "Invalid feed!");
+            } else utils.showFinishAlertDialog(this, "Alert!!!", "Invalid feed id!");
+        } else {
+            editMode = false;
+        }
 
         showInitialData();
     }
@@ -112,6 +142,48 @@ public class AddFeedActivity extends FragmentActivity {
             } else if (feedDescription.getText().toString().isEmpty()) {
                 feedDescription.setError("Enter a valid description!");
             } else showPostDialog();
+        });
+
+        if (currentFeed != null) {
+            Glide.with(this)
+                    .load(currentFeed.getEventImageUrl())
+                    .centerInside()
+                    .placeholder(R.drawable.baseline_dashboard_24)
+                    .into(imagePreview);
+            feedTitle.setText(currentFeed.getEventName());
+            feedDescription.setText(currentFeed.getEventDescription());
+            if (currentFeed.getPostLinks() != null) for (String page : currentFeed.getPostLinks()) {
+                if (page.contains("facebook")) fbLink = page;
+                else if (page.contains("instagram")) instLink = page;
+                else if (page.contains("twitter")) twitterLink = page;
+            }
+        }
+
+        activatePreviewButton();
+    }
+
+    private void activatePreviewButton() {
+        previewDescription = findViewById(R.id.button_preview_description);
+        previewDescription.setOnClickListener(v -> {
+            if (!previewMode) {
+                originalDescription = feedDescription.getText().toString();
+                if (!originalDescription.isEmpty()) {
+                    final Markwon markwon = Markwon.builder(this)
+                            .usePlugin(GlideImagesPlugin.create(this))
+                            .usePlugin(HtmlPlugin.create())
+                            .build();
+                    final Spanned spanned = markwon.toMarkdown(originalDescription);
+                    markwon.setParsedMarkdown(feedDescription, spanned);
+                    previewDescription.setText("Back to edit");
+                    feedDescription.setEnabled(false);
+                    previewMode = true;
+                }
+            } else {
+                feedDescription.setText(originalDescription);
+                previewDescription.setText("Preview");
+                feedDescription.setEnabled(true);
+                previewMode = false;
+            }
         });
     }
 
@@ -164,7 +236,10 @@ public class AddFeedActivity extends FragmentActivity {
 
     private void postImage() {
 
-        if (selectedImage == null) post("placeholder");
+        if (selectedImage == null)
+            if (currentFeed != null && currentFeed.getEventImageUrl() != null && !currentFeed.getEventImageUrl().isEmpty())
+                post(currentFeed.getEventImageUrl());
+            else post("");
         else {
 
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -210,8 +285,10 @@ public class AddFeedActivity extends FragmentActivity {
 
         Map<String, Object> jsonParams = new ArrayMap<>();
         jsonParams.put("eventName", feedTitle.getText().toString());
-        jsonParams.put("eventDescription", feedDescription.getText().toString());
         jsonParams.put("eventImageUrl", imageUrl);
+
+        if (previewMode) jsonParams.put("eventDescription", originalDescription);
+        else jsonParams.put("eventDescription", feedDescription.getText().toString());
 
         List<String> social = new ArrayList<>();
         if (fbLink != null && !fbLink.isEmpty()) social.add(fbLink);
@@ -223,26 +300,34 @@ public class AddFeedActivity extends FragmentActivity {
         String token = preferences.getString(USER_TOKEN, "0");
 
         FeedRoutes service = RetrofitClientInstance.getRetrofitInstance().create(FeedRoutes.class);
-        Call<ResponseBody> call = service.postFeed(token, body);
+
+        Call<ResponseBody> call;
+        if (editMode) call = service.editFeedById(token, currentFeed.getId(), body);
+        else call = service.postFeed(token, body);
+
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (progressDialog != null) progressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    Toast.makeText(AddFeedActivity.this, "Feed Successfully posted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFeedActivity.this, "Feed Successfully saved", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Log.e("failure", String.valueOf(response.code()));
                     utils.showSimpleAlertDialog(AddFeedActivity.this, "Alert!!!", "Post failed! Error: " + response.code());
+                    try {
+                        Log.e("failure", response.code() + (response.errorBody() != null ? response.errorBody().string() : ""));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("failure", t.getMessage());
+                if (t.getMessage() != null)
+                    Log.e("failure", t.getMessage());
                 if (progressDialog != null) progressDialog.dismiss();
                 Toast.makeText(AddFeedActivity.this, "Post failed, please check internet connection", Toast.LENGTH_LONG).show();
-
             }
         });
     }
@@ -287,84 +372,4 @@ public class AddFeedActivity extends FragmentActivity {
 
         builder.show();
     }
-
-
-    private void showData() {
-
-//        ImageView imageView = findViewById(R.id.image);
-//
-//        TextView title = findViewById(R.id.title);
-//        TextView description = findViewById(R.id.description);
-//        TextView feedPoster = findViewById(R.id.feed_poster);
-//
-//        if (current != null) {
-//
-//            Glide.with(this)
-//                    .load("")
-//                    .thumbnail(Glide.with(this).load(current.getEventImageUrl()))
-//                    .centerInside()
-//                    .placeholder(R.drawable.baseline_dashboard_24)
-//                    .into(imageView);
-//
-//            title.setText(current.getEventName());
-//
-//            if (current.getEventDescription() == null) {
-//                current.setEventDescription("No Description");
-//            }
-//
-//            feedPoster.setText(String.format("%s\n%s", current.getDataPoster().getName(), current.getDataPoster().getInstituteId().toUpperCase()));
-//
-//            final Markwon markwon = Markwon.builder(this)
-//                    .usePlugin(GlideImagesPlugin.create(this))
-//                    .usePlugin(HtmlPlugin.create())
-//                    .build();
-//
-//            final Spanned spanned = markwon.toMarkdown(current.getEventDescription());
-//            markwon.setParsedMarkdown(description, spanned);
-//
-//            if (current.getLikes() != null)
-//                reactCount.setText(String.valueOf(current.getLikes().size()));
-//            else reactCount.setText("0");
-//
-//            if (current.getLikes().contains(PreferenceManager.getDefaultSharedPreferences(this).getString(USER_MONGO_ID, "")))
-//                like.setImageDrawable(new IconDrawable(this, FontAwesomeIcons.fa_heart).colorRes(R.color.feed_detail_like));
-//            else
-//                like.setImageDrawable(new IconDrawable(this, FontAwesomeIcons.fa_heart_o).colorRes(R.color.feed_detail_like));
-//
-//            like.setOnClickListener(v -> {
-//                FeedUtils.reactOnFeed(this, current.getId());
-//                if (current.getLikes().contains(myMongoId)) {
-//                    like.setImageDrawable(new IconDrawable(this, FontAwesomeIcons.fa_heart_o).colorRes(R.color.feed_detail_like));
-//                    current.getLikes().remove(myMongoId);
-//                    reactCount.setText(String.valueOf(current.getLikes().size()));
-//                    feedViewModel.insert(current);
-//                } else {
-//                    like.setImageDrawable(new IconDrawable(this, FontAwesomeIcons.fa_heart).colorRes(R.color.feed_detail_like));
-//                    current.getLikes().add(myMongoId);
-//                    reactCount.setText(String.valueOf(current.getLikes().size()));
-//                    feedViewModel.insert(current);
-//                }
-//            });
-//
-//            if (current.getPostLinks() != null) {
-//                for (String page : current.getPostLinks()) {
-//                    if (page.contains("facebook")) {
-//                        ImageView fb = findViewById(R.id.feed_facebook);
-//                        fb.setVisibility(View.VISIBLE);
-//                        fb.setOnClickListener(view1 -> openWebsiteIntent(this, page));
-//                    } else if (page.contains("instagram")) {
-//                        ImageView inst = findViewById(R.id.feed_instagram);
-//                        inst.setVisibility(View.VISIBLE);
-//                        inst.setOnClickListener(view1 -> openWebsiteIntent(this, page));
-//                    } else if (page.contains("twitter")) {
-//                        ImageView tw = findViewById(R.id.feed_twitter);
-//                        tw.setVisibility(View.VISIBLE);
-//                        tw.setOnClickListener(view1 -> openWebsiteIntent(this, page));
-//                    }
-//                }
-//            }
-//
-//        }
-    }
-
 }

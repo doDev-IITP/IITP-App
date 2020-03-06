@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.grobo.notifications.R;
+import com.grobo.notifications.account.por.PORItem;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,10 +29,11 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
 
     private Context context;
     private List<ClubEventItem> clubEventItemList;
+    private PORItem porItem;
 
-
-    public ClubEventRecyclerAdapter(Context context) {
+    public ClubEventRecyclerAdapter(Context context, PORItem porItem) {
         this.context = context;
+        this.porItem = porItem;
     }
 
     @NonNull
@@ -74,6 +76,7 @@ public class ClubEventRecyclerAdapter extends RecyclerView.Adapter<ClubEventRecy
                 Intent intent = new Intent(context, ClubEventDetailActivity.class);
                 intent.putExtra("eventId", item.getId());
                 intent.putExtra("transition_image", "transition_image" + position);
+                if (porItem != null) intent.putExtra("por", porItem);
                 ActivityCompat.startActivity(context, intent, options.toBundle());
             });
 

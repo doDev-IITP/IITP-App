@@ -22,12 +22,15 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.grobo.notifications.R;
+import com.grobo.notifications.feed.addfeed.AddFeedActivity;
 import com.grobo.notifications.network.FeedRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.utils.ImageViewerActivity;
 import com.grobo.notifications.utils.utils;
 import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,6 +92,8 @@ public class FeedDetailActivity extends FragmentActivity {
     }
 
     private void showData() {
+
+        Iconify.with(new FontAwesomeModule());
 
         ImageView imageView = findViewById(R.id.image);
         ViewCompat.setTransitionName(imageView, IMAGE_TRANSITION_NAME);
@@ -191,15 +196,16 @@ public class FeedDetailActivity extends FragmentActivity {
 
             if (current.getDataPoster().getId().equals(myMongoId)) {
                 editFab.show();
+                editFab.setOnClickListener(v -> {
+                    Intent i = new Intent(FeedDetailActivity.this, AddFeedActivity.class);
+                    i.putExtra("feedId", current.getId());
+                    startActivity(i);
+                });
             } else {
                 editFab.hide();
             }
 
-        } else {
-            utils.showSimpleAlertDialog(this, "Alert!!!", "Feed not found.");
-//            NavHostFragment.findNavController(this).navigateUp();
-//            NavHostFragment.findNavController(this).navigate(R.id.nav_feed);
-        }
+        } else utils.showFinishAlertDialog(this, "Alert!!!", "Feed not found.");
 
     }
 

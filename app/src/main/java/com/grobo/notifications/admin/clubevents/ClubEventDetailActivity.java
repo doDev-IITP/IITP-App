@@ -21,10 +21,13 @@ import androidx.preference.PreferenceManager;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grobo.notifications.R;
+import com.grobo.notifications.account.por.PORItem;
 import com.grobo.notifications.network.EventsRoutes;
 import com.grobo.notifications.network.RetrofitClientInstance;
 import com.grobo.notifications.utils.ImageViewerActivity;
 import com.grobo.notifications.utils.utils;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -42,9 +45,11 @@ import static com.grobo.notifications.utils.utils.openWebsiteIntent;
 public class ClubEventDetailActivity extends FragmentActivity {
 
     private ClubEventViewModel viewModel;
-    private ClubEventItem current;
     private boolean reload = false;
     private ProgressDialog progressDialog;
+
+    private ClubEventItem current;
+    private PORItem currentPor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,27 +62,32 @@ public class ClubEventDetailActivity extends FragmentActivity {
 
         ((FloatingActionButton) findViewById(R.id.fab_edit)).hide();
 
-        if (getIntent().hasExtra("reload"))
-            reload = getIntent().getBooleanExtra("reload", false);
-
-        if (getIntent().hasExtra("eventId")){
+        if (getIntent().hasExtra("eventId")) {
             String eventId = getIntent().getStringExtra("eventId");
 
-            if (!reload) {
-                current = viewModel.getEventById(eventId);
-                showData();
+            if (getIntent().hasExtra("por")) {
+                currentPor = getIntent().getParcelableExtra("por");
+                if (currentPor != null) {
+                    current = viewModel.getEventById(eventId);
+                    showData();
+                } else utils.showFinishAlertDialog(this, "Alert!!!", "Invalid POR.");
             } else {
-                progressDialog = new ProgressDialog(this);
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Loading...");
-                progressDialog.show();
-                downloadData(eventId);
+                if (getIntent().hasExtra("reload"))
+                    reload = getIntent().getBooleanExtra("reload", false);
+                if (reload) {
+                    downloadData(eventId);
+                } else {
+                    current = viewModel.getEventById(eventId);
+                    showData();
+                }
             }
-        }
-        else utils.showFinishAlertDialog(this, "Alert!!!", "Event not found.");
+
+        } else utils.showFinishAlertDialog(this, "Alert!!!", "Event not found.");
     }
 
     private void showData() {
+
+        Iconify.with(new FontAwesomeModule());
 
         ImageView imageView = findViewById(R.id.image);
         if (getIntent().hasExtra("transition_image")) {
@@ -166,21 +176,28 @@ public class ClubEventDetailActivity extends FragmentActivity {
                     .placeholder(R.mipmap.ic_launcher)
                     .into(clubImage);
 
-//            if (current.getDataPoster().getId().equals(myMongoId)) {
-//                editFab.show();
-//            } else {
-//                editFab.hide();
-//            }
+            if (currentPor != null) {
+                editFab.show();
+                editFab.setOnClickListener(v -> {
+                    Intent i = new Intent(ClubEventDetailActivity.this, EditClubEventDetailActivity.class);
+                    i.putExtra("por", currentPor);
+                    i.putExtra("eventId", current.getId());
+                    startActivity(i);
+                });
+            } else {
+                editFab.hide();
+            }
 
-        } else {
-            utils.showSimpleAlertDialog(this, "Alert!!!", "Event not found.");
-//            NavHostFragment.findNavController(this).navigateUp();
-//            NavHostFragment.findNavController(this).navigate(R.id.nav_feed);
-        }
+        } else utils.showFinishAlertDialog(this, "Alert!!!", "Event not found.");
 
     }
 
     private void downloadData(String eventId) {
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
 
         String token = PreferenceManager.getDefaultSharedPreferences(this).getString(USER_TOKEN, "0");
 

@@ -23,6 +23,7 @@
             app:cardCornerRadius="8dp">
 
             <LinearLayout
+                android:id="@+id/ll_feed_card_body"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_gravity="bottom"

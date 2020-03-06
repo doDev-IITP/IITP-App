@@ -46,7 +46,7 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
 
             if (current.getAlarm() != 0) {
                 holder.alarm.setVisibility( View.VISIBLE );
-                SimpleDateFormat format = new SimpleDateFormat( "dd MMM YYYY, hh:mm a", Locale.getDefault() );
+                SimpleDateFormat format = new SimpleDateFormat( "dd MMM yyyy, hh:mm a", Locale.getDefault() );
                 holder.alarm.setText( format.format( current.getAlarm() ) );
             } else {
                 holder.alarm.setVisibility( View.GONE );

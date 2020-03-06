@@ -78,7 +78,7 @@ public class CalenderFragment extends Fragment {
 
         RecyclerView eventsRecycler = view.findViewById(R.id.eventlist);
         eventsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        clubEventRecyclerAdapter = new ClubEventRecyclerAdapter(getContext());
+        clubEventRecyclerAdapter = new ClubEventRecyclerAdapter(getContext(), null);
         eventsRecycler.setAdapter(clubEventRecyclerAdapter);
 
         DayViewDecorator todayDecorator = new DayViewDecorator() {
@@ -118,6 +118,7 @@ public class CalenderFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<ClubEventItem.ClubEventSuper> call, @NonNull Response<ClubEventItem.ClubEventSuper> response) {
                 if (response.isSuccessful())
+                    viewModel.deleteAllEvents();
                     if (response.body() != null && response.body().getEvents() != null)
                         for (ClubEventItem i : response.body().getEvents()) viewModel.insert(i);
             }
