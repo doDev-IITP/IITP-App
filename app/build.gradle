@@ -11,7 +11,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-
         release {
             minifyEnabled true
             shrinkResources true
@@ -58,7 +57,7 @@ dependencies {
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
 
     //play store core
-    implementation 'com.google.android.play:core:1.6.5'
+    implementation 'com.google.android.play:core:1.7.0'
 
     //navigation
     implementation 'androidx.navigation:navigation-fragment:2.2.1'

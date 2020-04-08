@@ -42,7 +42,6 @@ import static com.grobo.notifications.utils.Constants.USER_TOKEN;
 
 public class UserProfileActivity extends AppCompatActivity implements PORRecyclerAdapter.OnPORSelectedListener {
 
-
     private PORRecyclerAdapter adapter;
 
     private RecyclerView recyclerView;
